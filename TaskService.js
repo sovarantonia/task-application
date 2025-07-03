@@ -1,15 +1,15 @@
+import { generateGUID } from "./helpers/guidHelper";
 import { initialData } from "./initialData";
 import { Task } from "./Task";
 export class TaskService {
 
     constructor() {
-        this.tasks = initialData.map(task => new Task(task.id, task.title, task.description, task.status, task.assignedUser))
-        this.nextId = this.tasks.length;
+        this.tasks = initialData;
     }
 
-    saveTask(title, description, status, assignedUser) {
-        this.nextId++;
-        const newTask = new Task(this.nextId, title, description, status, assignedUser);
+    saveTask(newTask) {
+        const id = generateGUID();
+        //const newTask = {id: id, title: title, description: description, status: status, assignedUser: assignedUser}
         this.tasks.push(newTask);
     }
 
@@ -18,11 +18,11 @@ export class TaskService {
     }
 
     getTaskById(id) {
-        return this.tasks.at(id - 1); 
+        return this.tasks.find(task => task.id === id); 
     }
 
-    updateTask(id, title, description, status, assignedUser) {
-        let taskToUpdate = this.tasks.at(id - 1);
+    updateTask({id, title, description, status, assignedUser}) {
+        let taskToUpdate = this.tasks.at(id);
         if (taskToUpdate == null) {
             throw "Task does not exist";
         }

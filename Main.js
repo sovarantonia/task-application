@@ -67,12 +67,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
       function renderPage(page) {
         container.innerHTML = "";
-        const paginatedTasks = taskService.getPaginatedTasks(page, itemsPerPage);
+        const paginatedTasks = taskService.getPaginatedTasks({currentPage: page, itemsPerPage: itemsPerPage});
 
         paginatedTasks.forEach(element => {
           const card = document.createElement("div");
           card.className = "task-card";
-          card.innerHTML = `<h2>${element.id}) ${element.title}</h2>
+          card.innerHTML = `${element.title}</h2>
             <p>Status: ${element.status}</p>
             <p>${element.description}</p>
             <p>Assigned to: ${element.assignedUser}</p>`;
