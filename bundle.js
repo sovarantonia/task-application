@@ -190,69 +190,130 @@
 
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
-        const taskService = new TaskService(initialTaskData);
-        const container = document.getElementById("taskContainer");
-        const select = document.getElementById("itemsPerPageSelect");
+  class DbService {
+      constructor(initialData) {
+          this.objectList = initialData;
+      }
 
-        const previousBtn = document.getElementById("previousBtn");
-        const nextBtn = document.getElementById("nextBtn");
-        const currentPageSpan = document.getElementById("currentPageSpan");
-        const firstPageBtn = document.getElementById("firstPageBtn");
-        const lastPageBtn = document.getElementById("lastPageBtn");
+      save(objToSave) {
+          return new Promise((resolve) => {
+              this.objectList.push(objToSave);
+              resolve(objToSave);
+          })
+      }
+
+      update(id, props) {
+          return new Promise((resolve, reject) => {
+              const objToFind = this.objectList.find(obj => obj.id === id);
+              if(!objToFind) {
+                  return reject(`Object with id ${id} not found`);
+              }
+
+              Object.assign(objToFind, props);
+              resolve(objToFind);   
+          })
+      }
+
+      delete(id) {
+          return new Promise((resolve, reject) => {
+              const index = this.objectList.findIndex(o => o.id === id);
+              if (index !== -1) {
+                  const removed = this.objectList.splice(index, 1)[0];
+                  resolve(removed); 
+              }
+              else {
+                  reject(`Object with id ${id} not found`);
+              }
+          })
+      }
+
+      findById(objId) {
+          return new Promise((resolve, reject) => {
+              const objToFind = this.objectList.find(obj => obj.id === objId);
+              if(objToFind !== undefined) {
+                  resolve(objToFind);
+              }
+              else {
+                  reject(`Object with id ${objId} not found`);
+              }
+          })
+      }
+
+      getAll() {
+         return new Promise((resolve) => {
+          resolve(this.objectList);
+         }) 
+      }
+  }
+
+  class TaskPage {
+    constructor(taskService) {
+      this.taskService = taskService;
+
+      this.container = document.getElementById("taskContainer");
+      this.select = document.getElementById("itemsPerPageSelect");
+
+      this.previousBtn = document.getElementById("previousBtn");
+      this.nextBtn = document.getElementById("nextBtn");
+      this.currentPageSpan = document.getElementById("currentPageSpan");
+      this.firstPageBtn = document.getElementById("firstPageBtn");
+      this.lastPageBtn = document.getElementById("lastPageBtn");
           
-        let currentPage = 1;
-        let itemsPerPage = parseInt(select.value);
-        let totalPages = taskService.getTotalPages(itemsPerPage);
+      this.currentPage = 1;
+      this.itemsPerPage = parseInt(this.select.value);
+      this.totalPages = this.taskService.getTotalPages(this.itemsPerPage);
 
-        lastPageBtn.innerText = totalPages.toString();
+      this.lastPageBtn.innerText = this.totalPages.toString();
+    }
 
-        select.addEventListener("change", (e) => {
-          itemsPerPage = parseInt(e.target.value);
-          currentPage = 1;
-          currentPageSpan.innerText = currentPage.toString();
-          totalPages = taskService.getTotalPages(itemsPerPage);
-          lastPageBtn.innerText = totalPages.toString();
+    attachEvents() {
+      this.select.addEventListener("change", (e) => {
+          this.itemsPerPage = parseInt(e.target.value);
+          this.currentPage = 1;
+          this.currentPageSpan.innerText = this.currentPage.toString();
+          this.totalPages = this.taskService.getTotalPages(this.itemsPerPage);
+          this.lastPageBtn.innerText = this.totalPages.toString();
 
-          renderPage(currentPage);
+          renderPage(this.currentPage);
           renderPaginationControls();
-        });
+      });
 
-        previousBtn.addEventListener("click", () => {
-          if(currentPage > 1) {
-            currentPage --;
+      this.previousBtn.addEventListener("click", () => {
+          if(this.currentPage > 1) {
+            this.currentPage --;
           }
-          currentPageSpan.innerText = currentPage.toString();
-          renderPage(currentPage);
+          this.currentPageSpan.innerText = this.currentPage.toString();
+          renderPage(this.currentPage);
           renderPaginationControls();
-        });
+      });
 
           
-        nextBtn.addEventListener("click", () => {
-          if(currentPage < totalPages) {
-            currentPage ++;
-          }
+      this.nextBtn.addEventListener("click", () => {
+        if(this.currentPage < this.totalPages) {
+          this.currentPage ++;
+        }
             
-          currentPageSpan.innerText = currentPage.toString();
-          renderPage(currentPage);
-          renderPaginationControls();
-        });
+        this.currentPageSpan.innerText = this.currentPage.toString();
+        renderPage(this.currentPage);
+        renderPaginationControls();
+      });
 
-        firstPageBtn.addEventListener("click", () => {
-          currentPage = 1;
-          renderPage(currentPage);
-          renderPaginationControls();
-        });
+      this.firstPageBtn.addEventListener("click", () => {
+        this.currentPage = 1;
+        renderPage(this.currentPage);
+        renderPaginationControls();
+      });
 
-        lastPageBtn.addEventListener("click", () => {
-          currentPage = totalPages;
-          renderPage(currentPage);
-          renderPaginationControls();
-        });
+      this.lastPageBtn.addEventListener("click", () => {
+        this.currentPage = this.totalPages;
+        renderPage(this.currentPage);
+        renderPaginationControls();
+      });
+    }
 
-        function renderPage(page) {
-          container.innerHTML = "";
-          const paginatedTasks = taskService.getPaginatedTasks({currentPage: page, itemsPerPage: itemsPerPage});
+    renderPage(page) {
+          this.container.innerHTML = "";
+          const paginatedTasks = this.taskService.getPaginatedTasks({currentPage: page, itemsPerPage: this.itemsPerPage});
 
           paginatedTasks.forEach(element => {
             const card = document.createElement("div");
@@ -261,20 +322,46 @@
             <p>Status: ${element.status}</p>
             <p>${element.description}</p>
             <p>Assigned to: ${element.assignedUser}</p>`;
-            container.appendChild(card);
+            this.container.appendChild(card);
           });
+
+          this.currentPageSpan.innerText = this.currentPage.toString();
         }
 
-        function renderPaginationControls() {
-          previousBtn.disabled = currentPage === 1;
-          nextBtn.disabled = currentPage === totalPages;
-          currentPageSpan.hidden = currentPage === 1 || currentPage === totalPages;
+    renderPaginationControls() {
+          this.previousBtn.disabled = this.currentPage === 1;
+          this.nextBtn.disabled = this.currentPage === this.totalPages;
+          this.currentPageSpan.hidden = this.currentPage === 1 || this.currentPage === this.totalPages;
         }
-        currentPageSpan.innerText = currentPage.toString();
+        
+  }
 
-        renderPage(currentPage);
-        renderPaginationControls();
+  class Pagination {
+      constructor(elementList) {
+          this.list = elementList;
+      }
 
-      });
+      getPaginatedElements({currentPage, itemsPerPage}) {
+          const start = (currentPage - 1) * itemsPerPage;
+          const end = start + itemsPerPage;
+
+          return this.list.slice(start, end);
+      }
+
+      getTotalPages(itemsPerPage) {
+          return Math.ceil(this.list.length / itemsPerPage);
+      }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const dbService = new DbService(initialTaskData);
+    
+    const taskService = new TaskService(dbService);
+    new Pagination(taskService.getAllTasks());
+    const taskPage = new TaskPage(taskService);
+
+    taskPage.renderPage(1);
+    taskPage.renderPaginationControls();
+  });
 
 })();
