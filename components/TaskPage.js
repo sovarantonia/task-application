@@ -1,6 +1,3 @@
-import { initialTaskData } from "./data/initialTaskData.js";
-import { TaskService } from "./service/TaskService.js";
-
 document.addEventListener("DOMContentLoaded", () => {
       const taskService = new TaskService(initialTaskData);
       const container = document.getElementById("taskContainer");

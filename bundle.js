@@ -1,7 +1,7 @@
 (function () {
   'use strict';
 
-  const initialData = [
+  const initialTaskData = [
     {
       id: "24ab0076-1acc-41c2-952e-ca889c8c7695",
       title: "Fix login bug",
@@ -144,15 +144,6 @@
     }
   ];
 
-  class LoadData {
-     
-      loadData() {
-          return new Promise((resolve) => {
-             resolve(initialData);
-          })
-      }
-  }
-
   function generateGUID() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function (c) {
       const r = Math.random() * 16 | 0;
@@ -163,58 +154,36 @@
 
   class TaskService {
 
-      constructor() {
-          this.tasks = initialData;
+      constructor(dbService, pagination) {
+          this.service = dbService;
+          this.taskPagination = pagination;
       }
 
       saveTask(newTask) {
-          generateGUID();
-          //const newTask = {id: id, title: title, description: description, status: status, assignedUser: assignedUser}
-          this.tasks.push(newTask);
+          const id = generateGUID();
+          newTask.id = id;
+          return this.service.save(newTask);
       }
 
       getAllTasks() {
-          return this.tasks;
+          return this.service.getAll();
       }
 
       getTaskById(id) {
-          return this.tasks.find(task => task.id === id); 
+          return this.service.findById(id); 
       }
 
-      updateTask({id, title, description, status, assignedUser}) {
-          let taskToUpdate = this.tasks.at(id);
-          if (taskToUpdate == null) {
-              throw "Task does not exist";
-          }
-
-          if (title !== undefined) {
-              taskToUpdate.title = title;
-          }
-
-           if (description !== undefined) {
-              taskToUpdate.description = description;
-          }
-
-           if (status !== undefined) {
-              taskToUpdate.status = status;
-          }
-
-           if (assignedUser !== undefined) {
-              taskToUpdate.assignedUser = assignedUser;
-          }
-
-          return taskToUpdate;
+      updateTask(task) {
+          const {id, ...props} = task;
+          return this.service.update(id, props);
       }
 
       getPaginatedTasks({currentPage, itemsPerPage}) {
-          const start = (currentPage - 1) * itemsPerPage;
-          const end = start + itemsPerPage;
-
-          return this.tasks.slice(start, end);
+          return this.taskPagination.getPaginatedElements({currentPage, itemsPerPage});
       }
 
       getTotalPages(itemsPerPage) {
-          return Math.ceil(this.tasks.length / itemsPerPage);
+          return this.taskPagination.getTotalPages(itemsPerPage);
       }
 
 
@@ -222,11 +191,7 @@
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    const loader = new LoadData();
-
-    loader.loadData()
-      .then(data => {
-        const taskService = new TaskService(data);
+        const taskService = new TaskService(initialTaskData);
         const container = document.getElementById("taskContainer");
         const select = document.getElementById("itemsPerPageSelect");
 
@@ -310,9 +275,6 @@
         renderPage(currentPage);
         renderPaginationControls();
 
-      })
-      
-      .catch(err => console.error(err));
-  });
+      });
 
 })();

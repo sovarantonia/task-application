@@ -1,4 +1,4 @@
-const initialData = [
+const initialTaskData = [
   {
     id: "24ab0076-1acc-41c2-952e-ca889c8c7695",
     title: "Fix login bug",
@@ -140,4 +140,4 @@ const initialData = [
     assignedUser: "eva_tester"
   }
 ];
-export {initialData};
+export {initialTaskData};

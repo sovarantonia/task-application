@@ -1,27 +1,24 @@
-import { initialData } from "./initialData";
-
 export class DbService {
-    constructor() {
+    constructor(initialData) {
         this.objectList = initialData;
     }
 
-    save({objToSave}) {
+    save(objToSave) {
         return new Promise((resolve) => {
             this.objectList.push(objToSave);
             resolve(objToSave);
         })
     }
 
-    update(id, {props}) {
+    update(id, props) {
         return new Promise((resolve, reject) => {
             const objToFind = this.objectList.find(obj => obj.id === id);
-            if(objToFind !== undefined) {
-                Object.assign(objToFind, props);
-                resolve(objToFind, {props});
+            if(!objToFind) {
+                return reject(`Object with id ${id} not found`);
             }
-            else {
-                reject(`Object with id ${id} not found`);
-            }
+
+            Object.assign(objToFind, props);
+            resolve(objToFind);   
         })
     }
 
@@ -48,5 +45,11 @@ export class DbService {
                 reject(`Object with id ${objId} not found`);
             }
         })
+    }
+
+    getAll() {
+       return new Promise((resolve) => {
+        resolve(this.objectList);
+       }) 
     }
 }
