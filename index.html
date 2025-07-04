@@ -5,6 +5,7 @@
   </head>
   <body>
     <div id="taskContainer" class="task-grid"></div>
+
     <div id="paginationContainer">
       <button name="previousBtn" id="previousBtn">Previous</button>
       <button name="firstPageBtn" id="firstPageBtn">1</button>
@@ -12,12 +13,30 @@
       <button name="lastPageBtn" id="lastPageBtn"></button>
       <button name="nextBtn" id="nextBtn">Next</button>
     </div>
+
     <div>
       <label for="itemsPerPageSelect">Select a value:</label>
       <select name="itemsPerPageSelect" id="itemsPerPageSelect">
         <option value="5" selected>5</option>
         <option value="10">10</option>
       </select>
+    </div>
+
+    <button id="openCreateModalBtn">Create task</button>
+    <div id="createTaskModal">
+      <button id="closeModalBtn">&times;</button>
+      <form id="createTaskForm">
+        <label for="titleInput">Title</label>
+        <input type="text" id="titleInput" name="titleInput" />
+
+        <label for="descriptionInput">Description</label>
+        <input type="text" id="descriptionInput" name="descriptionInput" />
+
+        <label for="userSelect">Assign to:</label>
+        <select name="userSelect" id="userSelect"></select>
+
+        <input type="submit" id="submitCreateTaskBtn" />
+      </form>
     </div>
   </body>
 </html>
