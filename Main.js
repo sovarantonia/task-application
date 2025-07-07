@@ -11,6 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const taskPage = new TaskPage(taskService);
   taskPage.init();
 
-  const createTaskModal = new CreateTaskModal();
+  const createTaskModal = new CreateTaskModal(taskService);
   createTaskModal.init();
 });

@@ -1,8 +1,8 @@
 import { initialUserData } from "../data/initialUserData";
+import { TaskStatus } from "../data/taskStatus";
 
 export class CreateTaskModal {
-  constructor() {
-    //modal, open button, close button, form fields, submit
+  constructor(taskService) {
     this.openCreateModalBtn = document.getElementById("openCreateModalBtn");
     this.modal = document.getElementById("createTaskModal");
     this.closeModalBtn = document.getElementById("closeModalBtn");
@@ -14,6 +14,8 @@ export class CreateTaskModal {
     this.submitCreateTaskBtn = document.getElementById("submitCreateTaskBtn");
 
     this.modal.style.display = "none";
+
+    this.taskService = taskService;
   }
 
   init() {
@@ -38,6 +40,32 @@ export class CreateTaskModal {
 
     this.closeModalBtn.addEventListener("click", () => {
       this.modal.style.display = "none";
+      this.form.reset();
+    });
+
+    this.userSelect.addEventListener("change", (e) => {
+      this.userSelect.value = e.target.value;
+    });
+
+    this.submitCreateTaskBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+
+      const selectedOption =
+        this.userSelect.options[this.userSelect.selectedIndex];
+      const assignedUserName = selectedOption.text;
+
+      const newTask = {
+        title: this.titleInput.value,
+        description: this.descriptionInput.value,
+        assignedUser: assignedUserName,
+        status: TaskStatus.TODO,
+      };
+
+      this.taskService.saveTask(newTask).then((savedTask) => {
+        this.modal.style.display = "none";
+        console.log("Saved task: ", savedTask);
+        this.form.reset();
+      });
     });
   }
 }
