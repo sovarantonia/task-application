@@ -1,4 +1,5 @@
 import { Pagination } from "./Pagination";
+import { multiFieldSort } from "../helpers/sortHelper";
 
 export class DbService {
   constructor(initialData) {
@@ -67,6 +68,19 @@ export class DbService {
   getTotalPages(itemsPerPage) {
     return new Promise((resolve) => {
       resolve(this.pagination.getTotalPages(itemsPerPage));
+    });
+  }
+
+  getSortedPaginatedItems({ currentPage, itemsPerPage }, criteria) {
+    return new Promise((resolve) => {
+      const sortedItems = this.objectList.sort(multiFieldSort(criteria));
+      const paginationSortedItems = new Pagination(sortedItems);
+      resolve(
+        paginationSortedItems.getPaginatedElements({
+          currentPage,
+          itemsPerPage,
+        }),
+      );
     });
   }
 }

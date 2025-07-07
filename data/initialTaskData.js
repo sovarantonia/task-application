@@ -5,6 +5,7 @@ const initialTaskData = [
     description: "Users cannot log in with correct credentials.",
     status: "In Progress",
     assignedUser: "alice123",
+    creationDate: "2025-06-15",
   },
   {
     id: "1e0a63a7-6445-4254-8d58-9d8b19ab72e3",
@@ -13,6 +14,7 @@ const initialTaskData = [
       "Create a page where users can update their personal information.",
     status: "To Do",
     assignedUser: "bob_dev",
+    creationDate: "2025-06-14",
   },
   {
     id: "6a274a51-94cc-4244-b0fd-cc232f61d671",
@@ -21,6 +23,7 @@ const initialTaskData = [
       "Improve the performance of slow-loading pages by optimizing queries.",
     status: "Done",
     assignedUser: "charlie_q",
+    creationDate: "2025-06-12",
   },
   {
     id: "b6354a2b-2adf-4954-9fbe-61c783b89360",
@@ -28,6 +31,7 @@ const initialTaskData = [
     description: "Add an option for users to toggle dark mode in settings.",
     status: "To Do",
     assignedUser: "dana_ui",
+    creationDate: "2025-06-13",
   },
   {
     id: "43b82409-8234-44cf-a4b3-8dc590a6df6b",
@@ -36,6 +40,7 @@ const initialTaskData = [
       "Ensure critical user workflows are covered by integration tests.",
     status: "In Review",
     assignedUser: "eva_tester",
+    creationDate: "2025-06-15",
   },
   {
     id: "4c20f508-a24c-41ba-97ff-e34616d2c57c",
@@ -43,6 +48,7 @@ const initialTaskData = [
     description: "Reset link fails for accounts created before 2024.",
     status: "In Progress",
     assignedUser: "alice123",
+    creationDate: "2025-06-16",
   },
   {
     id: "41634150-0e26-4f2d-a62c-abadc417eaa4",
@@ -50,6 +56,7 @@ const initialTaskData = [
     description: "Modernize the layout of the user profile page.",
     status: "In Progress",
     assignedUser: "bob_dev",
+    creationDate: "2025-06-17",
   },
   {
     id: "fcbbf209-17b9-4e41-a307-71235780de6e",
@@ -57,6 +64,7 @@ const initialTaskData = [
     description: "Use PostgreSQL indexing to enhance filtering by title.",
     status: "To Do",
     assignedUser: "charlie_q",
+    creationDate: "2025-06-17",
   },
   {
     id: "abf36db4-4446-4404-a58e-6ca43bc1db22",
@@ -64,6 +72,7 @@ const initialTaskData = [
     description: "Support dynamic switching between themes.",
     status: "To Do",
     assignedUser: "dana_ui",
+    creationDate: "2025-06-18",
   },
   {
     id: "eff52628-aae3-4357-8857-6713c56f1f7e",
@@ -71,6 +80,7 @@ const initialTaskData = [
     description: "Organize unit and integration tests into separate folders.",
     status: "In Progress",
     assignedUser: "eva_tester",
+    creationDate: "2025-06-18",
   },
   {
     id: "35f172b6-b462-4d37-91c2-91d3938321c2",
@@ -78,6 +88,7 @@ const initialTaskData = [
     description: "Users stay on login page even after successful login.",
     status: "Done",
     assignedUser: "alice123",
+    creationDate: "2025-06-10",
   },
   {
     id: "5acef95d-1971-45cd-ae8f-c789cb256807",
@@ -85,6 +96,7 @@ const initialTaskData = [
     description: "Users can upload and crop their profile picture.",
     status: "To Do",
     assignedUser: "bob_dev",
+    creationDate: "2025-06-19",
   },
   {
     id: "563a2664-bf68-43d7-9b3d-3899bf24bd08",
@@ -92,6 +104,7 @@ const initialTaskData = [
     description: "Remove old joins and improve query structure.",
     status: "Done",
     assignedUser: "charlie_q",
+    creationDate: "2025-06-09",
   },
   {
     id: "95a896da-f3be-4f92-b60e-c5c390e1e4c4",
@@ -99,6 +112,7 @@ const initialTaskData = [
     description: "Adjust color palette for better accessibility in dark mode.",
     status: "In Progress",
     assignedUser: "dana_ui",
+    creationDate: "2025-06-20",
   },
   {
     id: "118763b8-6d69-4a7c-901e-c41fd97f1fde",
@@ -106,6 +120,7 @@ const initialTaskData = [
     description: "Validate correctness of downloaded PDFs for shared notes.",
     status: "In Review",
     assignedUser: "eva_tester",
+    creationDate: "2025-06-20",
   },
   {
     id: "f98e4427-0c0c-4d83-9f00-1866f9683a47",
@@ -113,6 +128,7 @@ const initialTaskData = [
     description: "Auto logout occurs prematurely after login.",
     status: "To Do",
     assignedUser: "alice123",
+    creationDate: "2025-06-21",
   },
   {
     id: "01734573-74cf-41e7-84e4-e0635529fbea",
@@ -120,6 +136,7 @@ const initialTaskData = [
     description: "Enable users to save multiple contact details.",
     status: "In Progress",
     assignedUser: "bob_dev",
+    creationDate: "2025-06-21",
   },
   {
     id: "b0c420d1-21d1-4431-a8af-0b43cf8732ef",
@@ -127,6 +144,7 @@ const initialTaskData = [
     description: "Generate weekly reports on slow queries and memory usage.",
     status: "Done",
     assignedUser: "charlie_q",
+    creationDate: "2025-06-11",
   },
   {
     id: "25c76bc3-177e-4bc9-834a-5d15dfdde382",
@@ -134,6 +152,7 @@ const initialTaskData = [
     description: "Use media query to detect and apply user's OS theme.",
     status: "To Do",
     assignedUser: "dana_ui",
+    creationDate: "2025-06-22",
   },
   {
     id: "5ad61f51-d697-43b4-afad-e88538399827",
@@ -141,6 +160,7 @@ const initialTaskData = [
     description: "Cover edge cases and error handling in export logic.",
     status: "In Review",
     assignedUser: "eva_tester",
+    creationDate: "2025-06-22",
   },
 ];
 export { initialTaskData };

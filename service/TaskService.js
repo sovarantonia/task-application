@@ -1,4 +1,5 @@
 import { generateGUID } from "../helpers/guidHelper";
+import { multiFieldSort } from "../helpers/sortHelper";
 export class TaskService {
   constructor(dbService) {
     this.service = dbService;
@@ -29,5 +30,12 @@ export class TaskService {
 
   getTotalPages(itemsPerPage) {
     return this.service.getTotalPages(itemsPerPage);
+  }
+
+  getSortedTasks(criteria, { currentPage, itemsPerPage }) {
+    return this.service.getSortedPaginatedItems(
+      { currentPage, itemsPerPage },
+      criteria,
+    );
   }
 }
