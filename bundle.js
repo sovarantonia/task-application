@@ -377,12 +377,22 @@
     }
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
-    const dbService = new DbService(initialTaskData);
-    const taskService = new TaskService(dbService);
+  class TaskPresentationService {
+    constructor() {
+      this.dbService = new DbService(initialTaskData);
+      this.taskService = new TaskService(this.dbService);
 
-    const taskPage = new TaskPage(taskService);
-    taskPage.init();
+      this.taskPage = new TaskPage(this.taskService);
+    }
+
+    init() {
+      this.taskPage.init();
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const taskPresentationService = new TaskPresentationService();
+    taskPresentationService.init();
   });
 
 })();
