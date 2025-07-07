@@ -1,5 +1,5 @@
 import { generateGUID } from "../helpers/guidHelper";
-import { multiFieldSort } from "../helpers/sortHelper";
+
 export class TaskService {
   constructor(dbService) {
     this.service = dbService;

@@ -82,7 +82,8 @@ export class TaskPage {
           card.innerHTML = `<h2>${element.title}</h2>
           <p>Status: ${element.status}</p>
           <p>${element.description}</p>
-          <p>Assigned to: ${element.assignedUser}</p>`;
+          <p>Assigned to: ${element.assignedUser}</p>
+          <p>Created at: ${element.creationDate}</p>`;
           this.container.appendChild(card);
         });
 

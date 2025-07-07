@@ -175,34 +175,6 @@
     });
   }
 
-  function combineComparisonFunctions(compareFunctions) {
-    return (a, b) => {
-      for (const compareFunction of compareFunctions) {
-        const result = compareFunction(a, b);
-        if (result !== 0) {
-          return result;
-        }
-      }
-      return 0;
-    };
-  }
-
-  function multiFieldSort(criteria) {
-    const compareFunctions = criteria.map(
-      ({ property, direction, transform = (x) => x }) => {
-        return (a, b) => {
-          const aValue = transform(a[property]);
-          const bValue = transform(b[property]);
-          if (aValue < bValue) return direction === "asc" ? -1 : 1;
-          if (aValue > bValue) return direction === "asc" ? 1 : -1;
-          return 0;
-        };
-      },
-    );
-
-    return combineComparisonFunctions(compareFunctions);
-  }
-
   class TaskService {
     constructor(dbService) {
       this.service = dbService;
@@ -258,6 +230,34 @@
     getTotalPages(itemsPerPage) {
       return Math.ceil(this.list.length / itemsPerPage);
     }
+  }
+
+  function combineComparisonFunctions(compareFunctions) {
+    return (a, b) => {
+      for (const compareFunction of compareFunctions) {
+        const result = compareFunction(a, b);
+        if (result !== 0) {
+          return result;
+        }
+      }
+      return 0;
+    };
+  }
+
+  function multiFieldSort(criteria) {
+    const compareFunctions = criteria.map(
+      ({ property, direction, transform = (x) => x }) => {
+        return (a, b) => {
+          const aValue = transform(a[property]);
+          const bValue = transform(b[property]);
+          if (aValue < bValue) return direction === "asc" ? -1 : 1;
+          if (aValue > bValue) return direction === "asc" ? 1 : -1;
+          return 0;
+        };
+      },
+    );
+
+    return combineComparisonFunctions(compareFunctions);
   }
 
   class DbService {
@@ -428,7 +428,8 @@
             card.innerHTML = `<h2>${element.title}</h2>
           <p>Status: ${element.status}</p>
           <p>${element.description}</p>
-          <p>Assigned to: ${element.assignedUser}</p>`;
+          <p>Assigned to: ${element.assignedUser}</p>
+          <p>Created at: ${element.creationDate}</p>`;
             this.container.appendChild(card);
           });
 
