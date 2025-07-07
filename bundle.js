@@ -6,8 +6,8 @@
       id: "24ab0076-1acc-41c2-952e-ca889c8c7695",
       title: "Fix login bug",
       description: "Users cannot log in with correct credentials.",
-      status: "In Progress",
-      assignedUser: "alice123",
+      status: "44d21520-d383-4bc3-b6db-848f3545df56",
+      assignedUser: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
       creationDate: "2025-06-15",
     },
     {
@@ -15,8 +15,8 @@
       title: "Add user profile page",
       description:
         "Create a page where users can update their personal information.",
-      status: "To Do",
-      assignedUser: "bob_dev",
+      status: "ad06176e-88cd-4eee-90b5-44fcea585434",
+      assignedUser: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
       creationDate: "2025-06-14",
     },
     {
@@ -24,16 +24,16 @@
       title: "Optimize database queries",
       description:
         "Improve the performance of slow-loading pages by optimizing queries.",
-      status: "Done",
-      assignedUser: "charlie_q",
+      status: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79",
+      assignedUser: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
       creationDate: "2025-06-12",
     },
     {
       id: "b6354a2b-2adf-4954-9fbe-61c783b89360",
       title: "Implement dark mode",
       description: "Add an option for users to toggle dark mode in settings.",
-      status: "To Do",
-      assignedUser: "dana_ui",
+      status: "ad06176e-88cd-4eee-90b5-44fcea585434",
+      assignedUser: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
       creationDate: "2025-06-13",
     },
     {
@@ -41,128 +41,128 @@
       title: "Write integration tests for user service",
       description:
         "Ensure critical user workflows are covered by integration tests.",
-      status: "In Review",
-      assignedUser: "eva_tester",
+      status: "b9920485-9f7e-4e82-bba6-3b761df91cb4",
+      assignedUser: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
       creationDate: "2025-06-15",
     },
     {
       id: "4c20f508-a24c-41ba-97ff-e34616d2c57c",
       title: "Fix password reset issue",
       description: "Reset link fails for accounts created before 2024.",
-      status: "In Progress",
-      assignedUser: "alice123",
+      status: "44d21520-d383-4bc3-b6db-848f3545df56",
+      assignedUser: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
       creationDate: "2025-06-16",
     },
     {
       id: "41634150-0e26-4f2d-a62c-abadc417eaa4",
       title: "Redesign user profile UI",
       description: "Modernize the layout of the user profile page.",
-      status: "In Progress",
-      assignedUser: "bob_dev",
+      status: "44d21520-d383-4bc3-b6db-848f3545df56",
+      assignedUser: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
       creationDate: "2025-06-17",
     },
     {
       id: "fcbbf209-17b9-4e41-a307-71235780de6e",
       title: "Add indexing to improve search speed",
       description: "Use PostgreSQL indexing to enhance filtering by title.",
-      status: "To Do",
-      assignedUser: "charlie_q",
+      status: "ad06176e-88cd-4eee-90b5-44fcea585434",
+      assignedUser: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
       creationDate: "2025-06-17",
     },
     {
       id: "abf36db4-4446-4404-a58e-6ca43bc1db22",
       title: "Add system-wide color theme toggle",
       description: "Support dynamic switching between themes.",
-      status: "To Do",
-      assignedUser: "dana_ui",
+      status: "ad06176e-88cd-4eee-90b5-44fcea585434",
+      assignedUser: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
       creationDate: "2025-06-18",
     },
     {
       id: "eff52628-aae3-4357-8857-6713c56f1f7e",
       title: "Refactor test suite structure",
       description: "Organize unit and integration tests into separate folders.",
-      status: "In Progress",
-      assignedUser: "eva_tester",
+      status: "44d21520-d383-4bc3-b6db-848f3545df56",
+      assignedUser: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
       creationDate: "2025-06-18",
     },
     {
       id: "35f172b6-b462-4d37-91c2-91d3938321c2",
       title: "Fix login redirect bug",
       description: "Users stay on login page even after successful login.",
-      status: "Done",
-      assignedUser: "alice123",
+      status: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79",
+      assignedUser: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
       creationDate: "2025-06-10",
     },
     {
       id: "5acef95d-1971-45cd-ae8f-c789cb256807",
       title: "Add avatar upload on profile page",
       description: "Users can upload and crop their profile picture.",
-      status: "To Do",
-      assignedUser: "bob_dev",
+      status: "ad06176e-88cd-4eee-90b5-44fcea585434",
+      assignedUser: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
       creationDate: "2025-06-19",
     },
     {
       id: "563a2664-bf68-43d7-9b3d-3899bf24bd08",
       title: "Clean up deprecated SQL queries",
       description: "Remove old joins and improve query structure.",
-      status: "Done",
-      assignedUser: "charlie_q",
+      status: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79",
+      assignedUser: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
       creationDate: "2025-06-09",
     },
     {
       id: "95a896da-f3be-4f92-b60e-c5c390e1e4c4",
       title: "Improve dark mode contrast",
       description: "Adjust color palette for better accessibility in dark mode.",
-      status: "In Progress",
-      assignedUser: "dana_ui",
+      status: "44d21520-d383-4bc3-b6db-848f3545df56",
+      assignedUser: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
       creationDate: "2025-06-20",
     },
     {
       id: "118763b8-6d69-4a7c-901e-c41fd97f1fde",
       title: "Test PDF export functionality",
       description: "Validate correctness of downloaded PDFs for shared notes.",
-      status: "In Review",
-      assignedUser: "eva_tester",
+      status: "b9920485-9f7e-4e82-bba6-3b761df91cb4",
+      assignedUser: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
       creationDate: "2025-06-20",
     },
     {
       id: "f98e4427-0c0c-4d83-9f00-1866f9683a47",
       title: "Fix session timeout bug",
       description: "Auto logout occurs prematurely after login.",
-      status: "To Do",
-      assignedUser: "alice123",
+      status: "ad06176e-88cd-4eee-90b5-44fcea585434",
+      assignedUser: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
       creationDate: "2025-06-21",
     },
     {
       id: "01734573-74cf-41e7-84e4-e0635529fbea",
       title: "Add contact information section",
       description: "Enable users to save multiple contact details.",
-      status: "In Progress",
-      assignedUser: "bob_dev",
+      status: "44d21520-d383-4bc3-b6db-848f3545df56",
+      assignedUser: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
       creationDate: "2025-06-21",
     },
     {
       id: "b0c420d1-21d1-4431-a8af-0b43cf8732ef",
       title: "Analyze DB performance metrics",
       description: "Generate weekly reports on slow queries and memory usage.",
-      status: "Done",
-      assignedUser: "charlie_q",
+      status: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79",
+      assignedUser: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
       creationDate: "2025-06-11",
     },
     {
       id: "25c76bc3-177e-4bc9-834a-5d15dfdde382",
       title: "Add auto dark mode using system preference",
       description: "Use media query to detect and apply user's OS theme.",
-      status: "To Do",
-      assignedUser: "dana_ui",
+      status: "ad06176e-88cd-4eee-90b5-44fcea585434",
+      assignedUser: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
       creationDate: "2025-06-22",
     },
     {
       id: "5ad61f51-d697-43b4-afad-e88538399827",
       title: "Expand test coverage for PDF module",
       description: "Cover edge cases and error handling in export logic.",
-      status: "In Review",
-      assignedUser: "eva_tester",
+      status: "b9920485-9f7e-4e82-bba6-3b761df91cb4",
+      assignedUser: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
       creationDate: "2025-06-22",
     },
   ];
@@ -199,20 +199,14 @@
       return this.service.update(id, props);
     }
 
-    getTasks({ currentPage, itemsPerPage }) {
-      return this.service.getPaginatedItems({ currentPage, itemsPerPage });
+    getTasks({ currentPage, itemsPerPage }, sortCriteria = [], filterCriteria = []) {
+      return this.service.getPaginatedItems({ currentPage, itemsPerPage }, sortCriteria, filterCriteria);
     }
 
     getTotalPages(itemsPerPage) {
       return this.service.getTotalPages(itemsPerPage);
     }
 
-    getSortedTasks(criteria, { currentPage, itemsPerPage }) {
-      return this.service.getSortedPaginatedItems(
-        { currentPage, itemsPerPage },
-        criteria,
-      );
-    }
   }
 
   class Pagination {
@@ -314,9 +308,15 @@
       });
     }
 
-    getPaginatedItems({ currentPage, itemsPerPage }) {
+    getPaginatedItems({ currentPage, itemsPerPage }, sortCriteria = [], filterCriteria = []) {
       return new Promise((resolve) => {
-        const paginatedItems = this.pagination.getPaginatedElements({
+        let items = this.objectList;
+
+        if (sortCriteria.length > 0) {
+          items = [...items].sort(multiFieldSort(sortCriteria)); 
+        }
+
+        const paginatedItems = new Pagination(items).getPaginatedElements({
           currentPage,
           itemsPerPage,
         });
@@ -327,19 +327,6 @@
     getTotalPages(itemsPerPage) {
       return new Promise((resolve) => {
         resolve(this.pagination.getTotalPages(itemsPerPage));
-      });
-    }
-
-    getSortedPaginatedItems({ currentPage, itemsPerPage }, criteria) {
-      return new Promise((resolve) => {
-        const sortedItems = this.objectList.sort(multiFieldSort(criteria));
-        const paginationSortedItems = new Pagination(sortedItems);
-        resolve(
-          paginationSortedItems.getPaginatedElements({
-            currentPage,
-            itemsPerPage,
-          }),
-        );
       });
     }
   }

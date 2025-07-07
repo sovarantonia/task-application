@@ -55,9 +55,15 @@ export class DbService {
     });
   }
 
-  getPaginatedItems({ currentPage, itemsPerPage }) {
+  getPaginatedItems({ currentPage, itemsPerPage }, sortCriteria = [], filterCriteria = []) {
     return new Promise((resolve) => {
-      const paginatedItems = this.pagination.getPaginatedElements({
+      let items = this.objectList;
+
+      if (sortCriteria.length > 0) {
+        items = [...items].sort(multiFieldSort(sortCriteria)); 
+      }
+
+      const paginatedItems = new Pagination(items).getPaginatedElements({
         currentPage,
         itemsPerPage,
       });
@@ -68,19 +74,6 @@ export class DbService {
   getTotalPages(itemsPerPage) {
     return new Promise((resolve) => {
       resolve(this.pagination.getTotalPages(itemsPerPage));
-    });
-  }
-
-  getSortedPaginatedItems({ currentPage, itemsPerPage }, criteria) {
-    return new Promise((resolve) => {
-      const sortedItems = this.objectList.sort(multiFieldSort(criteria));
-      const paginationSortedItems = new Pagination(sortedItems);
-      resolve(
-        paginationSortedItems.getPaginatedElements({
-          currentPage,
-          itemsPerPage,
-        }),
-      );
     });
   }
 }

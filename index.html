@@ -4,6 +4,39 @@
     <link rel="stylesheet" href="card.css" />
   </head>
   <body>
+    <div id="sortContainer">
+      <fieldset id="sortOptions">
+        <legend>Sort by:</legend>
+
+        <label>
+          <input type="checkbox" value="title_asc" />
+          Title ↑
+        </label>
+        <label>
+          <input type="checkbox" value="title_desc" />
+          Title ↓
+        </label>
+        <label>
+          <input type="checkbox" value="status_asc" />
+          Status ↑
+        </label>
+        <label>
+          <input type="checkbox" value="status_desc" />
+          Status ↓
+        </label>
+        <label>
+          <input type="checkbox" value="creationDate_asc" />
+          Creation Date ↑
+        </label>
+        <label>
+          <input type="checkbox" value="creationDate_desc" />
+          Creation Date ↓
+        </label>
+      </fieldset>
+
+      <button id="applySortBtn">Apply Sort</button>
+    </div>
+
     <div id="taskContainer" class="task-grid"></div>
 
     <div id="paginationContainer">
