@@ -54,7 +54,7 @@ export class DbService {
     });
   }
 
-  getElements({ currentPage, itemsPerPage }) {
+  getPaginatedItems({ currentPage, itemsPerPage }) {
     return new Promise((resolve) => {
       const paginatedItems = this.pagination.getPaginatedElements({
         currentPage,

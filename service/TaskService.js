@@ -24,7 +24,7 @@ export class TaskService {
   }
 
   getTasks({ currentPage, itemsPerPage }) {
-    return this.service.getElements({ currentPage, itemsPerPage });
+    return this.service.getPaginatedItems({ currentPage, itemsPerPage });
   }
 
   getTotalPages(itemsPerPage) {
