@@ -5,8 +5,20 @@
   </head>
   <body>
     <div id="sortContainer">
-      <button id="titleSortBtn" data-sort-title-state="0">Sort by title <span id="titleArrow"></span></button>
-      <button id="dateSortBtn" data-sort-date-state="0">Sort by creation date <span id="dateArrow"></span></button>
+      <button id="titleSortBtn" data-sort-title-state="0">
+        Sort by title <span id="titleArrow"></span>
+      </button>
+      <button id="dateSortBtn" data-sort-date-state="0">
+        Sort by creation date <span id="dateArrow"></span>
+      </button>
+    </div>
+
+    <div id="filterContainer">
+      <label for="userFilterSelect">Filter by user:</label>
+      <select id="userFilterSelect">
+      </select>
+      <label for="statusFilterSelect">Filter by status:</label>
+      <select id="statusFilterSelect"></select>
     </div>
 
     <div id="taskContainer" class="task-grid"></div>

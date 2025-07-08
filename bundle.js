@@ -258,6 +258,18 @@
     return new Date(string);
   }
 
+  function multiFieldFilter(criteria) {
+    const filterFunctions = criteria.map(
+      ({ property, value, transform = (x) => x }) => {
+        return (item) => transform(item[property]) == value;
+      },
+    );
+
+    return (item) => {
+      filterFunctions.every((func) => func(item));
+    };
+  }
+
   class DbService {
     constructor(initialData) {
       this.objectList = initialData;
@@ -320,8 +332,14 @@
       return new Promise((resolve) => {
         let items = this.objectList;
 
-        if (sortCriteria.length > 0) {
-          items = Array.from(items).sort(multiFieldSort(sortCriteria)); 
+        if (filterCriteria.length > 0 && sortCriteria.length > 0) {
+          items = Array.from(items)
+            .filter(multiFieldFilter(filterCriteria))
+            .sort(multiFieldSort(sortCriteria));
+        } else if (sortCriteria.length > 0) {
+          items = Array.from(items).sort(multiFieldSort(sortCriteria));
+        } else if (filterCriteria.length > 0) {
+          items = Array.from(items).filter(multiFieldFilter(filterCriteria));
         }
 
         const paginatedItems = new Pagination(items).getPaginatedElements({
@@ -339,6 +357,26 @@
     }
   }
 
+  const TaskStatus = [
+    { id: "ad06176e-88cd-4eee-90b5-44fcea585434", name: "To Do" },
+    { id: "44d21520-d383-4bc3-b6db-848f3545df56", name: "In Progress" },
+    { id: "b9920485-9f7e-4e82-bba6-3b761df91cb4", name: "In Review" },
+    { id: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79", name: "Done" },
+  ];
+
+  const initialUserData = [
+    { id: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67", name: "Alice Morgan" },
+    { id: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624", name: "Bob Daniels" },
+    { id: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d", name: "Charlie Wu" },
+    { id: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721", name: "Dana Kim" },
+    { id: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba", name: "Eva Thompson" },
+    { id: "4f2fd22d-74cc-40bb-9600-2e9e83f223db", name: "Frank Ortega" },
+    { id: "8ea1de6b-681b-4d47-a4f7-abc9c7e19e02", name: "Grace Lee" },
+    { id: "f8c2f610-08c3-42f6-bbde-f94fc53119ea", name: "Henry Patel" },
+    { id: "bd23c62f-205b-44aa-8b63-d0bfb749d4b9", name: "Isla Novak" },
+    { id: "3e4a3c5f-f6c7-442b-8c17-ccdd75ef1b7e", name: "Jack Reynolds" },
+  ];
+
   class TaskPage {
     constructor(taskService) {
       this.taskService = taskService;
@@ -355,6 +393,9 @@
       this.titleSortBtn = document.getElementById("titleSortBtn");
       this.dateSortBtn = document.getElementById("dateSortBtn");
 
+      this.statusFilterSelect = document.getElementById("statusFilterSelect");
+      this.userFilterSelect = document.getElementById("userFilterSelect");
+
       this.currentPage = 1;
       this.itemsPerPage = parseInt(this.select.value);
       this.taskService.getTotalPages(this.itemsPerPage).then((total) => {
@@ -363,12 +404,38 @@
       });
 
       this.sortingCriteria = [];
+      this.filterCriteria = [];
     }
 
     init() {
+      this.populateSelect();
       this.attachEvents();
-      this.renderPage(1, this.sortingCriteria);
+      this.renderPage(1, this.sortingCriteria, this.filterCriteria);
       this.renderPaginationControls();
+    }
+
+    populateSelect() {
+      // const emptyOption = document.createElement("option");
+      // emptyOption.value = emptyOption.text = "";
+      this.userFilterSelect.innerHTML = "";
+      // this.userFilterSelect.add(emptyOption);
+
+      initialUserData.forEach((user) => {
+        const option = document.createElement("option");
+        option.value = user.id;
+        option.text = user.name;
+        this.userFilterSelect.add(option);
+      });
+
+      this.statusFilterSelect.innerHTML = "";
+      // this.statusFilterSelect.add(emptyOption);
+
+      TaskStatus.forEach((taskStatus) => {
+        const option = document.createElement("option");
+        option.value = taskStatus.id;
+        option.text = taskStatus.name;
+        this.statusFilterSelect.add(option);
+      });
     }
 
     attachEvents() {
@@ -380,7 +447,7 @@
         this.taskService.getTotalPages(this.itemsPerPage).then((total) => {
           this.totalPages = total;
           this.lastPageBtn.innerText = total.toString();
-          this.renderPage(this.currentPage, this.sortingCriteria);
+          this.renderPage(this.currentPage, this.sortingCriteria, this.filterCriteria);
           this.renderPaginationControls();
         });
       });
@@ -390,7 +457,7 @@
           this.currentPage--;
         }
         this.currentPageSpan.innerText = this.currentPage.toString();
-        this.renderPage(this.currentPage, this.sortingCriteria);
+        this.renderPage(this.currentPage, this.sortingCriteria, this.filterCriteria);
         this.renderPaginationControls();
       });
 
@@ -400,19 +467,19 @@
         }
 
         this.currentPageSpan.innerText = this.currentPage.toString();
-        this.renderPage(this.currentPage, this.sortingCriteria);
+        this.renderPage(this.currentPage, this.sortingCriteria, this.filterCriteria);
         this.renderPaginationControls();
       });
 
       this.firstPageBtn.addEventListener("click", () => {
         this.currentPage = 1;
-        this.renderPage(this.currentPage, this.sortingCriteria);
+        this.renderPage(this.currentPage, this.sortingCriteria, this.filterCriteria);
         this.renderPaginationControls();
       });
 
       this.lastPageBtn.addEventListener("click", () => {
         this.currentPage = this.totalPages;
-        this.renderPage(this.currentPage, this.sortingCriteria);
+        this.renderPage(this.currentPage, this.sortingCriteria, this.filterCriteria);
         this.renderPaginationControls();
       });
 
@@ -453,8 +520,11 @@
           }
         }
 
-        debugger;
-        this.renderPage(this.currentPage, this.sortingCriteria);
+        this.renderPage(
+          this.currentPage,
+          this.sortingCriteria,
+          this.filterCriteria,
+        );
       });
 
       this.dateSortBtn.addEventListener("click", () => {
@@ -497,14 +567,63 @@
 
         this.renderPage(this.currentPage, this.sortingCriteria);
       });
+
+      this.statusFilterSelect.addEventListener("change", (e) => {
+        //calculate no of pages, also smth for remove filter
+        const statusFilterOption = {
+          property: "status",
+          value: e.target.value,
+        };
+        const elementIndex = this.filterCriteria.findIndex(
+          (option) => option.property === "status",
+        );
+        if (elementIndex !== -1) {
+          this.filterCriteria.push(statusFilterOption);
+        } else {
+          this.filterCriteria[elementIndex] = statusFilterOption;
+        }
+
+        this.renderPage(
+          this.currentPage,
+          this.sortingCriteria,
+          this.filterCriteria,
+        );
+      });
+
+      this.userFilterSelect.addEventListener("change", (e) => {
+        //calculate no of pages, also smth for remove filter
+        const userFilterOption = {
+          property: "name",
+          value: e.target.value,
+        };
+        const elementIndex = this.filterCriteria.findIndex(
+          (option) => option.property === "name",
+        );
+        if (elementIndex !== -1) {
+          this.filterCriteria.push(userFilterOption);
+        } else {
+          this.filterCriteria[elementIndex] = userFilterOption;
+        }
+
+        this.renderPage(
+          this.currentPage,
+          this.sortingCriteria,
+          this.filterCriteria,
+        );
+      });
     }
 
-    renderPage(page, criteriaForSorting = []) {
+    renderPage(
+      page,
+      criteriaForSorting = [],
+      criteriaForFiltering = [],
+    ) {
       this.container.innerHTML = "";
       this.taskService
         .getTasks(
           { currentPage: page, itemsPerPage: this.itemsPerPage },
           criteriaForSorting,
+          criteriaForFiltering,
         )
         .then((taskList) => {
           taskList.forEach((element) => {

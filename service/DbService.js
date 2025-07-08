@@ -1,5 +1,6 @@
 import { Pagination } from "./Pagination";
 import { multiFieldSort } from "../helpers/sortHelper";
+import { multiFieldFilter } from "../helpers/filterHelper";
 
 export class DbService {
   constructor(initialData) {
@@ -63,8 +64,14 @@ export class DbService {
     return new Promise((resolve) => {
       let items = this.objectList;
 
-      if (sortCriteria.length > 0) {
-        items = Array.from(items).sort(multiFieldSort(sortCriteria)); 
+      if (filterCriteria.length > 0 && sortCriteria.length > 0) {
+        items = Array.from(items)
+          .filter(multiFieldFilter(filterCriteria))
+          .sort(multiFieldSort(sortCriteria));
+      } else if (sortCriteria.length > 0) {
+        items = Array.from(items).sort(multiFieldSort(sortCriteria));
+      } else if (filterCriteria.length > 0) {
+        items = Array.from(items).filter(multiFieldFilter(filterCriteria));
       }
 
       const paginatedItems = new Pagination(items).getPaginatedElements({
