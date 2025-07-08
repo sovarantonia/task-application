@@ -11,17 +11,17 @@ export function combineComparisonFunctions(compareFunctions) {
 }
 
 export function multiFieldSort(criteria) {
-  const compareFunctions = criteria.map(
-    ({ property, direction, transform = (x) => x }) => {
+  const compareFunctions = criteria
+    .filter((c) => c.direction !== 0)
+    .map(({ property, direction, transform = (x) => x }) => {
       return (a, b) => {
         const aValue = transform(a[property]);
         const bValue = transform(b[property]);
-        if (aValue < bValue) return direction === "asc" ? -1 : 1;
-        if (aValue > bValue) return direction === "asc" ? 1 : -1;
+        if (aValue < bValue) return -direction;
+        if (aValue > bValue) return direction;
         return 0;
       };
-    },
-  );
+    });
 
   return combineComparisonFunctions(compareFunctions);
 }

@@ -55,12 +55,16 @@ export class DbService {
     });
   }
 
-  getPaginatedItems({ currentPage, itemsPerPage }, sortCriteria = [], filterCriteria = []) {
+  getPaginatedItems(
+    { currentPage, itemsPerPage },
+    sortCriteria = [],
+    filterCriteria = [],
+  ) {
     return new Promise((resolve) => {
       let items = this.objectList;
 
       if (sortCriteria.length > 0) {
-        items = [...items].sort(multiFieldSort(sortCriteria)); 
+        items = Array.from(items).sort(multiFieldSort(sortCriteria)); 
       }
 
       const paginatedItems = new Pagination(items).getPaginatedElements({

@@ -5,36 +5,8 @@
   </head>
   <body>
     <div id="sortContainer">
-      <fieldset id="sortOptions">
-        <legend>Sort by:</legend>
-
-        <label>
-          <input type="checkbox" value="title_asc" />
-          Title ↑
-        </label>
-        <label>
-          <input type="checkbox" value="title_desc" />
-          Title ↓
-        </label>
-        <label>
-          <input type="checkbox" value="status_asc" />
-          Status ↑
-        </label>
-        <label>
-          <input type="checkbox" value="status_desc" />
-          Status ↓
-        </label>
-        <label>
-          <input type="checkbox" value="creationDate_asc" />
-          Creation Date ↑
-        </label>
-        <label>
-          <input type="checkbox" value="creationDate_desc" />
-          Creation Date ↓
-        </label>
-      </fieldset>
-
-      <button id="applySortBtn">Apply Sort</button>
+      <button id="titleSortBtn" data-sort-title-state="0">Sort by title <span id="titleArrow"></span></button>
+      <button id="dateSortBtn" data-sort-date-state="0">Sort by creation date <span id="dateArrow"></span></button>
     </div>
 
     <div id="taskContainer" class="task-grid"></div>
