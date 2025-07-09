@@ -1,7 +1,6 @@
 import { dateParser } from "../helpers/sortHelper";
 import { TaskStatus } from "../data/taskStatus";
 import { initialUserData } from "../data/initialUserData";
-import { getTotalPages } from "../service/Pagination";
 
 export class TaskPage {
   constructor(taskService) {
@@ -305,15 +304,9 @@ export class TaskPage {
   }
 
   renderPaginationControls() {
-    if (
+    this.lastPageBtn.hidden =
       this.firstPageBtn.innerText === this.lastPageBtn.innerText &&
-      this.lastPageBtn.innerText === "1"
-    ) {
-      this.lastPageBtn.hidden = true;
-    }
-    else {
-      this.lastPageBtn.hidden = false;
-    }
+      this.lastPageBtn.innerText === "1";
     this.previousBtn.disabled = this.currentPage === 1;
     this.nextBtn.disabled = this.currentPage === this.totalPages;
     this.currentPageSpan.hidden =

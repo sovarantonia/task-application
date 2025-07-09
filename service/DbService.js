@@ -63,29 +63,21 @@ export class DbService {
     return new Promise((resolve) => {
       let items = [...this.objectList];
 
-      if (filterCriteria.length > 0 && sortCriteria.length > 0) {
-        items = items
-          .filter(multiFieldFilter(filterCriteria))
-          .sort(multiFieldSort(sortCriteria));
-      } else if (sortCriteria.length > 0) {
-        items = items.sort(multiFieldSort(sortCriteria));
-      } else if (filterCriteria.length > 0) {
+      if (filterCriteria.length > 0) {
         items = items.filter(multiFieldFilter(filterCriteria));
       }
 
-      // if (filterCriteria.length == 0 && sortCriteria.length == 0) {
-      //   resolve(items);
-      // }
-
-
+      if (sortCriteria.length > 0) {
+        items = items.sort(multiFieldSort(sortCriteria));
+      }
 
       const paginatedItems = getPaginatedElements(items, {
         currentPage,
         itemsPerPage,
       });
-
       const totalPages = getTotalPages(items, itemsPerPage);
-      resolve({paginatedItems, totalPages});
+
+      resolve({paginatedItems,totalPages });
     });
   }
 
