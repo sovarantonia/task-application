@@ -83,7 +83,9 @@ export class DbService {
         currentPage,
         itemsPerPage,
       });
-      resolve(paginatedItems);
+
+      const totalPages = getTotalPages(items, itemsPerPage);
+      resolve({paginatedItems, totalPages});
     });
   }
 

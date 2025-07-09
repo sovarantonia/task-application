@@ -275,7 +275,6 @@ export class TaskPage {
         this.sortingCriteria,
         this.filterCriteria,
       );
-
     });
   }
 
@@ -287,8 +286,11 @@ export class TaskPage {
         criteriaForSorting,
         criteriaForFiltering,
       )
-      .then((taskList) => {
-        taskList.forEach((element) => {
+      .then(({ paginatedItems, totalPages }) => {
+        this.totalPages = totalPages;
+        this.lastPageBtn.innerText = this.totalPages;
+        
+        paginatedItems.forEach((element) => {
           const card = document.createElement("div");
           card.className = "task-card";
           card.innerHTML = `<h2>${element.title}</h2>
@@ -305,14 +307,13 @@ export class TaskPage {
   }
 
   renderPaginationControls() {
+    if (this.firstPageBtn.innerText === this.lastPageBtn.innerText) {
+      this.lastPageBtn.hidden = true;
+    }
     this.previousBtn.disabled = this.currentPage === 1;
     this.nextBtn.disabled = this.currentPage === this.totalPages;
     this.currentPageSpan.hidden =
       this.currentPage === 1 || this.currentPage === this.totalPages;
   }
 
-  calculateTotalPages(itemsPerPage) {
-    this.taskService.get;
-    //return getTotalPages(itemsPerPage);
-  }
 }
