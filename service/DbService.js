@@ -1,11 +1,10 @@
-import { Pagination } from "./Pagination";
+import { getPaginatedElements, getTotalPages } from "../service/Pagination";
 import { multiFieldSort } from "../helpers/sortHelper";
 import { multiFieldFilter } from "../helpers/filterHelper";
 
 export class DbService {
   constructor(initialData) {
     this.objectList = initialData;
-    this.pagination = new Pagination(initialData);
   }
 
   save(objToSave) {
@@ -62,19 +61,25 @@ export class DbService {
     filterCriteria = [],
   ) {
     return new Promise((resolve) => {
-      let items = this.objectList;
+      let items = [...this.objectList];
 
       if (filterCriteria.length > 0 && sortCriteria.length > 0) {
-        items = Array.from(items)
+        items = items
           .filter(multiFieldFilter(filterCriteria))
           .sort(multiFieldSort(sortCriteria));
       } else if (sortCriteria.length > 0) {
-        items = Array.from(items).sort(multiFieldSort(sortCriteria));
+        items = items.sort(multiFieldSort(sortCriteria));
       } else if (filterCriteria.length > 0) {
-        items = Array.from(items).filter(multiFieldFilter(filterCriteria));
+        items = items.filter(multiFieldFilter(filterCriteria));
       }
 
-      const paginatedItems = new Pagination(items).getPaginatedElements({
+      // if (filterCriteria.length == 0 && sortCriteria.length == 0) {
+      //   resolve(items);
+      // }
+
+
+
+      const paginatedItems = getPaginatedElements(items, {
         currentPage,
         itemsPerPage,
       });
@@ -84,7 +89,7 @@ export class DbService {
 
   getTotalPages(itemsPerPage) {
     return new Promise((resolve) => {
-      resolve(this.pagination.getTotalPages(itemsPerPage));
+      resolve(getTotalPages(this.objectList, itemsPerPage));
     });
   }
 }

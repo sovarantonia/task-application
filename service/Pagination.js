@@ -1,16 +1,13 @@
-export class Pagination {
-  constructor(elementList) {
-    this.list = elementList;
-  }
+export function getPaginatedElements(
+  elementList,
+  { currentPage, itemsPerPage },
+) {
+  const start = (currentPage - 1) * itemsPerPage;
+  const end = start + itemsPerPage;
 
-  getPaginatedElements({ currentPage, itemsPerPage }) {
-    const start = (currentPage - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
+  return elementList.slice(start, end);
+}
 
-    return this.list.slice(start, end);
-  }
-
-  getTotalPages(itemsPerPage) {
-    return Math.ceil(this.list.length / itemsPerPage);
-  }
+export function getTotalPages(elementList, itemsPerPage) {
+  return Math.ceil(elementList.length / itemsPerPage);
 }

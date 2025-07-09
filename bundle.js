@@ -7,7 +7,7 @@
       title: "Fix login bug",
       description: "Users cannot log in with correct credentials.",
       status: "44d21520-d383-4bc3-b6db-848f3545df56",
-      assignedUser: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
+      userName: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
       creationDate: "2025-06-15",
     },
     {
@@ -16,7 +16,7 @@
       description:
         "Create a page where users can update their personal information.",
       status: "ad06176e-88cd-4eee-90b5-44fcea585434",
-      assignedUser: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
+      userName: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
       creationDate: "2025-06-14",
     },
     {
@@ -25,7 +25,7 @@
       description:
         "Improve the performance of slow-loading pages by optimizing queries.",
       status: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79",
-      assignedUser: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
+      userName: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
       creationDate: "2025-06-12",
     },
     {
@@ -33,7 +33,7 @@
       title: "Implement dark mode",
       description: "Add an option for users to toggle dark mode in settings.",
       status: "ad06176e-88cd-4eee-90b5-44fcea585434",
-      assignedUser: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
+      userName: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
       creationDate: "2025-06-13",
     },
     {
@@ -42,7 +42,7 @@
       description:
         "Ensure critical user workflows are covered by integration tests.",
       status: "b9920485-9f7e-4e82-bba6-3b761df91cb4",
-      assignedUser: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
+      userName: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
       creationDate: "2025-06-15",
     },
     {
@@ -50,7 +50,7 @@
       title: "Fix password reset issue",
       description: "Reset link fails for accounts created before 2024.",
       status: "44d21520-d383-4bc3-b6db-848f3545df56",
-      assignedUser: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
+      userName: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
       creationDate: "2025-06-16",
     },
     {
@@ -58,7 +58,7 @@
       title: "Redesign user profile UI",
       description: "Modernize the layout of the user profile page.",
       status: "44d21520-d383-4bc3-b6db-848f3545df56",
-      assignedUser: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
+      userName: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
       creationDate: "2025-06-17",
     },
     {
@@ -66,7 +66,7 @@
       title: "Add indexing to improve search speed",
       description: "Use PostgreSQL indexing to enhance filtering by title.",
       status: "ad06176e-88cd-4eee-90b5-44fcea585434",
-      assignedUser: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
+      userName: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
       creationDate: "2025-06-17",
     },
     {
@@ -74,7 +74,7 @@
       title: "Add system-wide color theme toggle",
       description: "Support dynamic switching between themes.",
       status: "ad06176e-88cd-4eee-90b5-44fcea585434",
-      assignedUser: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
+      userName: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
       creationDate: "2025-06-18",
     },
     {
@@ -82,7 +82,7 @@
       title: "Refactor test suite structure",
       description: "Organize unit and integration tests into separate folders.",
       status: "44d21520-d383-4bc3-b6db-848f3545df56",
-      assignedUser: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
+      userName: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
       creationDate: "2025-06-18",
     },
     {
@@ -90,7 +90,7 @@
       title: "Fix login redirect bug",
       description: "Users stay on login page even after successful login.",
       status: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79",
-      assignedUser: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
+      userName: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
       creationDate: "2025-06-10",
     },
     {
@@ -98,7 +98,7 @@
       title: "Add avatar upload on profile page",
       description: "Users can upload and crop their profile picture.",
       status: "ad06176e-88cd-4eee-90b5-44fcea585434",
-      assignedUser: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
+      userName: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
       creationDate: "2025-06-19",
     },
     {
@@ -106,7 +106,7 @@
       title: "Clean up deprecated SQL queries",
       description: "Remove old joins and improve query structure.",
       status: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79",
-      assignedUser: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
+      userName: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
       creationDate: "2025-06-09",
     },
     {
@@ -114,7 +114,7 @@
       title: "Improve dark mode contrast",
       description: "Adjust color palette for better accessibility in dark mode.",
       status: "44d21520-d383-4bc3-b6db-848f3545df56",
-      assignedUser: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
+      userName: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
       creationDate: "2025-06-20",
     },
     {
@@ -122,7 +122,7 @@
       title: "Test PDF export functionality",
       description: "Validate correctness of downloaded PDFs for shared notes.",
       status: "b9920485-9f7e-4e82-bba6-3b761df91cb4",
-      assignedUser: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
+      userName: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
       creationDate: "2025-06-20",
     },
     {
@@ -130,7 +130,7 @@
       title: "Fix session timeout bug",
       description: "Auto logout occurs prematurely after login.",
       status: "ad06176e-88cd-4eee-90b5-44fcea585434",
-      assignedUser: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
+      userName: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
       creationDate: "2025-06-21",
     },
     {
@@ -138,7 +138,7 @@
       title: "Add contact information section",
       description: "Enable users to save multiple contact details.",
       status: "44d21520-d383-4bc3-b6db-848f3545df56",
-      assignedUser: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
+      userName: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
       creationDate: "2025-06-21",
     },
     {
@@ -146,7 +146,7 @@
       title: "Analyze DB performance metrics",
       description: "Generate weekly reports on slow queries and memory usage.",
       status: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79",
-      assignedUser: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
+      userName: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
       creationDate: "2025-06-11",
     },
     {
@@ -154,7 +154,7 @@
       title: "Add auto dark mode using system preference",
       description: "Use media query to detect and apply user's OS theme.",
       status: "ad06176e-88cd-4eee-90b5-44fcea585434",
-      assignedUser: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
+      userName: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
       creationDate: "2025-06-22",
     },
     {
@@ -162,7 +162,7 @@
       title: "Expand test coverage for PDF module",
       description: "Cover edge cases and error handling in export logic.",
       status: "b9920485-9f7e-4e82-bba6-3b761df91cb4",
-      assignedUser: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
+      userName: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
       creationDate: "2025-06-22",
     },
   ];
@@ -209,21 +209,18 @@
 
   }
 
-  class Pagination {
-    constructor(elementList) {
-      this.list = elementList;
-    }
+  function getPaginatedElements(
+    elementList,
+    { currentPage, itemsPerPage },
+  ) {
+    const start = (currentPage - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
 
-    getPaginatedElements({ currentPage, itemsPerPage }) {
-      const start = (currentPage - 1) * itemsPerPage;
-      const end = start + itemsPerPage;
+    return elementList.slice(start, end);
+  }
 
-      return this.list.slice(start, end);
-    }
-
-    getTotalPages(itemsPerPage) {
-      return Math.ceil(this.list.length / itemsPerPage);
-    }
+  function getTotalPages(elementList, itemsPerPage) {
+    return Math.ceil(elementList.length / itemsPerPage);
   }
 
   function combineComparisonFunctions(compareFunctions) {
@@ -261,19 +258,22 @@
   function multiFieldFilter(criteria) {
     const filterFunctions = criteria.map(
       ({ property, value, transform = (x) => x }) => {
-        return (item) => transform(item[property]) == value;
+        return (item) => transform(item[property]) === value;
       },
     );
 
+    return combineFilterComparisonFunctions(filterFunctions);
+  }
+
+  function combineFilterComparisonFunctions(functions) {
     return (item) => {
-      filterFunctions.every((func) => func(item));
+      return functions.every((f) => f(item)); 
     };
   }
 
   class DbService {
     constructor(initialData) {
       this.objectList = initialData;
-      this.pagination = new Pagination(initialData);
     }
 
     save(objToSave) {
@@ -330,19 +330,25 @@
       filterCriteria = [],
     ) {
       return new Promise((resolve) => {
-        let items = this.objectList;
+        let items = [...this.objectList];
 
         if (filterCriteria.length > 0 && sortCriteria.length > 0) {
-          items = Array.from(items)
+          items = items
             .filter(multiFieldFilter(filterCriteria))
             .sort(multiFieldSort(sortCriteria));
         } else if (sortCriteria.length > 0) {
-          items = Array.from(items).sort(multiFieldSort(sortCriteria));
+          items = items.sort(multiFieldSort(sortCriteria));
         } else if (filterCriteria.length > 0) {
-          items = Array.from(items).filter(multiFieldFilter(filterCriteria));
+          items = items.filter(multiFieldFilter(filterCriteria));
         }
 
-        const paginatedItems = new Pagination(items).getPaginatedElements({
+        // if (filterCriteria.length == 0 && sortCriteria.length == 0) {
+        //   resolve(items);
+        // }
+
+
+
+        const paginatedItems = getPaginatedElements(items, {
           currentPage,
           itemsPerPage,
         });
@@ -352,7 +358,7 @@
 
     getTotalPages(itemsPerPage) {
       return new Promise((resolve) => {
-        resolve(this.pagination.getTotalPages(itemsPerPage));
+        resolve(getTotalPages(this.objectList, itemsPerPage));
       });
     }
   }
@@ -365,16 +371,16 @@
   ];
 
   const initialUserData = [
-    { id: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67", name: "Alice Morgan" },
-    { id: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624", name: "Bob Daniels" },
-    { id: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d", name: "Charlie Wu" },
-    { id: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721", name: "Dana Kim" },
-    { id: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba", name: "Eva Thompson" },
-    { id: "4f2fd22d-74cc-40bb-9600-2e9e83f223db", name: "Frank Ortega" },
-    { id: "8ea1de6b-681b-4d47-a4f7-abc9c7e19e02", name: "Grace Lee" },
-    { id: "f8c2f610-08c3-42f6-bbde-f94fc53119ea", name: "Henry Patel" },
-    { id: "bd23c62f-205b-44aa-8b63-d0bfb749d4b9", name: "Isla Novak" },
-    { id: "3e4a3c5f-f6c7-442b-8c17-ccdd75ef1b7e", name: "Jack Reynolds" },
+    { id: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67", userName: "Alice Morgan" },
+    { id: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624", userName: "Bob Daniels" },
+    { id: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d", userName: "Charlie Wu" },
+    { id: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721", userName: "Dana Kim" },
+    { id: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba", userName: "Eva Thompson" },
+    { id: "4f2fd22d-74cc-40bb-9600-2e9e83f223db", userName: "Frank Ortega" },
+    { id: "8ea1de6b-681b-4d47-a4f7-abc9c7e19e02", userName: "Grace Lee" },
+    { id: "f8c2f610-08c3-42f6-bbde-f94fc53119ea", userName: "Henry Patel" },
+    { id: "bd23c62f-205b-44aa-8b63-d0bfb749d4b9", userName: "Isla Novak" },
+    { id: "3e4a3c5f-f6c7-442b-8c17-ccdd75ef1b7e", userName: "Jack Reynolds" },
   ];
 
   class TaskPage {
@@ -415,20 +421,23 @@
     }
 
     populateSelect() {
-      // const emptyOption = document.createElement("option");
-      // emptyOption.value = emptyOption.text = "";
       this.userFilterSelect.innerHTML = "";
-      // this.userFilterSelect.add(emptyOption);
+      const allUserOption = document.createElement("option");
+      allUserOption.value = allUserOption.text = "All";
+      this.userFilterSelect.add(allUserOption);
 
       initialUserData.forEach((user) => {
         const option = document.createElement("option");
         option.value = user.id;
-        option.text = user.name;
+        option.text = user.userName;
         this.userFilterSelect.add(option);
       });
 
+      const allStatusOption = document.createElement("option");
+      allStatusOption.value = allStatusOption.text = "All";
+
       this.statusFilterSelect.innerHTML = "";
-      // this.statusFilterSelect.add(emptyOption);
+      this.statusFilterSelect.add(allStatusOption);
 
       TaskStatus.forEach((taskStatus) => {
         const option = document.createElement("option");
@@ -447,7 +456,11 @@
         this.taskService.getTotalPages(this.itemsPerPage).then((total) => {
           this.totalPages = total;
           this.lastPageBtn.innerText = total.toString();
-          this.renderPage(this.currentPage, this.sortingCriteria, this.filterCriteria);
+          this.renderPage(
+            this.currentPage,
+            this.sortingCriteria,
+            this.filterCriteria,
+          );
           this.renderPaginationControls();
         });
       });
@@ -457,7 +470,11 @@
           this.currentPage--;
         }
         this.currentPageSpan.innerText = this.currentPage.toString();
-        this.renderPage(this.currentPage, this.sortingCriteria, this.filterCriteria);
+        this.renderPage(
+          this.currentPage,
+          this.sortingCriteria,
+          this.filterCriteria,
+        );
         this.renderPaginationControls();
       });
 
@@ -467,19 +484,31 @@
         }
 
         this.currentPageSpan.innerText = this.currentPage.toString();
-        this.renderPage(this.currentPage, this.sortingCriteria, this.filterCriteria);
+        this.renderPage(
+          this.currentPage,
+          this.sortingCriteria,
+          this.filterCriteria,
+        );
         this.renderPaginationControls();
       });
 
       this.firstPageBtn.addEventListener("click", () => {
         this.currentPage = 1;
-        this.renderPage(this.currentPage, this.sortingCriteria, this.filterCriteria);
+        this.renderPage(
+          this.currentPage,
+          this.sortingCriteria,
+          this.filterCriteria,
+        );
         this.renderPaginationControls();
       });
 
       this.lastPageBtn.addEventListener("click", () => {
         this.currentPage = this.totalPages;
-        this.renderPage(this.currentPage, this.sortingCriteria, this.filterCriteria);
+        this.renderPage(
+          this.currentPage,
+          this.sortingCriteria,
+          this.filterCriteria,
+        );
         this.renderPaginationControls();
       });
 
@@ -565,11 +594,15 @@
           }
         }
 
-        this.renderPage(this.currentPage, this.sortingCriteria);
+        this.renderPage(
+          this.currentPage,
+          this.sortingCriteria,
+          this.filterCriteria,
+        );
       });
 
       this.statusFilterSelect.addEventListener("change", (e) => {
-        //calculate no of pages, also smth for remove filter
+        //calculate no of pages
         const statusFilterOption = {
           property: "status",
           value: e.target.value,
@@ -577,10 +610,16 @@
         const elementIndex = this.filterCriteria.findIndex(
           (option) => option.property === "status",
         );
-        if (elementIndex !== -1) {
-          this.filterCriteria.push(statusFilterOption);
+        if (elementIndex === -1) {
+          if (e.target.value !== "All") {
+            this.filterCriteria.push(statusFilterOption);
+          }
         } else {
-          this.filterCriteria[elementIndex] = statusFilterOption;
+          if (e.target.value !== "All") {
+            this.filterCriteria[elementIndex] = statusFilterOption;
+          } else {
+            this.filterCriteria.splice(elementIndex, 1);
+          }
         }
 
         this.renderPage(
@@ -591,18 +630,24 @@
       });
 
       this.userFilterSelect.addEventListener("change", (e) => {
-        //calculate no of pages, also smth for remove filter
+        //calculate no of pages
         const userFilterOption = {
-          property: "name",
+          property: "userName",
           value: e.target.value,
         };
         const elementIndex = this.filterCriteria.findIndex(
-          (option) => option.property === "name",
+          (option) => option.property === "userName",
         );
-        if (elementIndex !== -1) {
-          this.filterCriteria.push(userFilterOption);
+        if (elementIndex === -1) {
+          if (e.target.value !== "All") {
+            this.filterCriteria.push(userFilterOption);
+          }
         } else {
-          this.filterCriteria[elementIndex] = userFilterOption;
+          if (e.target.value !== "All") {
+            this.filterCriteria[elementIndex] = userFilterOption;
+          } else {
+            this.filterCriteria.splice(elementIndex, 1);
+          }
         }
 
         this.renderPage(
@@ -610,14 +655,11 @@
           this.sortingCriteria,
           this.filterCriteria,
         );
+
       });
     }
 
-    renderPage(
-      page,
-      criteriaForSorting = [],
-      criteriaForFiltering = [],
-    ) {
+    renderPage(page, criteriaForSorting = [], criteriaForFiltering = []) {
       this.container.innerHTML = "";
       this.taskService
         .getTasks(
@@ -632,7 +674,7 @@
             card.innerHTML = `<h2>${element.title}</h2>
           <p>Status: ${element.status}</p>
           <p>${element.description}</p>
-          <p>Assigned to: ${element.assignedUser}</p>
+          <p>Assigned to: ${element.userName}</p>
           <p>Created at: ${element.creationDate}</p>`;
             this.container.appendChild(card);
           });
@@ -647,6 +689,11 @@
       this.nextBtn.disabled = this.currentPage === this.totalPages;
       this.currentPageSpan.hidden =
         this.currentPage === 1 || this.currentPage === this.totalPages;
+    }
+
+    calculateTotalPages(itemsPerPage) {
+      this.taskService.get;
+      //return getTotalPages(itemsPerPage);
     }
   }
 

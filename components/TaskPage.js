@@ -1,6 +1,7 @@
 import { dateParser } from "../helpers/sortHelper";
 import { TaskStatus } from "../data/taskStatus";
 import { initialUserData } from "../data/initialUserData";
+import { getTotalPages } from "../service/Pagination";
 
 export class TaskPage {
   constructor(taskService) {
@@ -40,20 +41,23 @@ export class TaskPage {
   }
 
   populateSelect() {
-    // const emptyOption = document.createElement("option");
-    // emptyOption.value = emptyOption.text = "";
     this.userFilterSelect.innerHTML = "";
-    // this.userFilterSelect.add(emptyOption);
+    const allUserOption = document.createElement("option");
+    allUserOption.value = allUserOption.text = "All";
+    this.userFilterSelect.add(allUserOption);
 
     initialUserData.forEach((user) => {
       const option = document.createElement("option");
       option.value = user.id;
-      option.text = user.name;
+      option.text = user.userName;
       this.userFilterSelect.add(option);
     });
 
+    const allStatusOption = document.createElement("option");
+    allStatusOption.value = allStatusOption.text = "All";
+
     this.statusFilterSelect.innerHTML = "";
-    // this.statusFilterSelect.add(emptyOption);
+    this.statusFilterSelect.add(allStatusOption);
 
     TaskStatus.forEach((taskStatus) => {
       const option = document.createElement("option");
@@ -72,7 +76,11 @@ export class TaskPage {
       this.taskService.getTotalPages(this.itemsPerPage).then((total) => {
         this.totalPages = total;
         this.lastPageBtn.innerText = total.toString();
-        this.renderPage(this.currentPage, this.sortingCriteria, this.filterCriteria);
+        this.renderPage(
+          this.currentPage,
+          this.sortingCriteria,
+          this.filterCriteria,
+        );
         this.renderPaginationControls();
       });
     });
@@ -82,7 +90,11 @@ export class TaskPage {
         this.currentPage--;
       }
       this.currentPageSpan.innerText = this.currentPage.toString();
-      this.renderPage(this.currentPage, this.sortingCriteria, this.filterCriteria);
+      this.renderPage(
+        this.currentPage,
+        this.sortingCriteria,
+        this.filterCriteria,
+      );
       this.renderPaginationControls();
     });
 
@@ -92,19 +104,31 @@ export class TaskPage {
       }
 
       this.currentPageSpan.innerText = this.currentPage.toString();
-      this.renderPage(this.currentPage, this.sortingCriteria, this.filterCriteria);
+      this.renderPage(
+        this.currentPage,
+        this.sortingCriteria,
+        this.filterCriteria,
+      );
       this.renderPaginationControls();
     });
 
     this.firstPageBtn.addEventListener("click", () => {
       this.currentPage = 1;
-      this.renderPage(this.currentPage, this.sortingCriteria, this.filterCriteria);
+      this.renderPage(
+        this.currentPage,
+        this.sortingCriteria,
+        this.filterCriteria,
+      );
       this.renderPaginationControls();
     });
 
     this.lastPageBtn.addEventListener("click", () => {
       this.currentPage = this.totalPages;
-      this.renderPage(this.currentPage, this.sortingCriteria, this.filterCriteria);
+      this.renderPage(
+        this.currentPage,
+        this.sortingCriteria,
+        this.filterCriteria,
+      );
       this.renderPaginationControls();
     });
 
@@ -190,11 +214,15 @@ export class TaskPage {
         }
       }
 
-      this.renderPage(this.currentPage, this.sortingCriteria);
+      this.renderPage(
+        this.currentPage,
+        this.sortingCriteria,
+        this.filterCriteria,
+      );
     });
 
     this.statusFilterSelect.addEventListener("change", (e) => {
-      //calculate no of pages, also smth for remove filter
+      //calculate no of pages
       const statusFilterOption = {
         property: "status",
         value: e.target.value,
@@ -202,10 +230,16 @@ export class TaskPage {
       const elementIndex = this.filterCriteria.findIndex(
         (option) => option.property === "status",
       );
-      if (elementIndex !== -1) {
-        this.filterCriteria.push(statusFilterOption);
+      if (elementIndex === -1) {
+        if (e.target.value !== "All") {
+          this.filterCriteria.push(statusFilterOption);
+        }
       } else {
-        this.filterCriteria[elementIndex] = statusFilterOption;
+        if (e.target.value !== "All") {
+          this.filterCriteria[elementIndex] = statusFilterOption;
+        } else {
+          this.filterCriteria.splice(elementIndex, 1);
+        }
       }
 
       this.renderPage(
@@ -216,18 +250,24 @@ export class TaskPage {
     });
 
     this.userFilterSelect.addEventListener("change", (e) => {
-      //calculate no of pages, also smth for remove filter
+      //calculate no of pages
       const userFilterOption = {
-        property: "name",
+        property: "userName",
         value: e.target.value,
       };
       const elementIndex = this.filterCriteria.findIndex(
-        (option) => option.property === "name",
+        (option) => option.property === "userName",
       );
-      if (elementIndex !== -1) {
-        this.filterCriteria.push(userFilterOption);
+      if (elementIndex === -1) {
+        if (e.target.value !== "All") {
+          this.filterCriteria.push(userFilterOption);
+        }
       } else {
-        this.filterCriteria[elementIndex] = userFilterOption;
+        if (e.target.value !== "All") {
+          this.filterCriteria[elementIndex] = userFilterOption;
+        } else {
+          this.filterCriteria.splice(elementIndex, 1);
+        }
       }
 
       this.renderPage(
@@ -235,14 +275,11 @@ export class TaskPage {
         this.sortingCriteria,
         this.filterCriteria,
       );
+
     });
   }
 
-  renderPage(
-    page,
-    criteriaForSorting = [],
-    criteriaForFiltering = [],
-  ) {
+  renderPage(page, criteriaForSorting = [], criteriaForFiltering = []) {
     this.container.innerHTML = "";
     this.taskService
       .getTasks(
@@ -257,7 +294,7 @@ export class TaskPage {
           card.innerHTML = `<h2>${element.title}</h2>
           <p>Status: ${element.status}</p>
           <p>${element.description}</p>
-          <p>Assigned to: ${element.assignedUser}</p>
+          <p>Assigned to: ${element.userName}</p>
           <p>Created at: ${element.creationDate}</p>`;
           this.container.appendChild(card);
         });
@@ -272,5 +309,10 @@ export class TaskPage {
     this.nextBtn.disabled = this.currentPage === this.totalPages;
     this.currentPageSpan.hidden =
       this.currentPage === 1 || this.currentPage === this.totalPages;
+  }
+
+  calculateTotalPages(itemsPerPage) {
+    this.taskService.get;
+    //return getTotalPages(itemsPerPage);
   }
 }
