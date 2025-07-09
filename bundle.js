@@ -366,10 +366,10 @@
   }
 
   const TaskStatus = [
-    { id: "ad06176e-88cd-4eee-90b5-44fcea585434", name: "To Do" },
-    { id: "44d21520-d383-4bc3-b6db-848f3545df56", name: "In Progress" },
-    { id: "b9920485-9f7e-4e82-bba6-3b761df91cb4", name: "In Review" },
-    { id: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79", name: "Done" },
+    { id: "ad06176e-88cd-4eee-90b5-44fcea585434", status: "To Do" },
+    { id: "44d21520-d383-4bc3-b6db-848f3545df56", status: "In Progress" },
+    { id: "b9920485-9f7e-4e82-bba6-3b761df91cb4", status: "In Review" },
+    { id: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79", status: "Done" },
   ];
 
   const initialUserData = [
@@ -444,7 +444,7 @@
       TaskStatus.forEach((taskStatus) => {
         const option = document.createElement("option");
         option.value = taskStatus.id;
-        option.text = taskStatus.name;
+        option.text = taskStatus.status;
         this.statusFilterSelect.add(option);
       });
     }
@@ -604,7 +604,6 @@
       });
 
       this.statusFilterSelect.addEventListener("change", (e) => {
-        //calculate no of pages
         const statusFilterOption = {
           property: "status",
           value: e.target.value,
@@ -632,7 +631,6 @@
       });
 
       this.userFilterSelect.addEventListener("change", (e) => {
-        //calculate no of pages
         const userFilterOption = {
           property: "userName",
           value: e.target.value,
@@ -671,7 +669,7 @@
         .then(({ paginatedItems, totalPages }) => {
           this.totalPages = totalPages;
           this.lastPageBtn.innerText = this.totalPages;
-          
+
           paginatedItems.forEach((element) => {
             const card = document.createElement("div");
             card.className = "task-card";
@@ -689,15 +687,20 @@
     }
 
     renderPaginationControls() {
-      if (this.firstPageBtn.innerText === this.lastPageBtn.innerText) {
+      if (
+        this.firstPageBtn.innerText === this.lastPageBtn.innerText &&
+        this.lastPageBtn.innerText === "1"
+      ) {
         this.lastPageBtn.hidden = true;
+      }
+      else {
+        this.lastPageBtn.hidden = false;
       }
       this.previousBtn.disabled = this.currentPage === 1;
       this.nextBtn.disabled = this.currentPage === this.totalPages;
       this.currentPageSpan.hidden =
         this.currentPage === 1 || this.currentPage === this.totalPages;
     }
-
   }
 
   class TaskPresentationService {

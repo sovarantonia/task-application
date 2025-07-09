@@ -62,7 +62,7 @@ export class TaskPage {
     TaskStatus.forEach((taskStatus) => {
       const option = document.createElement("option");
       option.value = taskStatus.id;
-      option.text = taskStatus.name;
+      option.text = taskStatus.status;
       this.statusFilterSelect.add(option);
     });
   }
@@ -222,7 +222,6 @@ export class TaskPage {
     });
 
     this.statusFilterSelect.addEventListener("change", (e) => {
-      //calculate no of pages
       const statusFilterOption = {
         property: "status",
         value: e.target.value,
@@ -250,7 +249,6 @@ export class TaskPage {
     });
 
     this.userFilterSelect.addEventListener("change", (e) => {
-      //calculate no of pages
       const userFilterOption = {
         property: "userName",
         value: e.target.value,
@@ -289,7 +287,7 @@ export class TaskPage {
       .then(({ paginatedItems, totalPages }) => {
         this.totalPages = totalPages;
         this.lastPageBtn.innerText = this.totalPages;
-        
+
         paginatedItems.forEach((element) => {
           const card = document.createElement("div");
           card.className = "task-card";
@@ -307,13 +305,18 @@ export class TaskPage {
   }
 
   renderPaginationControls() {
-    if (this.firstPageBtn.innerText === this.lastPageBtn.innerText) {
+    if (
+      this.firstPageBtn.innerText === this.lastPageBtn.innerText &&
+      this.lastPageBtn.innerText === "1"
+    ) {
       this.lastPageBtn.hidden = true;
+    }
+    else {
+      this.lastPageBtn.hidden = false;
     }
     this.previousBtn.disabled = this.currentPage === 1;
     this.nextBtn.disabled = this.currentPage === this.totalPages;
     this.currentPageSpan.hidden =
       this.currentPage === 1 || this.currentPage === this.totalPages;
   }
-
 }
