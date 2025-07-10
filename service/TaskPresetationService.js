@@ -20,7 +20,7 @@ export class TaskPresentationService {
 
   init() {
     this.taskPage.init();
-    this.sortTasksControl.addEvents();
+    this.sortTasksControl.init();
     this.filterTasksControl.init();
   }
 }

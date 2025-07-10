@@ -1,21 +1,18 @@
 export function updateCriteria({ optionList, option, removingCriteria }) {
-  console.log("OptionList:", optionList);
-  console.log("Option:", option);
-  console.log("Removing?", removingCriteria(option));
-  const elementIndex = this.optionList.findIndex(
+  const elementIndex = optionList.findIndex(
     (o) => o.property === option.property,
   );
   if (removingCriteria(option)) {
     if (elementIndex !== -1) {
-      return [...optionList.splice(index, 1)];
+      return optionList.splice(elementIndex, 1);
     }
   } else {
     if (elementIndex === -1) {
-      return [...optionList, option];
+      optionList.push(option);
+      return optionList;
     } else {
-      const updated = [...optionList];
-      updated[index] = option;
-      return updated;
+      optionList[elementIndex] = option;
+      return optionList;
     }
   }
 }

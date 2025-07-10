@@ -1,3 +1,5 @@
+import { updateCriteria } from "../helpers/updateCriteriaHelper";
+
 export class SortTasksControl {
   constructor(sortingCriteria, renderPageFunction) {
     this.titleSortBtn = document.getElementById("titleSortBtn");
@@ -7,7 +9,7 @@ export class SortTasksControl {
     this.renderPage = renderPageFunction;
   }
 
-  addEvents() {
+  init() {
     this.titleSortBtn.addEventListener("click", () => {
       const titleArrow = document.getElementById("titleArrow");
       let sortingDirection = 0;
@@ -30,20 +32,12 @@ export class SortTasksControl {
         property: "title",
         direction: sortingDirection,
       };
-      const elementIndex = this.sortingCriteria.findIndex(
-        (e) => e.property === "title",
-      );
-      if (elementIndex === -1) {
-        if (titleSortOption.direction !== 0) {
-          this.sortingCriteria.push(titleSortOption);
-        }
-      } else {
-        if (titleSortOption.direction === 0) {
-          this.sortingCriteria.splice(elementIndex, 1);
-        } else {
-          this.sortingCriteria[elementIndex] = titleSortOption;
-        }
-      }
+
+      updateCriteria({
+        optionList: this.sortingCriteria,
+        option: titleSortOption,
+        removingCriteria: (opt) => opt.direction === 0,
+      });
 
       this.renderPage();
     });
@@ -70,20 +64,12 @@ export class SortTasksControl {
         property: "creationDate",
         direction: sortingDirection,
       };
-      const elementIndex = this.sortingCriteria.findIndex(
-        (e) => e.property === "creationDate",
-      );
-      if (elementIndex === -1) {
-        if (dateSortOption.direction !== 0) {
-          this.sortingCriteria.push(dateSortOption);
-        }
-      } else {
-        if (dateSortOption.direction === 0) {
-          this.sortingCriteria.splice(elementIndex, 1);
-        } else {
-          this.sortingCriteria[elementIndex] = dateSortOption;
-        }
-      }
+
+      updateCriteria({
+        optionList: this.sortingCriteria,
+        option: dateSortOption,
+        removingCriteria: (opt) => opt.direction === 0,
+      });
 
       this.renderPage();
     });

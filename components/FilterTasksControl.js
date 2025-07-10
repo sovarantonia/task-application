@@ -1,5 +1,6 @@
 import { initialUserData } from "../data/initialUserData";
 import { TaskStatus } from "../data/taskStatus";
+import { updateCriteria } from "../helpers/updateCriteriaHelper";
 
 export class FilterTasksControl {
   constructor(filterCriteria, renderPageFunction) {
@@ -48,20 +49,12 @@ export class FilterTasksControl {
         property: "status",
         value: e.target.value,
       };
-      const elementIndex = this.filterCriteria.findIndex(
-        (option) => option.property === "status",
-      );
-      if (elementIndex === -1) {
-        if (e.target.value !== "All") {
-          this.filterCriteria.push(statusFilterOption);
-        }
-      } else {
-        if (e.target.value !== "All") {
-          this.filterCriteria[elementIndex] = statusFilterOption;
-        } else {
-          this.filterCriteria.splice(elementIndex, 1);
-        }
-      }
+
+      updateCriteria({
+        optionList: this.filterCriteria,
+        option: statusFilterOption,
+        removingCriteria: (opt) => opt.value === "All",
+      });
 
       this.renderPage();
     });
@@ -71,20 +64,12 @@ export class FilterTasksControl {
         property: "userName",
         value: e.target.value,
       };
-      const elementIndex = this.filterCriteria.findIndex(
-        (option) => option.property === "userName",
-      );
-      if (elementIndex === -1) {
-        if (e.target.value !== "All") {
-          this.filterCriteria.push(userFilterOption);
-        }
-      } else {
-        if (e.target.value !== "All") {
-          this.filterCriteria[elementIndex] = userFilterOption;
-        } else {
-          this.filterCriteria.splice(elementIndex, 1);
-        }
-      }
+
+      updateCriteria({
+        optionList: this.filterCriteria,
+        option: userFilterOption,
+        removingCriteria: (opt) => opt.value === "All",
+      });
 
       this.renderPage();
     });

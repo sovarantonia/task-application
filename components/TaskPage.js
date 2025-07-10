@@ -72,7 +72,6 @@ export class TaskPage {
       this.renderPage();
       this.renderPaginationControls();
     });
-
   }
 
   renderPage() {
