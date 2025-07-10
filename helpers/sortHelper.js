@@ -11,21 +11,12 @@ export function combineComparisonFunctions(compareFunctions) {
 }
 
 export function multiFieldSort(criteria) {
-  const compareFunctions = criteria
-    .filter((c) => c.direction !== 0)
-    .map(({ property, direction, transform = (x) => x }) => {
-      return (a, b) => {
-        const aValue = transform(a[property]);
-        const bValue = transform(b[property]);
-        if (aValue < bValue) return -direction;
-        if (aValue > bValue) return direction;
-        return 0;
-      };
-    });
+  const compareFunctions = criteria.map(({ property, direction }) => {
+    return (a, b) => {
+      if (a[property] === b[property]) return 0;
+      return a[property] < b[property] ? -direction : direction;
+    };
+  });
 
   return combineComparisonFunctions(compareFunctions);
-}
-
-export function dateParser(string) {
-  return new Date(string);
 }

@@ -7,13 +7,15 @@ export function updateCriteria({ optionList, option, removingCriteria }) {
   );
   if (removingCriteria(option)) {
     if (elementIndex !== -1) {
-      optionList.splice(index, 1);
+      return [...optionList.splice(index, 1)];
     }
   } else {
     if (elementIndex === -1) {
-      optionList.push(option);
+      return [...optionList, option];
     } else {
-      optionList[elementIndex] = option;
+      const updated = [...optionList];
+      updated[index] = option;
+      return updated;
     }
   }
 }

@@ -70,14 +70,14 @@ export class DbService {
       if (sortCriteria.length > 0) {
         items = items.sort(multiFieldSort(sortCriteria));
       }
-
+      
       const paginatedItems = getPaginatedElements(items, {
         currentPage,
         itemsPerPage,
       });
       const totalPages = getTotalPages(items, itemsPerPage);
 
-      resolve({paginatedItems,totalPages });
+      resolve({ paginatedItems, totalPages });
     });
   }
 

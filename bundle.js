@@ -236,38 +236,27 @@
   }
 
   function multiFieldSort(criteria) {
-    const compareFunctions = criteria
-      .filter((c) => c.direction !== 0)
-      .map(({ property, direction, transform = (x) => x }) => {
-        return (a, b) => {
-          const aValue = transform(a[property]);
-          const bValue = transform(b[property]);
-          if (aValue < bValue) return -direction;
-          if (aValue > bValue) return direction;
-          return 0;
-        };
-      });
+    const compareFunctions = criteria.map(({ property, direction }) => {
+      return (a, b) => {
+        if (a[property] === b[property]) return 0;
+        return a[property] < b[property] ? -direction : direction;
+      };
+    });
 
     return combineComparisonFunctions(compareFunctions);
   }
 
-  function dateParser(string) {
-    return new Date(string);
-  }
-
   function multiFieldFilter(criteria) {
-    const filterFunctions = criteria.map(
-      ({ property, value, transform = (x) => x }) => {
-        return (item) => transform(item[property]) === value;
-      },
-    );
+    const filterFunctions = criteria.map(({ property, value }) => {
+      return (item) => item[property] === value;
+    });
 
     return combineFilterComparisonFunctions(filterFunctions);
   }
 
   function combineFilterComparisonFunctions(functions) {
     return (item) => {
-      return functions.every((f) => f(item)); 
+      return functions.every((f) => f(item));
     };
   }
 
@@ -339,14 +328,14 @@
         if (sortCriteria.length > 0) {
           items = items.sort(multiFieldSort(sortCriteria));
         }
-
+        
         const paginatedItems = getPaginatedElements(items, {
           currentPage,
           itemsPerPage,
         });
         const totalPages = getTotalPages(items, itemsPerPage);
 
-        resolve({paginatedItems,totalPages });
+        resolve({ paginatedItems, totalPages });
       });
     }
 
@@ -356,26 +345,6 @@
       });
     }
   }
-
-  const TaskStatus = [
-    { id: "ad06176e-88cd-4eee-90b5-44fcea585434", status: "To Do" },
-    { id: "44d21520-d383-4bc3-b6db-848f3545df56", status: "In Progress" },
-    { id: "b9920485-9f7e-4e82-bba6-3b761df91cb4", status: "In Review" },
-    { id: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79", status: "Done" },
-  ];
-
-  const initialUserData = [
-    { id: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67", userName: "Alice Morgan" },
-    { id: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624", userName: "Bob Daniels" },
-    { id: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d", userName: "Charlie Wu" },
-    { id: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721", userName: "Dana Kim" },
-    { id: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba", userName: "Eva Thompson" },
-    { id: "4f2fd22d-74cc-40bb-9600-2e9e83f223db", userName: "Frank Ortega" },
-    { id: "8ea1de6b-681b-4d47-a4f7-abc9c7e19e02", userName: "Grace Lee" },
-    { id: "f8c2f610-08c3-42f6-bbde-f94fc53119ea", userName: "Henry Patel" },
-    { id: "bd23c62f-205b-44aa-8b63-d0bfb749d4b9", userName: "Isla Novak" },
-    { id: "3e4a3c5f-f6c7-442b-8c17-ccdd75ef1b7e", userName: "Jack Reynolds" },
-  ];
 
   class TaskPage {
     constructor(taskService) {
@@ -390,12 +359,6 @@
       this.firstPageBtn = document.getElementById("firstPageBtn");
       this.lastPageBtn = document.getElementById("lastPageBtn");
 
-      this.titleSortBtn = document.getElementById("titleSortBtn");
-      this.dateSortBtn = document.getElementById("dateSortBtn");
-
-      this.statusFilterSelect = document.getElementById("statusFilterSelect");
-      this.userFilterSelect = document.getElementById("userFilterSelect");
-
       this.currentPage = 1;
       this.itemsPerPage = parseInt(this.select.value);
       this.taskService.getTotalPages(this.itemsPerPage).then((total) => {
@@ -408,37 +371,9 @@
     }
 
     init() {
-      this.populateSelect();
       this.attachEvents();
-      this.renderPage(1, this.sortingCriteria, this.filterCriteria);
+      this.renderPage();
       this.renderPaginationControls();
-    }
-
-    populateSelect() {
-      this.userFilterSelect.innerHTML = "";
-      const allUserOption = document.createElement("option");
-      allUserOption.value = allUserOption.text = "All";
-      this.userFilterSelect.add(allUserOption);
-
-      initialUserData.forEach((user) => {
-        const option = document.createElement("option");
-        option.value = user.id;
-        option.text = user.userName;
-        this.userFilterSelect.add(option);
-      });
-
-      const allStatusOption = document.createElement("option");
-      allStatusOption.value = allStatusOption.text = "All";
-
-      this.statusFilterSelect.innerHTML = "";
-      this.statusFilterSelect.add(allStatusOption);
-
-      TaskStatus.forEach((taskStatus) => {
-        const option = document.createElement("option");
-        option.value = taskStatus.id;
-        option.text = taskStatus.status;
-        this.statusFilterSelect.add(option);
-      });
     }
 
     attachEvents() {
@@ -450,11 +385,7 @@
         this.taskService.getTotalPages(this.itemsPerPage).then((total) => {
           this.totalPages = total;
           this.lastPageBtn.innerText = total.toString();
-          this.renderPage(
-            this.currentPage,
-            this.sortingCriteria,
-            this.filterCriteria,
-          );
+          this.renderPage();
           this.renderPaginationControls();
         });
       });
@@ -464,11 +395,7 @@
           this.currentPage--;
         }
         this.currentPageSpan.innerText = this.currentPage.toString();
-        this.renderPage(
-          this.currentPage,
-          this.sortingCriteria,
-          this.filterCriteria,
-        );
+        this.renderPage();
         this.renderPaginationControls();
       });
 
@@ -478,34 +405,77 @@
         }
 
         this.currentPageSpan.innerText = this.currentPage.toString();
-        this.renderPage(
-          this.currentPage,
-          this.sortingCriteria,
-          this.filterCriteria,
-        );
+        this.renderPage();
         this.renderPaginationControls();
       });
 
       this.firstPageBtn.addEventListener("click", () => {
         this.currentPage = 1;
-        this.renderPage(
-          this.currentPage,
-          this.sortingCriteria,
-          this.filterCriteria,
-        );
+        this.renderPage();
         this.renderPaginationControls();
       });
 
       this.lastPageBtn.addEventListener("click", () => {
         this.currentPage = this.totalPages;
-        this.renderPage(
-          this.currentPage,
-          this.sortingCriteria,
-          this.filterCriteria,
-        );
+        this.renderPage();
         this.renderPaginationControls();
       });
 
+    }
+
+    renderPage() {
+      this.container.innerHTML = "";
+      this.taskService
+        .getTasks(
+          { currentPage: this.currentPage, itemsPerPage: this.itemsPerPage },
+          this.sortingCriteria,
+          this.filterCriteria,
+        )
+        .then(({ paginatedItems, totalPages }) => {
+          this.totalPages = totalPages;
+          this.lastPageBtn.innerText = this.totalPages;
+
+          paginatedItems.forEach((element) => {
+            const card = document.createElement("div");
+            card.className = "task-card";
+            card.innerHTML = `<h2>${element.title}</h2>
+          <p>Status: ${element.status}</p>
+          <p>${element.description}</p>
+          <p>Assigned to: ${element.userName}</p>
+          <p>Created at: ${element.creationDate}</p>`;
+            this.container.appendChild(card);
+          });
+
+          this.currentPageSpan.innerText = this.currentPage.toString();
+          this.renderPaginationControls();
+        });
+    }
+
+    renderPaginationControls() {
+      this.lastPageBtn.hidden =
+        this.firstPageBtn.innerText === this.lastPageBtn.innerText &&
+        this.lastPageBtn.innerText === "1";
+      this.previousBtn.disabled = this.currentPage === 1;
+      this.nextBtn.disabled = this.currentPage === this.totalPages;
+      this.currentPageSpan.hidden =
+        this.currentPage === 1 || this.currentPage === this.totalPages;
+    }
+  }
+
+  function dateParser(value) {
+    return new Date(value);
+  }
+
+  class SortTasksControl {
+    constructor(sortingCriteria, renderPageFunction) {
+      this.titleSortBtn = document.getElementById("titleSortBtn");
+      this.dateSortBtn = document.getElementById("dateSortBtn");
+
+      this.sortingCriteria = sortingCriteria;
+      this.renderPage = renderPageFunction;
+    }
+
+    addEvents() {
       this.titleSortBtn.addEventListener("click", () => {
         const titleArrow = document.getElementById("titleArrow");
         let sortingDirection = 0;
@@ -543,11 +513,7 @@
           }
         }
 
-        this.renderPage(
-          this.currentPage,
-          this.sortingCriteria,
-          this.filterCriteria,
-        );
+        this.renderPage();
       });
 
       this.dateSortBtn.addEventListener("click", () => {
@@ -571,7 +537,6 @@
         const dateSortOption = {
           property: "creationDate",
           direction: sortingDirection,
-          transform: dateParser,
         };
         const elementIndex = this.sortingCriteria.findIndex(
           (e) => e.property === "creationDate",
@@ -588,13 +553,73 @@
           }
         }
 
-        this.renderPage(
-          this.currentPage,
-          this.sortingCriteria,
-          this.filterCriteria,
-        );
+        this.renderPage();
+      });
+    }
+  }
+
+  const initialUserData = [
+    { id: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67", userName: "Alice Morgan" },
+    { id: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624", userName: "Bob Daniels" },
+    { id: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d", userName: "Charlie Wu" },
+    { id: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721", userName: "Dana Kim" },
+    { id: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba", userName: "Eva Thompson" },
+    { id: "4f2fd22d-74cc-40bb-9600-2e9e83f223db", userName: "Frank Ortega" },
+    { id: "8ea1de6b-681b-4d47-a4f7-abc9c7e19e02", userName: "Grace Lee" },
+    { id: "f8c2f610-08c3-42f6-bbde-f94fc53119ea", userName: "Henry Patel" },
+    { id: "bd23c62f-205b-44aa-8b63-d0bfb749d4b9", userName: "Isla Novak" },
+    { id: "3e4a3c5f-f6c7-442b-8c17-ccdd75ef1b7e", userName: "Jack Reynolds" },
+  ];
+
+  const TaskStatus = [
+    { id: "ad06176e-88cd-4eee-90b5-44fcea585434", status: "To Do" },
+    { id: "44d21520-d383-4bc3-b6db-848f3545df56", status: "In Progress" },
+    { id: "b9920485-9f7e-4e82-bba6-3b761df91cb4", status: "In Review" },
+    { id: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79", status: "Done" },
+  ];
+
+  class FilterTasksControl {
+    constructor(filterCriteria, renderPageFunction) {
+      this.statusFilterSelect = document.getElementById("statusFilterSelect");
+      this.userFilterSelect = document.getElementById("userFilterSelect");
+
+      this.filterCriteria = filterCriteria;
+      this.renderPage = renderPageFunction;
+    }
+
+    init() {
+      this.populateSelect();
+      this.addEvents();
+    }
+
+    populateSelect() {
+      this.userFilterSelect.innerHTML = "";
+      const allUserOption = document.createElement("option");
+      allUserOption.value = allUserOption.text = "All";
+      this.userFilterSelect.add(allUserOption);
+
+      initialUserData.forEach((user) => {
+        const option = document.createElement("option");
+        option.value = user.id;
+        option.text = user.userName;
+        this.userFilterSelect.add(option);
       });
 
+      const allStatusOption = document.createElement("option");
+      allStatusOption.value = allStatusOption.text = "All";
+
+      this.statusFilterSelect.innerHTML = "";
+      this.statusFilterSelect.add(allStatusOption);
+
+      TaskStatus.forEach((taskStatus) => {
+        const option = document.createElement("option");
+        option.value = taskStatus.id;
+        option.text = taskStatus.status;
+        this.statusFilterSelect.add(option);
+      });
+    }
+
+    addEvents() {
       this.statusFilterSelect.addEventListener("change", (e) => {
         const statusFilterOption = {
           property: "status",
@@ -615,11 +640,7 @@
           }
         }
 
-        this.renderPage(
-          this.currentPage,
-          this.sortingCriteria,
-          this.filterCriteria,
-        );
+        this.renderPage();
       });
 
       this.userFilterSelect.addEventListener("change", (e) => {
@@ -642,63 +663,28 @@
           }
         }
 
-        this.renderPage(
-          this.currentPage,
-          this.sortingCriteria,
-          this.filterCriteria,
-        );
+        this.renderPage();
       });
-    }
-
-    renderPage(page, criteriaForSorting = [], criteriaForFiltering = []) {
-      this.container.innerHTML = "";
-      this.taskService
-        .getTasks(
-          { currentPage: page, itemsPerPage: this.itemsPerPage },
-          criteriaForSorting,
-          criteriaForFiltering,
-        )
-        .then(({ paginatedItems, totalPages }) => {
-          this.totalPages = totalPages;
-          this.lastPageBtn.innerText = this.totalPages;
-
-          paginatedItems.forEach((element) => {
-            const card = document.createElement("div");
-            card.className = "task-card";
-            card.innerHTML = `<h2>${element.title}</h2>
-          <p>Status: ${element.status}</p>
-          <p>${element.description}</p>
-          <p>Assigned to: ${element.userName}</p>
-          <p>Created at: ${element.creationDate}</p>`;
-            this.container.appendChild(card);
-          });
-
-          this.currentPageSpan.innerText = this.currentPage.toString();
-          this.renderPaginationControls();
-        });
-    }
-
-    renderPaginationControls() {
-      this.lastPageBtn.hidden =
-        this.firstPageBtn.innerText === this.lastPageBtn.innerText &&
-        this.lastPageBtn.innerText === "1";
-      this.previousBtn.disabled = this.currentPage === 1;
-      this.nextBtn.disabled = this.currentPage === this.totalPages;
-      this.currentPageSpan.hidden =
-        this.currentPage === 1 || this.currentPage === this.totalPages;
     }
   }
 
   class TaskPresentationService {
     constructor() {
+      initialTaskData.forEach((task) => {
+        dateParser(task.creationDate);
+      });
       this.dbService = new DbService(initialTaskData);
       this.taskService = new TaskService(this.dbService);
 
       this.taskPage = new TaskPage(this.taskService);
+      this.sortTasksControl = new SortTasksControl(this.taskPage.sortingCriteria, this.taskPage.renderPage.bind(this.taskPage));
+      this.filterTasksControl = new FilterTasksControl(this.taskPage.filterCriteria, this.taskPage.renderPage.bind(this.taskPage));
     }
 
     init() {
       this.taskPage.init();
+      this.sortTasksControl.addEvents();
+      this.filterTasksControl.init();
     }
   }
 
