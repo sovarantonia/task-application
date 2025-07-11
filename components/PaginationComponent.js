@@ -1,4 +1,4 @@
-export class TaskPage {
+export class PaginationComponent {
   constructor(taskService) {
     this.taskService = taskService;
 
@@ -13,10 +13,6 @@ export class TaskPage {
 
     this.currentPage = 1;
     this.itemsPerPage = parseInt(this.select.value);
-    this.taskService.getTotalPages(this.itemsPerPage).then((total) => {
-      this.totalPages = total;
-      this.lastPageBtn.innerText = total.toString();
-    });
 
     this.sortingCriteria = [];
     this.filterCriteria = [];
@@ -25,7 +21,6 @@ export class TaskPage {
   init() {
     this.attachEvents();
     this.renderPage();
-    this.renderPaginationControls();
   }
 
   attachEvents() {
@@ -33,13 +28,7 @@ export class TaskPage {
       this.itemsPerPage = parseInt(e.target.value);
       this.currentPage = 1;
       this.currentPageSpan.innerText = this.currentPage.toString();
-
-      this.taskService.getTotalPages(this.itemsPerPage).then((total) => {
-        this.totalPages = total;
-        this.lastPageBtn.innerText = total.toString();
-        this.renderPage();
-        this.renderPaginationControls();
-      });
+      this.renderPage();
     });
 
     this.previousBtn.addEventListener("click", () => {
@@ -48,7 +37,6 @@ export class TaskPage {
       }
       this.currentPageSpan.innerText = this.currentPage.toString();
       this.renderPage();
-      this.renderPaginationControls();
     });
 
     this.nextBtn.addEventListener("click", () => {
@@ -58,19 +46,16 @@ export class TaskPage {
 
       this.currentPageSpan.innerText = this.currentPage.toString();
       this.renderPage();
-      this.renderPaginationControls();
     });
 
     this.firstPageBtn.addEventListener("click", () => {
       this.currentPage = 1;
       this.renderPage();
-      this.renderPaginationControls();
     });
 
     this.lastPageBtn.addEventListener("click", () => {
       this.currentPage = this.totalPages;
       this.renderPage();
-      this.renderPaginationControls();
     });
   }
 

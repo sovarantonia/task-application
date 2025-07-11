@@ -17,15 +17,17 @@ export class SortTasksControl {
       clickNr = (clickNr + 1) % 3;
       this.titleSortBtn.dataset.sortTitleState = clickNr;
 
-      if (clickNr === 1) {
-        sortingDirection = 1;
-        titleArrow.textContent = "\u2191";
-      } else if (clickNr == 2) {
-        sortingDirection = -1;
-        titleArrow.textContent = "\u2193";
-      } else {
-        sortingDirection = 0;
-        titleArrow.textContent = "";
+      switch (clickNr) {
+        case 1:
+          sortingDirection = 1;
+          titleArrow.textContent = "\u2191";
+          break;
+        case 2:
+          sortingDirection = -1;
+          titleArrow.textContent = "\u2193";
+        default:
+          sortingDirection = 0;
+          titleArrow.textContent = "";
       }
 
       const titleSortOption = {
@@ -49,15 +51,17 @@ export class SortTasksControl {
       clickNr = (clickNr + 1) % 3;
       this.dateSortBtn.dataset.sortDateState = clickNr;
 
-      if (clickNr === 1) {
-        sortingDirection = 1;
-        dateArrow.textContent = "\u2191";
-      } else if (clickNr == 2) {
-        sortingDirection = -1;
-        dateArrow.textContent = "\u2193";
-      } else {
-        sortingDirection = 0;
-        dateArrow.textContent = "";
+      switch (clickNr) {
+        case 1:
+          sortingDirection = 1;
+          dateArrow.textContent = "\u2191";
+          break;
+        case 2:
+          sortingDirection = -1;
+          dateArrow.textContent = "\u2193";
+        default:
+          sortingDirection = 0;
+          dateArrow.textContent = "";
       }
 
       const dateSortOption = {

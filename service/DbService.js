@@ -49,12 +49,6 @@ export class DbService {
     });
   }
 
-  getAll() {
-    return new Promise((resolve) => {
-      resolve(this.objectList);
-    });
-  }
-
   getPaginatedItems(
     { currentPage, itemsPerPage },
     sortCriteria = [],
@@ -70,7 +64,7 @@ export class DbService {
       if (sortCriteria.length > 0) {
         items = items.sort(multiFieldSort(sortCriteria));
       }
-      
+
       const paginatedItems = getPaginatedElements(items, {
         currentPage,
         itemsPerPage,
@@ -78,12 +72,6 @@ export class DbService {
       const totalPages = getTotalPages(items, itemsPerPage);
 
       resolve({ paginatedItems, totalPages });
-    });
-  }
-
-  getTotalPages(itemsPerPage) {
-    return new Promise((resolve) => {
-      resolve(getTotalPages(this.objectList, itemsPerPage));
     });
   }
 }
