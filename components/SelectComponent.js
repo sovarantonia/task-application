@@ -1,5 +1,5 @@
 export class SelectComponent {
-  constructor(onChangeFunction, options) {
+  constructor({ onChangeFunction = null, options = [] } = {}) {
     this.onChangeFunction = onChangeFunction;
     this.options = options;
     this.select = document.createElement("select");

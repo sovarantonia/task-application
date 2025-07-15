@@ -1,25 +1,25 @@
+import { CreateElementComponent } from "./CreateElementComponent";
+
 export class PagerComponent {
   constructor({ onNext, onPrev } = {}) {
     this.onNext = onNext;
     this.onPrevious = onPrev;
 
-    this.container = document.createElement("div");
+    this.createElementComponent = new CreateElementComponent();
+    this.container = this.createElementComponent.createDiv();
 
-    this.previousBtn = document.createElement("button");
-    this.previousBtn.textContent = "Previous";
+    this.previousBtn = this.createElementComponent.createButton({
+      text: "Previous",
+      eventToAdd: () => this.onPrevious?.(),
+    });
+    this.nextBtn = this.createElementComponent.createButton({
+      text: "Next",
+      eventToAdd: () => this.onNext?.(),
+    });
 
-    this.nextBtn = document.createElement("button");
-    this.nextBtn.textContent = "Next";
-
-    this.pageIndicator = document.createElement("span");
+    this.pageIndicator = this.createElementComponent.createSpan();
 
     this.container.append(this.previousBtn, this.pageIndicator, this.nextBtn);
-    this.init();
-  }
-
-  init() {
-    this.previousBtn.addEventListener("click", () => this.onPrevious?.());
-    this.nextBtn.addEventListener("click", () => this.onNext?.());
   }
 
   renderPaginationResults({ totalPages, currentPage }) {

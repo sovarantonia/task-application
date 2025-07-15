@@ -1,10 +1,14 @@
 import { renderTasks } from "../ui/taskListRenderer";
 
 export class TaskLogic {
-  constructor(taskService, pagerComponent, itemsPerPageSelector) {
+  constructor({
+    taskService = null,
+    pagerComponent = null,
+    itemsPerPageSelector = null,
+  } = {}) {
     this.taskService = taskService;
 
-    itemsPerPageSelector.onChangeFunction = this.setItemsPerPage.bind(this);
+    itemsPerPageSelector.onChangeFunction = this.setItemsPerPage;
     this.currentPage = 1;
     this.itemsPerPage = 5;
 
@@ -13,22 +17,19 @@ export class TaskLogic {
     this.pager = pagerComponent;
   }
 
-  setItemsPerPage(itemNrPerPage) {
+  setItemsPerPage = (itemNrPerPage) =>  {
     this.itemsPerPage = parseInt(itemNrPerPage);
     this.currentPage = 1;
     this.getPagination();
   }
 
   getPagination() {
-    console.log("getPagination called");
     const paginationRequest = {
       currentPage: this.currentPage,
       itemsPerPage: this.itemsPerPage,
     };
     this.taskService
-      .getTasks(
-        paginationRequest
-      )
+      .getTasks(paginationRequest)
       .then(({ paginatedItems, totalPages }) => {
         this.taskRenderer(paginatedItems);
         this.totalPages = totalPages;
@@ -39,17 +40,17 @@ export class TaskLogic {
       });
   }
 
-  onNext() {
+  onNext = () => {
     if (this.currentPage < this.totalPages) {
       this.currentPage++;
     }
     this.getPagination();
-  }
+  };
 
-  onPrevious() {
+  onPrevious = () => {
     if (this.currentPage > 1) {
       this.currentPage--;
     }
     this.getPagination();
-  }
+  };
 }

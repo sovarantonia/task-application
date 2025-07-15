@@ -337,10 +337,73 @@
     return new Date(value);
   }
 
+  const initialUserData = [
+    {
+      id: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
+      userName: "Alice Morgan",
+      email: "alice.morgan@example.com",
+      department: "Backend Development", 
+    },
+    {
+      id: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
+      userName: "Bob Daniels",
+      email: "bob.daniels@example.com",
+      department: "Frontend Development", 
+    },
+    {
+      id: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
+      userName: "Charlie Wu",
+      email: "charlie.wu@example.com",
+      department: "Database Engineering", 
+    },
+    {
+      id: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
+      userName: "Dana Kim",
+      email: "dana.kim@example.com",
+      department: "UX/UI Design", 
+    },
+    {
+      id: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
+      userName: "Eva Thompson",
+      email: "eva.thompson@example.com",
+      department: "Quality Assurance", 
+    },
+    {
+      id: "4f2fd22d-74cc-40bb-9600-2e9e83f223db",
+      userName: "Frank Ortega",
+      email: "frank.ortega@example.com",
+      department: "Project Management",
+    },
+    {
+      id: "8ea1de6b-681b-4d47-a4f7-abc9c7e19e02",
+      userName: "Grace Lee",
+      email: "grace.lee@example.com",
+      department: "Customer Support",
+    },
+    {
+      id: "f8c2f610-08c3-42f6-bbde-f94fc53119ea",
+      userName: "Henry Patel",
+      email: "henry.patel@example.com",
+      department: "IT Support",
+    },
+    {
+      id: "bd23c62f-205b-44aa-8b63-d0bfb749d4b9",
+      userName: "Isla Novak",
+      email: "isla.novak@example.com",
+      department: "Legal",
+    },
+    {
+      id: "3e4a3c5f-f6c7-442b-8c17-ccdd75ef1b7e",
+      userName: "Jack Reynolds",
+      email: "jack.reynolds@example.com",
+      department: "Operations",
+    },
+  ];
+
   function renderTasks(containerId) {
     const container = document.getElementById(containerId);
 
-    return function (tasks) {
+    return (tasks) => {
       container.innerHTML = "";
 
       tasks.forEach((element) => {
@@ -357,10 +420,14 @@
   }
 
   class TaskLogic {
-    constructor(taskService, pagerComponent, itemsPerPageSelector) {
+    constructor({
+      taskService = null,
+      pagerComponent = null,
+      itemsPerPageSelector = null,
+    } = {}) {
       this.taskService = taskService;
 
-      itemsPerPageSelector.onChangeFunction = this.setItemsPerPage.bind(this);
+      itemsPerPageSelector.onChangeFunction = this.setItemsPerPage;
       this.currentPage = 1;
       this.itemsPerPage = 5;
 
@@ -369,22 +436,19 @@
       this.pager = pagerComponent;
     }
 
-    setItemsPerPage(itemNrPerPage) {
+    setItemsPerPage = (itemNrPerPage) =>  {
       this.itemsPerPage = parseInt(itemNrPerPage);
       this.currentPage = 1;
       this.getPagination();
     }
 
     getPagination() {
-      console.log("getPagination called");
       const paginationRequest = {
         currentPage: this.currentPage,
         itemsPerPage: this.itemsPerPage,
       };
       this.taskService
-        .getTasks(
-          paginationRequest
-        )
+        .getTasks(paginationRequest)
         .then(({ paginatedItems, totalPages }) => {
           this.taskRenderer(paginatedItems);
           this.totalPages = totalPages;
@@ -395,23 +459,23 @@
         });
     }
 
-    onNext() {
+    onNext = () => {
       if (this.currentPage < this.totalPages) {
         this.currentPage++;
       }
       this.getPagination();
-    }
+    };
 
-    onPrevious() {
+    onPrevious = () => {
       if (this.currentPage > 1) {
         this.currentPage--;
       }
       this.getPagination();
-    }
+    };
   }
 
   class SelectComponent {
-    constructor(onChangeFunction, options) {
+    constructor({ onChangeFunction = null, options = [] } = {}) {
       this.onChangeFunction = onChangeFunction;
       this.options = options;
       this.select = document.createElement("select");
@@ -436,34 +500,231 @@
     }
   }
 
+  class CreateElementComponent {
+    createDiv() {
+      return document.createElement("div");
+    }
+    createButton({ text = "", eventToAdd = null } = {}) {
+      const button = document.createElement("button");
+      button.textContent = text;
+      button.addEventListener("click", eventToAdd);
+      return button;
+    }
+
+    createSpan(text = "") {
+      const span = document.createElement("span");
+      span.textContent = text;
+      return span;
+    }
+
+    createCheckbox({ value = "", eventToAdd = null } = {}) {
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.value = value;
+      checkbox.addEventListener("change", eventToAdd);
+      return checkbox;
+    }
+
+    createP(text = "") {
+      const p = document.createElement("p");
+      p.innerText = text;
+      return p;
+    }
+    
+  }
+
   class PagerComponent {
     constructor({ onNext, onPrev } = {}) {
       this.onNext = onNext;
       this.onPrevious = onPrev;
 
-      this.container = document.createElement("div");
+      this.createElementComponent = new CreateElementComponent();
+      this.container = this.createElementComponent.createDiv();
 
-      this.previousBtn = document.createElement("button");
-      this.previousBtn.textContent = "Previous";
+      this.previousBtn = this.createElementComponent.createButton({
+        text: "Previous",
+        eventToAdd: () => this.onPrevious?.(),
+      });
+      this.nextBtn = this.createElementComponent.createButton({
+        text: "Next",
+        eventToAdd: () => this.onNext?.(),
+      });
 
-      this.nextBtn = document.createElement("button");
-      this.nextBtn.textContent = "Next";
-
-      this.pageIndicator = document.createElement("span");
+      this.pageIndicator = this.createElementComponent.createSpan();
 
       this.container.append(this.previousBtn, this.pageIndicator, this.nextBtn);
-      this.init();
-    }
-
-    init() {
-      this.previousBtn.addEventListener("click", () => this.onPrevious?.());
-      this.nextBtn.addEventListener("click", () => this.onNext?.());
     }
 
     renderPaginationResults({ totalPages, currentPage }) {
       this.pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
       this.previousBtn.disabled = currentPage <= 1;
       this.nextBtn.disabled = currentPage >= totalPages;
+    }
+
+    addContainer(containerId) {
+      const target = document.getElementById(containerId);
+      target.appendChild(this.container);
+    }
+  }
+
+  function renderUsers(containerId) {
+    const container = document.getElementById(containerId);
+    const createElementComponent = new CreateElementComponent();
+
+    return (users, eventToAdd = null) => {
+      container.innerHTML = "";
+
+      users.forEach((element) => {
+        const card = createElementComponent.createDiv();
+        card.className = "user-card";
+        const checkbox = createElementComponent.createCheckbox({
+          value: element.id,
+          eventToAdd: (e) => {
+            eventToAdd?.(e.target.value, e.target.checked);
+          },
+        });
+        const nameInfo = createElementComponent.createP(`${element.userName}`);
+        const emailInfo = createElementComponent.createP(
+          `Email: ${element.email}`,
+        );
+        const departmentInfo = createElementComponent.createP(
+          `Department: ${element.department}`,
+        );
+
+        card.append(checkbox, nameInfo, emailInfo, departmentInfo);
+        container.appendChild(card);
+      });
+    };
+  }
+
+  class UserLogic {
+    constructor({
+      userService = null,
+      pagerComponent = null,
+      itemsPerPageSelector = null,
+      checkboxSelectComponent = null,
+    } = {}) {
+      this.userService = userService;
+      this.pagerComponent = pagerComponent;
+      this.checkboxSelectComponent = checkboxSelectComponent;
+
+      this.currentPage = 1;
+      this.itemsPerPage = 5;
+
+      itemsPerPageSelector.onChangeFunction = this.setItemsPerPage;
+
+      this.userRenderer = renderUsers("userContainer");
+
+      this.userList = [];
+    }
+
+    setItemsPerPage = (itemNrPerPage) => {
+      this.itemsPerPage = parseInt(itemNrPerPage);
+      this.currentPage = 1;
+      this.getUsers();
+    };
+
+    getUsers() {
+      this.userService
+        .getPaginatedUsers({
+          currentPage: this.currentPage,
+          itemsPerPage: this.itemsPerPage,
+        })
+        .then(({ paginatedItems, totalPages }) => {
+          this.userRenderer(paginatedItems, this.onSelect);
+          this.totalPages = totalPages;
+          this.pagerComponent.renderPaginationResults({
+            totalPages: totalPages,
+            currentPage: this.currentPage,
+          });
+          this.checkboxSelectComponent.renderSelectedItemNr(this.userList.length);
+        });
+    }
+
+    onNext = () => {
+      if (this.currentPage < this.totalPages) {
+        this.currentPage++;
+      }
+      this.getUsers();
+    };
+
+    onPrevious = () => {
+      if (this.currentPage > 1) {
+        this.currentPage--;
+      }
+      this.getUsers();
+    };
+
+    onSelect = (userId, isChecked) => {
+      const index = this.userList.findIndex((e) => e.id === userId);
+
+      isChecked ? this.userList.push(userId) : this.userList.splice(index, 1);
+      console.log(this.userList);
+      this.checkboxSelectComponent.renderSelectedItemNr(this.userList.length);
+    };
+
+    onClick = () => {
+      const promises = this.userList.map((id) => this.userService.getById(id));
+
+      Promise.all(promises)
+        .then((userInfoList) => {
+          return this.userService.sendEmail(userInfoList);
+        })
+        .then((messages) => {
+        });
+    };
+  }
+
+  class UserService {
+    constructor(userData) {
+      this.service = new DbService(userData);
+    }
+
+    getPaginatedUsers(
+      { currentPage, itemsPerPage },
+      sortCriteria = [],
+      filterCriteria = [],
+    ) {
+      return this.service.getPaginatedItems(
+        { currentPage, itemsPerPage },
+        sortCriteria,
+        filterCriteria,
+      );
+    }
+
+    sendEmail(userList) {
+      return new Promise((resolve) => {
+        const infoList = userList.map((element) => {
+          const msg = `Sent mail to ${element.userName} (${element.email})`;
+          console.log(msg);
+          return msg;
+        });
+        resolve(infoList);
+      });
+    }
+
+    getById(userId) {
+      return this.service.findById(userId);
+    }
+  }
+
+  class CheckboxSelectComponent {
+    constructor({ onClick = null } = {}) {
+      this.onClick = onClick;
+      this.createElementComponent = new CreateElementComponent();
+      this.container = this.createElementComponent.createDiv();
+      this.sendButton = this.createElementComponent.createButton({
+        text: "Send email",
+        eventToAdd: () => this.onClick?.(),
+      });
+      this.selectedItemNrSpan = this.createElementComponent.createSpan();
+      this.container.append(this.selectedItemNrSpan, this.sendButton);
+    }
+
+    renderSelectedItemNr(selectedItemNr) {
+      this.selectedItemNrSpan.innerText = `${selectedItemNr} user(s) selected`;
+      this.selectedItemNrSpan.hidden = selectedItemNr <= 0;
+      this.sendButton.disabled = selectedItemNr <= 0;
     }
 
     addContainer(containerId) {
@@ -480,13 +741,41 @@
       this.taskService = new TaskService(initialTaskData);
       this.pager = new PagerComponent();
       this.select = new SelectComponent();
-      this.taskLogic = new TaskLogic(this.taskService, this.pager, this.select);
+      this.taskLogic = new TaskLogic({
+        taskService: this.taskService,
+        pagerComponent: this.pager,
+        itemsPerPageSelector: this.select,
+      });
 
-      this.pager.onNext = this.taskLogic.onNext.bind(this.taskLogic);
-      this.pager.onPrevious = this.taskLogic.onPrevious.bind(this.taskLogic);
+      this.pager.onNext = this.taskLogic.onNext;
+      this.pager.onPrevious = this.taskLogic.onPrevious;
       this.pager.addContainer("buttonContainer");
+
       this.select.options = [5, 10];
       this.select.renderSelect("itemsPerPageSelect");
+
+      this.userService = new UserService(initialUserData);
+
+      this.userPager = new PagerComponent();
+      this.selectUserPerPage = new SelectComponent();
+      this.checkboxSelectComponent = new CheckboxSelectComponent();
+
+      this.userLogic = new UserLogic({
+        userService: this.userService,
+        pagerComponent: this.userPager,
+        itemsPerPageSelector: this.selectUserPerPage,
+        checkboxSelectComponent: this.checkboxSelectComponent,
+      });
+
+      this.userPager.onNext = this.userLogic.onNext;
+      this.userPager.onPrevious = this.userLogic.onPrevious;
+      this.userPager.addContainer("userPageControls");
+
+      this.selectUserPerPage.options = [5, 10];
+      this.selectUserPerPage.renderSelect("selectUsersPerPage");
+
+      this.checkboxSelectComponent.onClick = this.userLogic.onClick;
+      this.checkboxSelectComponent.addContainer("sendActionControl");
 
       // this.taskPage = new PaginationComponent(this.taskService);
       // this.sortTasksControl = new SortTasksControl(
@@ -501,6 +790,7 @@
 
     init() {
       this.taskLogic.getPagination();
+      this.userLogic.getUsers();
     }
   }
 

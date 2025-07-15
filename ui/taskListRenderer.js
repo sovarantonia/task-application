@@ -1,7 +1,7 @@
 export function renderTasks(containerId) {
   const container = document.getElementById(containerId);
 
-  return function (tasks) {
+  return (tasks) => {
     container.innerHTML = "";
 
     tasks.forEach((element) => {
