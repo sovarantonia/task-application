@@ -1,4 +1,4 @@
-import { renderUsers } from "../ui/renderUsers";
+import { getCheckboxesState, renderUsers } from "../ui/renderUsers";
 
 export class UserLogic {
   constructor({
@@ -18,7 +18,7 @@ export class UserLogic {
 
     this.userRenderer = renderUsers("userContainer");
 
-    this.userList = [];
+    this.checkboxStateMap = new Map();
   }
 
   setItemsPerPage = (itemNrPerPage) => {
@@ -40,7 +40,10 @@ export class UserLogic {
           totalPages: totalPages,
           currentPage: this.currentPage,
         });
-        this.checkboxSelectComponent.renderSelectedItemNr(this.userList.length);
+        this.checkboxSelectComponent.renderSelectedItemNr(
+          this.checkboxStateMap.size,
+        );
+        getCheckboxesState(this.checkboxStateMap);
       });
   }
 
@@ -59,15 +62,19 @@ export class UserLogic {
   };
 
   onSelect = (userId, isChecked) => {
-    const index = this.userList.findIndex((e) => e.id === userId);
-
-    isChecked ? this.userList.push(userId) : this.userList.splice(index, 1);
-    console.log(this.userList);
-    this.checkboxSelectComponent.renderSelectedItemNr(this.userList.length);
+    isChecked
+      ? this.checkboxStateMap.set(userId, isChecked)
+      : this.checkboxStateMap.delete(userId);
+    this.checkboxSelectComponent.renderSelectedItemNr(
+      this.checkboxStateMap.size,
+    );
   };
 
   onClick = () => {
-    const promises = this.userList.map((id) => this.userService.getById(id));
+    const promises = [];
+    for (const id of this.checkboxStateMap.keys()) {
+      promises.push(this.userService.getById(id));
+    }
 
     Promise.all(promises)
       .then((userInfoList) => {

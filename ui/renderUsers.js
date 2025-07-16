@@ -16,6 +16,7 @@ export function renderUsers(containerId) {
           eventToAdd?.(e.target.value, e.target.checked);
         },
       });
+      checkbox.id = element.id;
       const nameInfo = createElementComponent.createP(`${element.userName}`);
       const emailInfo = createElementComponent.createP(
         `Email: ${element.email}`,
@@ -28,4 +29,13 @@ export function renderUsers(containerId) {
       container.appendChild(card);
     });
   };
+}
+
+export function getCheckboxesState(checkboxState) {
+  for (const id of checkboxState.keys()) {
+    const checkbox = document.getElementById(id);
+    if (checkbox) {
+      checkbox.checked = checkboxState.get(id);
+    }
+  }
 }

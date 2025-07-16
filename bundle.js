@@ -583,6 +583,7 @@
             eventToAdd?.(e.target.value, e.target.checked);
           },
         });
+        checkbox.id = element.id;
         const nameInfo = createElementComponent.createP(`${element.userName}`);
         const emailInfo = createElementComponent.createP(
           `Email: ${element.email}`,
@@ -595,6 +596,15 @@
         container.appendChild(card);
       });
     };
+  }
+
+  function getCheckboxesState(checkboxState) {
+    for (const id of checkboxState.keys()) {
+      const checkbox = document.getElementById(id);
+      if (checkbox) {
+        checkbox.checked = checkboxState.get(id);
+      }
+    }
   }
 
   class UserLogic {
@@ -615,7 +625,7 @@
 
       this.userRenderer = renderUsers("userContainer");
 
-      this.userList = [];
+      this.checkboxStateMap = new Map();
     }
 
     setItemsPerPage = (itemNrPerPage) => {
@@ -637,7 +647,10 @@
             totalPages: totalPages,
             currentPage: this.currentPage,
           });
-          this.checkboxSelectComponent.renderSelectedItemNr(this.userList.length);
+          this.checkboxSelectComponent.renderSelectedItemNr(
+            this.checkboxStateMap.size,
+          );
+          getCheckboxesState(this.checkboxStateMap);
         });
     }
 
@@ -656,15 +669,19 @@
     };
 
     onSelect = (userId, isChecked) => {
-      const index = this.userList.findIndex((e) => e.id === userId);
-
-      isChecked ? this.userList.push(userId) : this.userList.splice(index, 1);
-      console.log(this.userList);
-      this.checkboxSelectComponent.renderSelectedItemNr(this.userList.length);
+      isChecked
+        ? this.checkboxStateMap.set(userId, isChecked)
+        : this.checkboxStateMap.delete(userId);
+      this.checkboxSelectComponent.renderSelectedItemNr(
+        this.checkboxStateMap.size,
+      );
     };
 
     onClick = () => {
-      const promises = this.userList.map((id) => this.userService.getById(id));
+      const promises = [];
+      for (const id of this.checkboxStateMap.keys()) {
+        promises.push(this.userService.getById(id));
+      }
 
       Promise.all(promises)
         .then((userInfoList) => {
