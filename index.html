@@ -1,38 +1,49 @@
 <html>
   <head>
     <script src="bundle.js"></script>
-    <link rel="stylesheet" href="card.css" />
+    <link rel="stylesheet" href="./styles/card.css" />
+    <link rel="stylesheet" href="./styles/split-page.css" />
+    <link rel="stylesheet" href="./styles/user-card.css" />
   </head>
   <body>
-    <div id="sortContainer">
-      <!-- <button id="titleSortBtn" data-sort-title-state="0">
-        Sort by title <span id="titleArrow"></span>
-      </button>
-      <button id="dateSortBtn" data-sort-date-state="0">
-        Sort by creation date <span id="dateArrow"></span>
-      </button> -->
+    <div id="content">
+      <div id="leftSide">
+        <div id="sortContainer">
+              <!-- <button id="titleSortBtn" data-sort-title-state="0">
+                Sort by title <span id="titleArrow"></span>
+              </button>
+              <button id="dateSortBtn" data-sort-date-state="0">
+                Sort by creation date <span id="dateArrow"></span>
+              </button> -->
+            </div>
+        
+            <div id="filterContainer">
+              <!-- <label for="userFilterSelect">Filter by user:</label>
+              <select id="userFilterSelect"></select>
+              <label for="statusFilterSelect">Filter by status:</label>
+              <select id="statusFilterSelect"></select> -->
+            </div>
+        
+            <div id="paginationContainer"></div>
+        
+            <div id="buttonContainer"></div>
+        
+            <div id="itemsPerPageSelect"></div>
+            </div>
+        
+            <div id="rightSide">
+              <div id="selectUsersPerPage"></div>
+        
+            <div id="userContainer"></div>
+        
+            <div id="userPageControls"></div>
+        
+            <div id="sendActionControl"></div>
+            </div>       
     </div>
 
-    <div id="filterContainer">
-      <!-- <label for="userFilterSelect">Filter by user:</label>
-      <select id="userFilterSelect"></select>
-      <label for="statusFilterSelect">Filter by status:</label>
-      <select id="statusFilterSelect"></select> -->
-    </div>
-
-    <div id="paginationContainer"></div>
-
-    <div id="buttonContainer"></div>
-
-    <div id="itemsPerPageSelect"></div>
-
-    <div id="selectUsersPerPage"></div>
-
-    <div id="userContainer"></div>
-
-    <div id="userPageControls"></div>
-
-    <div id="sendActionControl"></div>
+    
+    
   </body>
 
     <!-- <button id="openCreateModalBtn">Create task</button>
