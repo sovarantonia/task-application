@@ -28,5 +28,17 @@ export class CreateElementComponent {
     p.innerText = text;
     return p;
   }
-  
+
+  createSelect({ options = [], eventToAdd = null } = {}) {
+    const select = document.createElement("select");
+    options.forEach((element) => {
+      const opt = document.createElement("option");
+      opt.value = element;
+      opt.textContent = element;
+      select.append(opt);
+    });
+    select.options[0].selected = true;
+    select.addEventListener("change", eventToAdd);
+    return select;
+  }
 }

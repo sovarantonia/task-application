@@ -4,41 +4,34 @@ export class UserLogic {
   constructor({
     userService = null,
     pagerComponent = null,
-    itemsPerPageSelector = null,
     checkboxSelectComponent = null,
   } = {}) {
     this.userService = userService;
     this.pagerComponent = pagerComponent;
     this.checkboxSelectComponent = checkboxSelectComponent;
 
-    this.currentPage = 1;
-    this.itemsPerPage = 5;
-
-    itemsPerPageSelector.onChangeFunction = this.setItemsPerPage;
+    this.paginationData = this.pagerComponent.paginationData;
 
     this.userRenderer = renderUsers("userContainer");
 
     this.checkboxStateMap = new Map();
   }
 
-  setItemsPerPage = (itemNrPerPage) => {
-    this.itemsPerPage = parseInt(itemNrPerPage);
-    this.currentPage = 1;
-    this.getUsers();
-  };
+//   setItemsPerPage = (itemNrPerPage) => {
+//     this.itemsPerPage = parseInt(itemNrPerPage);
+//     this.currentPage = 1;
+//     this.getUsers();
+//   };
 
   getUsers() {
     this.userService
-      .getPaginatedUsers({
-        currentPage: this.currentPage,
-        itemsPerPage: this.itemsPerPage,
-      })
+      .getPaginatedUsers(this.paginationData)
       .then(({ paginatedItems, totalPages }) => {
         this.userRenderer(paginatedItems, this.onSelect);
         this.totalPages = totalPages;
         this.pagerComponent.renderPaginationResults({
           totalPages: totalPages,
-          currentPage: this.currentPage,
+          currentPage: this.paginationData.currentPage,
         });
         this.checkboxSelectComponent.renderSelectedItemNr(
           this.checkboxStateMap.size,
@@ -48,15 +41,15 @@ export class UserLogic {
   }
 
   onNext = () => {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
+    if (this.paginationData.currentPage < this.totalPages) {
+      this.paginationData.currentPage++;
     }
     this.getUsers();
   };
 
   onPrevious = () => {
-    if (this.currentPage > 1) {
-      this.currentPage--;
+    if (this.paginationData.currentPage > 1) {
+      this.paginationData.currentPage--;
     }
     this.getUsers();
   };

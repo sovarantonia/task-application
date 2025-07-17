@@ -16,6 +16,8 @@ export class SelectComponent {
       this.select.append(opt);
     });
 
+    this.select.options[0].selected = true;
+
     this.select.addEventListener("change", (e) => {
       this.onChangeFunction(e.target.value);
     });

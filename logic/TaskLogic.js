@@ -1,56 +1,41 @@
+import { PagerComponent } from "../components/PagerComponent";
 import { renderTasks } from "../ui/taskListRenderer";
+import { PaginationHandler } from "./PaginationHandler";
 
 export class TaskLogic {
   constructor({
     taskService = null,
-    pagerComponent = null,
-    itemsPerPageSelector = null,
   } = {}) {
     this.taskService = taskService;
-
-    itemsPerPageSelector.onChangeFunction = this.setItemsPerPage;
-    this.currentPage = 1;
-    this.itemsPerPage = 5;
+    this.pagerComponent = new PagerComponent();
+    this.paginationHandler = new PaginationHandler({
+      paginationFunction: this.taskService.getTasks(this.paginationData),
+      pagerComponent: this.pagerComponent,
+      renderFunction: renderTasks("paginationContainer"),
+    });
+    this.paginationHandler.pagerComponent = this.pagerComponent;
 
     this.taskRenderer = renderTasks("paginationContainer");
 
-    this.pager = pagerComponent;
-  }
+    this.paginationData = this.pagerComponent.paginationData;
 
-  setItemsPerPage = (itemNrPerPage) =>  {
-    this.itemsPerPage = parseInt(itemNrPerPage);
-    this.currentPage = 1;
-    this.getPagination();
+    // this.paginationHandler = paginationHandler;
   }
 
   getPagination() {
-    const paginationRequest = {
-      currentPage: this.currentPage,
-      itemsPerPage: this.itemsPerPage,
-    };
-    this.taskService
-      .getTasks(paginationRequest)
-      .then(({ paginatedItems, totalPages }) => {
-        this.taskRenderer(paginatedItems);
-        this.totalPages = totalPages;
-        this.pager.renderPaginationResults({
-          totalPages: totalPages,
-          currentPage: this.currentPage,
-        });
-      });
+    
+    this.paginationHandler.getItems()
+
+    // maybe here pass the pagination function to handler
+    // this.taskService
+    //   .getTasks(this.paginationData)
+    //   .then(({ paginatedItems, totalPages }) => {
+    //     this.taskRenderer(paginatedItems); // send this to pager component
+    //     this.totalPages = totalPages;
+    //     this.pager.renderPaginationResults({
+    //       totalPages: totalPages,
+    //       currentPage: this.paginationData.currentPage,
+    //     });
+    //   });
   }
-
-  onNext = () => {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-    }
-    this.getPagination();
-  };
-
-  onPrevious = () => {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-    }
-    this.getPagination();
-  };
 }
