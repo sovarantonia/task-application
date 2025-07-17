@@ -4,6 +4,9 @@ export class PaginationHandler {
     this.pagerComponent = pagerComponent;
     this.renderFunction = renderFunction;
 
+    this.pagerComponent.onNext = this.onNext;
+    this.pagerComponent.onPrevious = this.onPrevious;
+
     this.paginationData = this.pagerComponent.paginationData;
   }
 
