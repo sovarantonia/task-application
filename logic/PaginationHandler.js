@@ -1,40 +1,37 @@
+import { PagerData } from "./PagerData";
+
 export class PaginationHandler {
-  constructor({ paginationFunction = null, pagerComponent = null, renderFunction = null } = {}) {
+  constructor({ paginationFunction = null, onPaginationResponse = null } = {}) {
     this.paginationFunction = paginationFunction;
-    this.pagerComponent = pagerComponent;
-    this.renderFunction = renderFunction;
+    this.onPaginationResponse = onPaginationResponse;
+    // this.pagerComponent.onNext = this.onNext;
+    // this.pagerComponent.onPrevious = this.onPrevious;
 
-    this.pagerComponent.onNext = this.onNext;
-    this.pagerComponent.onPrevious = this.onPrevious;
-
-    this.paginationData = this.pagerComponent.paginationData;
+    this.paginationData = new PagerData();
   }
 
+  //call the pagination function
   getItems() {
-    //call the pagination function and pass the results to pager component
-    this.paginationFunction(this.paginationData).then(
-      ({ paginatedItems, totalPages }) => {
-        this.totalPages = totalPages;
-        this.pagerComponent.renderPaginationResults({
-          totalPages: this.totalPages,
-          currentPage: this.paginationData.currentPage,
-          result: paginatedItems,
-          renderFunction: this.renderFunction,
-        });
-      },
-    );
+    const { currentPage, itemsPerPage } = this.paginationData;
+    this.paginationFunction({
+      currentPage,
+      itemsPerPage,
+    }).then(({ paginatedItems, totalPages }) => {
+      this.onPaginationResponse({ paginatedItems, totalPages });
+    });
   }
 
   onNext = () => {
-    if (this.paginationData.currentPage < this.totalPages) {
-      this.paginationData.currentPage++;
+    //have to use pager data somehow
+    if (this.paginationData.currentPageNo < this.totalPages) {
+      this.paginationData.currentPageNo++;
     }
     this.getItems();
   };
 
   onPrevious = () => {
-    if (this.paginationData.currentPage > 1) {
-      this.paginationData.currentPage--;
+    if (this.paginationData.currentPageNo > 1) {
+      this.paginationData.currentPageNo--;
     }
     this.getItems();
   };

@@ -11,6 +11,7 @@ import { initialUserData } from "../data/initialUserData.js";
 import { UserService } from "../service/UserService.js";
 import { CheckboxSelectComponent } from "../components/CheckboxSelectComponent.js";
 import { PaginationHandler } from "../logic/PaginationHandler.js";
+import { TaskPresentationUI } from "../ui/TaskPresentationUI.js";
 export class TaskPresentationService {
   constructor() {
     initialTaskData.forEach((task) => {
@@ -18,12 +19,18 @@ export class TaskPresentationService {
     });
 
     this.taskService = new TaskService(initialTaskData);
-    // this.taskPagerComponent = new PagerComponent({selectOptions : [5, 10]});
+    this.taskPagerComponent = new PagerComponent({selectOptions : [5, 10]});
+    this.taskPagerComponent.addContainer("buttonContainer")
     // this.taskPaginationHandler = new PaginationHandler();
 
     this.taskLogic = new TaskLogic({
       taskService: this.taskService,
     });
+
+    this.taskPresentationPage = new TaskPresentationUI(this.taskLogic);
+    // this.taskPresentationPage.addContainer("paginationContainer");
+    this.taskPresentationPage.renderTasks();
+
 
     // this.taskPagerComponent.onNext = this.taskPaginationHandler.onNext;
     // this.taskPagerComponent.onPrevious = this.taskPaginationHandler.onPrevious;

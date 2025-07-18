@@ -383,45 +383,41 @@
   }
 
   class PagerComponent {
-    constructor({ onNext, onPrev, selectOptions } = {}) {
-      this.onNext = onNext;
-      this.onPrevious = onPrev;
+    constructor({ selectOptions, onPageChange } = {}) {
+      // this.onNext = onNext;
+      // this.onPrevious = onPrev;
 
       this.createElementComponent = new CreateElementComponent();
       this.container = this.createElementComponent.createDiv();
 
-      this.previousBtn = this.createElementComponent.createButton({
-        text: "Previous",
-        eventToAdd: () => this.onPrevious?.(),
-      });
-      this.nextBtn = this.createElementComponent.createButton({
-        text: "Next",
-        eventToAdd: () => this.onNext?.(),
-      });
-
-      this.paginationData = { currentPage: 1, itemsPerPage: 5 };
-      // this.selectItemsPerPage = this.createElementComponent.createSelect({
-      //   options: selectOptions,
-      //   eventToAdd: (e) => {
-      //     this.paginationData.itemsPerPage = e.target.value;
-      //   },
+      // this.previousBtn = this.createElementComponent.createButton({
+      //   text: "Previous",
+      //   eventToAdd: () => this.onPrevious?.(),
       // });
-      this.pageIndicator = this.createElementComponent.createSpan();
+      // this.nextBtn = this.createElementComponent.createButton({
+      //   text: "Next",
+      //   eventToAdd: () => this.onNext?.(),
+      // });
 
-      this.container.append(this.previousBtn, this.pageIndicator, this.nextBtn);
+      this.selectItemsPerPage = this.createElementComponent.createSelect({
+        options: selectOptions,
+        eventToAdd: (e) => onPageChange?.(e.target.value) // need to do something with this value and define this function somehow
+      });
+
+      this.container.append(this.selectItemsPerPage);
     }
 
-    setItemsPerPage = (itemNrPerPage) => {
-      this.paginationData.itemsPerPage = parseInt(itemNrPerPage);
-      this.paginationData.currentPage = 1;
-    };
+    // setItemsPerPage = (itemNrPerPage) => {
+    //   this.paginationData.itemsPerPage = parseInt(itemNrPerPage);
+    //   this.paginationData.currentPage = 1;
+    // };
 
-    renderPaginationResults({ totalPages, currentPage, result, renderFunction }) {
-      renderFunction(result);
-      this.pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
-      this.previousBtn.disabled = currentPage <= 1;
-      this.nextBtn.disabled = currentPage >= totalPages;
-    }
+    // renderPaginationResults({ totalPages, currentPage, result, renderFunction }) {
+    //   renderFunction(result)
+    //   this.pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
+    //   this.previousBtn.disabled = currentPage <= 1;
+    //   this.nextBtn.disabled = currentPage >= totalPages;
+    // }
 
     addContainer(containerId) {
       const target = document.getElementById(containerId);
@@ -448,43 +444,49 @@
     };
   }
 
-  class PaginationHandler {
-    constructor({ paginationFunction = null, pagerComponent = null, renderFunction = null } = {}) {
-      this.paginationFunction = paginationFunction;
-      this.pagerComponent = pagerComponent;
-      this.renderFunction = renderFunction;
-
-      this.pagerComponent.onNext = this.onNext;
-      this.pagerComponent.onPrevious = this.onPrevious;
-
-      this.paginationData = this.pagerComponent.paginationData;
+  class PagerData {
+    constructor() {
+      this.currentPageNo = 1;
+      this.itemsPerPage = 5;
     }
 
+    setItemsPerPage(itemsPerPageNr) {
+      this.itemsPerPage = itemsPerPageNr;
+    }
+  }
+
+  class PaginationHandler {
+    constructor({ paginationFunction = null, onPaginationResponse = null } = {}) {
+      this.paginationFunction = paginationFunction;
+      this.onPaginationResponse = onPaginationResponse;
+      // this.pagerComponent.onNext = this.onNext;
+      // this.pagerComponent.onPrevious = this.onPrevious;
+
+      this.paginationData = new PagerData();
+    }
+
+    //call the pagination function
     getItems() {
-      //call the pagination function and pass the results to pager component
-      this.paginationFunction(this.paginationData).then(
-        ({ paginatedItems, totalPages }) => {
-          this.totalPages = totalPages;
-          this.pagerComponent.renderPaginationResults({
-            totalPages: this.totalPages,
-            currentPage: this.paginationData.currentPage,
-            result: paginatedItems,
-            renderFunction: this.renderFunction,
-          });
-        },
-      );
+      const { currentPage, itemsPerPage } = this.paginationData;
+      this.paginationFunction({
+        currentPage,
+        itemsPerPage,
+      }).then(({ paginatedItems, totalPages }) => {
+        this.onPaginationResponse({ paginatedItems, totalPages });
+      });
     }
 
     onNext = () => {
-      if (this.paginationData.currentPage < this.totalPages) {
-        this.paginationData.currentPage++;
+      //have to use pager data somehow
+      if (this.paginationData.currentPageNo < this.totalPages) {
+        this.paginationData.currentPageNo++;
       }
       this.getItems();
     };
 
     onPrevious = () => {
-      if (this.paginationData.currentPage > 1) {
-        this.paginationData.currentPage--;
+      if (this.paginationData.currentPageNo > 1) {
+        this.paginationData.currentPageNo--;
       }
       this.getItems();
     };
@@ -493,36 +495,52 @@
   class TaskLogic {
     constructor({ taskService = null } = {}) {
       this.taskService = taskService;
-      this.pagerComponent = new PagerComponent();
+
+      this.pagerData = new PagerData();
+      // am nevoie de pager data aici ca functia are ca paramentru datele, trb sa ii dau ca param altcumva ------
       this.paginationHandler = new PaginationHandler({
-        pagerComponent: this.pagerComponent,
-        renderFunction: renderTasks("paginationContainer"),
+        paginationFunction: () => this.taskService.getTasks({
+          currentPage: this.pagerData.currentPageNo,
+          itemsPerPage: this.pagerData.itemsPerPage,
+        }),
+        onPaginationResponse: this.onPaginationResponse,
       });
-      this.paginationData = this.pagerComponent.paginationData;
-      this.paginationHandler.paginationFunction = () => this.taskService.getTasks(this.paginationData);
-      this.paginationHandler.pagerComponent = this.pagerComponent;
-
-      this.pagerComponent.addContainer("buttonContainer");
-      // this.paginationHandler = paginationHandler;
-
+      this.result = {};
     }
-
 
     getPagination() {
       this.paginationHandler.getItems();
-
-      // maybe here pass the pagination function to handler
-      // this.taskService
-      //   .getTasks(this.paginationData)
-      //   .then(({ paginatedItems, totalPages }) => {
-      //     this.taskRenderer(paginatedItems); // send this to pager component
-      //     this.totalPages = totalPages;
-      //     this.pager.renderPaginationResults({
-      //       totalPages: totalPages,
-      //       currentPage: this.paginationData.currentPage,
-      //     });
-      //   });
     }
+
+    onPaginationResponse({ paginatedItems = [], totalPages = 0}) {
+       this.result = { paginatedItems, totalPages }; //this does not work at all 
+    }
+
+  }
+
+  class TaskPresentationUI {
+    constructor(taskLogic = null) {
+      this.taskRenderer = renderTasks("paginationContainer");
+      this.taskLogic = taskLogic;
+      // or something, atm i do this bcs i don't have other render function
+      // this.paginationReponse = this.taskLogic.getResponse(); // i get the tasks from the task logic, the result
+
+      this.createElementComponent = new CreateElementComponent();
+      this.container = this.createElementComponent.createDiv();
+      this.pageIndicator = this.createElementComponent.createSpan();
+    }
+
+    renderTasks() {
+      //   this.pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
+      // this.taskRenderer(this.taskItems);
+      console.log(this.paginationReponse);
+      
+    }
+
+    // addContainer(containerId) {
+    //   const target = document.getElementById(containerId);
+    //   target.appendChild(this.container);
+    // }
   }
 
   class TaskPresentationService {
@@ -532,12 +550,18 @@
       });
 
       this.taskService = new TaskService(initialTaskData);
-      // this.taskPagerComponent = new PagerComponent({selectOptions : [5, 10]});
+      this.taskPagerComponent = new PagerComponent({selectOptions : [5, 10]});
+      this.taskPagerComponent.addContainer("buttonContainer");
       // this.taskPaginationHandler = new PaginationHandler();
 
       this.taskLogic = new TaskLogic({
         taskService: this.taskService,
       });
+
+      this.taskPresentationPage = new TaskPresentationUI(this.taskLogic);
+      // this.taskPresentationPage.addContainer("paginationContainer");
+      this.taskPresentationPage.renderTasks();
+
 
       // this.taskPagerComponent.onNext = this.taskPaginationHandler.onNext;
       // this.taskPagerComponent.onPrevious = this.taskPaginationHandler.onPrevious;

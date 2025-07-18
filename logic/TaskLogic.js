@@ -1,38 +1,30 @@
 import { PagerComponent } from "../components/PagerComponent";
 import { renderTasks } from "../ui/taskListRenderer";
+import { PagerData } from "./PagerData";
 import { PaginationHandler } from "./PaginationHandler";
 
 export class TaskLogic {
   constructor({ taskService = null } = {}) {
     this.taskService = taskService;
-    this.pagerComponent = new PagerComponent();
+
+    this.pagerData = new PagerData();
+    // am nevoie de pager data aici ca functia are ca paramentru datele, trb sa ii dau ca param altcumva ------
     this.paginationHandler = new PaginationHandler({
-      pagerComponent: this.pagerComponent,
-      renderFunction: renderTasks("paginationContainer"),
+      paginationFunction: () => this.taskService.getTasks({
+        currentPage: this.pagerData.currentPageNo,
+        itemsPerPage: this.pagerData.itemsPerPage,
+      }),
+      onPaginationResponse: this.onPaginationResponse,
     });
-    this.paginationData = this.pagerComponent.paginationData;
-    this.paginationHandler.paginationFunction = () => this.taskService.getTasks(this.paginationData)
-    this.paginationHandler.pagerComponent = this.pagerComponent;
-
-    this.pagerComponent.addContainer("buttonContainer")
-    // this.paginationHandler = paginationHandler;
-
+    this.result = {}
   }
-
 
   getPagination() {
     this.paginationHandler.getItems();
-
-    // maybe here pass the pagination function to handler
-    // this.taskService
-    //   .getTasks(this.paginationData)
-    //   .then(({ paginatedItems, totalPages }) => {
-    //     this.taskRenderer(paginatedItems); // send this to pager component
-    //     this.totalPages = totalPages;
-    //     this.pager.renderPaginationResults({
-    //       totalPages: totalPages,
-    //       currentPage: this.paginationData.currentPage,
-    //     });
-    //   });
   }
+
+  onPaginationResponse({ paginatedItems = [], totalPages = 0}) {
+     this.result = { paginatedItems, totalPages }; //this does not work at all 
+  }
+
 }
