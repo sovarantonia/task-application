@@ -27,4 +27,7 @@ export class TaskLogic {
      this.result = { paginatedItems, totalPages }; //this does not work at all 
   }
 
+  getResponse = () => {
+    return this.result;
+  }
 }

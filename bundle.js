@@ -516,6 +516,9 @@
        this.result = { paginatedItems, totalPages }; //this does not work at all 
     }
 
+    getResponse = () => {
+      return this.result;
+    }
   }
 
   class TaskPresentationUI {
@@ -523,8 +526,8 @@
       this.taskRenderer = renderTasks("paginationContainer");
       this.taskLogic = taskLogic;
       // or something, atm i do this bcs i don't have other render function
-      // this.paginationReponse = this.taskLogic.getResponse(); // i get the tasks from the task logic, the result
-
+      this.paginationReponse = this.taskLogic.getResponse(); // i get the tasks from the task logic, the result
+      // not working 
       this.createElementComponent = new CreateElementComponent();
       this.container = this.createElementComponent.createDiv();
       this.pageIndicator = this.createElementComponent.createSpan();
