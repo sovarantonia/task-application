@@ -17,11 +17,11 @@ export class UserLogic {
     this.checkboxStateMap = new Map();
   }
 
-//   setItemsPerPage = (itemNrPerPage) => {
-//     this.itemsPerPage = parseInt(itemNrPerPage);
-//     this.currentPage = 1;
-//     this.getUsers();
-//   };
+  //   setItemsPerPage = (itemNrPerPage) => {
+  //     this.itemsPerPage = parseInt(itemNrPerPage);
+  //     this.currentPageNo = 1;
+  //     this.getUsers();
+  //   };
 
   getUsers() {
     this.userService
@@ -31,7 +31,7 @@ export class UserLogic {
         this.totalPages = totalPages;
         this.pagerComponent.renderPaginationResults({
           totalPages: totalPages,
-          currentPage: this.paginationData.currentPage,
+          currentPageNo: this.paginationData.currentPageNo,
         });
         this.checkboxSelectComponent.renderSelectedItemNr(
           this.checkboxStateMap.size,
@@ -41,15 +41,15 @@ export class UserLogic {
   }
 
   onNext = () => {
-    if (this.paginationData.currentPage < this.totalPages) {
-      this.paginationData.currentPage++;
+    if (this.paginationData.currentPageNo < this.totalPages) {
+      this.paginationData.currentPageNo++;
     }
     this.getUsers();
   };
 
   onPrevious = () => {
-    if (this.paginationData.currentPage > 1) {
-      this.paginationData.currentPage--;
+    if (this.paginationData.currentPageNo > 1) {
+      this.paginationData.currentPageNo--;
     }
     this.getUsers();
   };

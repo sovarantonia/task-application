@@ -7,11 +7,11 @@ export class PaginationComponent {
 
     this.previousBtn = document.getElementById("previousBtn");
     this.nextBtn = document.getElementById("nextBtn");
-    this.currentPageSpan = document.getElementById("currentPageSpan");
+    this.currentPageNoSpan = document.getElementById("currentPageNoSpan");
     this.firstPageBtn = document.getElementById("firstPageBtn");
     this.lastPageBtn = document.getElementById("lastPageBtn");
 
-    this.currentPage = 1;
+    this.currentPageNo = 1;
     this.itemsPerPage = parseInt(this.select.value);
 
     this.sortingCriteria = [];
@@ -26,35 +26,35 @@ export class PaginationComponent {
   attachEvents() {
     this.select.addEventListener("change", (e) => {
       this.itemsPerPage = parseInt(e.target.value);
-      this.currentPage = 1;
-      this.currentPageSpan.innerText = this.currentPage.toString();
+      this.currentPageNo = 1;
+      this.currentPageNoSpan.innerText = this.currentPageNo.toString();
       this.renderPage();
     });
 
     this.previousBtn.addEventListener("click", () => {
-      if (this.currentPage > 1) {
-        this.currentPage--;
+      if (this.currentPageNo > 1) {
+        this.currentPageNo--;
       }
-      this.currentPageSpan.innerText = this.currentPage.toString();
+      this.currentPageNoSpan.innerText = this.currentPageNo.toString();
       this.renderPage();
     });
 
     this.nextBtn.addEventListener("click", () => {
-      if (this.currentPage < this.totalPages) {
-        this.currentPage++;
+      if (this.currentPageNo < this.totalPages) {
+        this.currentPageNo++;
       }
 
-      this.currentPageSpan.innerText = this.currentPage.toString();
+      this.currentPageNoSpan.innerText = this.currentPageNo.toString();
       this.renderPage();
     });
 
     this.firstPageBtn.addEventListener("click", () => {
-      this.currentPage = 1;
+      this.currentPageNo = 1;
       this.renderPage();
     });
 
     this.lastPageBtn.addEventListener("click", () => {
-      this.currentPage = this.totalPages;
+      this.currentPageNo = this.totalPages;
       this.renderPage();
     });
   }
@@ -63,7 +63,7 @@ export class PaginationComponent {
     this.container.innerHTML = "";
     this.taskService
       .getTasks(
-        { currentPage: this.currentPage, itemsPerPage: this.itemsPerPage },
+        { currentPageNo: this.currentPageNo, itemsPerPage: this.itemsPerPage },
         this.sortingCriteria,
         this.filterCriteria,
       )
@@ -82,7 +82,7 @@ export class PaginationComponent {
           this.container.appendChild(card);
         });
 
-        this.currentPageSpan.innerText = this.currentPage.toString();
+        this.currentPageNoSpan.innerText = this.currentPageNo.toString();
         this.renderPaginationControls();
       });
   }
@@ -91,9 +91,9 @@ export class PaginationComponent {
     this.lastPageBtn.hidden =
       this.firstPageBtn.innerText === this.lastPageBtn.innerText &&
       this.lastPageBtn.innerText === "1";
-    this.previousBtn.disabled = this.currentPage === 1;
-    this.nextBtn.disabled = this.currentPage === this.totalPages;
-    this.currentPageSpan.hidden =
-      this.currentPage === 1 || this.currentPage === this.totalPages;
+    this.previousBtn.disabled = this.currentPageNo === 1;
+    this.nextBtn.disabled = this.currentPageNo === this.totalPages;
+    this.currentPageNoSpan.hidden =
+      this.currentPageNo === 1 || this.currentPageNo === this.totalPages;
   }
 }

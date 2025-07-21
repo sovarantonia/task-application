@@ -19,7 +19,7 @@ export class PagerComponent {
 
     this.selectItemsPerPage = this.createElementComponent.createSelect({
       options: selectOptions,
-      eventToAdd: (e) => onPageChange?.(e.target.value) // need to do something with this value and define this function somehow
+      eventToAdd: (e) => onPageChange?.(e.target.value), // need to do something with this value and define this function somehow
     });
 
     this.container.append(this.selectItemsPerPage);
@@ -27,14 +27,14 @@ export class PagerComponent {
 
   // setItemsPerPage = (itemNrPerPage) => {
   //   this.paginationData.itemsPerPage = parseInt(itemNrPerPage);
-  //   this.paginationData.currentPage = 1;
+  //   this.paginationData.currentPageNo = 1;
   // };
 
-  // renderPaginationResults({ totalPages, currentPage, result, renderFunction }) {
+  // renderPaginationResults({ totalPages, currentPageNo, result, renderFunction }) {
   //   renderFunction(result)
-  //   this.pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
-  //   this.previousBtn.disabled = currentPage <= 1;
-  //   this.nextBtn.disabled = currentPage >= totalPages;
+  //   this.pageIndicator.textContent = `Page ${currentPageNo} of ${totalPages}`;
+  //   this.previousBtn.disabled = currentPageNo <= 1;
+  //   this.nextBtn.disabled = currentPageNo >= totalPages;
   // }
 
   addContainer(containerId) {

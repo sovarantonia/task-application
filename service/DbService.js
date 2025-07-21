@@ -50,7 +50,7 @@ export class DbService {
   }
 
   getPaginatedItems(
-    { currentPage, itemsPerPage },
+    { currentPageNo, itemsPerPage },
     sortCriteria = [],
     filterCriteria = [],
   ) {
@@ -66,7 +66,7 @@ export class DbService {
       }
 
       const paginatedItems = getPaginatedElements(items, {
-        currentPage,
+        currentPageNo,
         itemsPerPage,
       });
       const totalPages = getTotalPages(items, itemsPerPage);

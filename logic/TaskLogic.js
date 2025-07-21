@@ -1,33 +1,39 @@
-import { PagerComponent } from "../components/PagerComponent";
-import { renderTasks } from "../ui/taskListRenderer";
-import { PagerData } from "./PagerData";
 import { PaginationHandler } from "./PaginationHandler";
 
 export class TaskLogic {
   constructor({ taskService = null } = {}) {
     this.taskService = taskService;
 
-    this.pagerData = new PagerData();
-    // am nevoie de pager data aici ca functia are ca paramentru datele, trb sa ii dau ca param altcumva ------
     this.paginationHandler = new PaginationHandler({
-      paginationFunction: () => this.taskService.getTasks({
-        currentPage: this.pagerData.currentPageNo,
-        itemsPerPage: this.pagerData.itemsPerPage,
-      }),
+      paginationFunction: this.taskService.getTasks, //or bind; this is an arrow function
       onPaginationResponse: this.onPaginationResponse,
     });
-    this.result = {}
+    this.result = {};
   }
 
-  getPagination() {
+  getPagination = () => {
+    // debugger;
+   
     this.paginationHandler.getItems();
-  }
+    // debugger;
+    // .then(({paginatedItems, totalPages}) => {
+    //   this.onPaginationResponse({paginatedItems, totalPages});
+    // })
+    // .then(this.getResponse);
+    return result;
+  };
 
-  onPaginationResponse({ paginatedItems = [], totalPages = 0}) {
-     this.result = { paginatedItems, totalPages }; //this does not work at all 
-  }
+  onPaginationResponse = ({ paginatedItems, totalPages }) => {
+    // debugger;
+
+    this.result = { list: paginatedItems, totalPages: totalPages };
+
+    // issue related to promise
+    // return this.result;
+  };
 
   getResponse = () => {
+    // debugger;
     return this.result;
-  }
+  };
 }

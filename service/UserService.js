@@ -5,17 +5,17 @@ export class UserService {
     this.service = new DbService(userData);
   }
 
-  getPaginatedUsers(
-    { currentPage, itemsPerPage },
+  getPaginatedUsers = (
+    { currentPageNo, itemsPerPage },
     sortCriteria = [],
     filterCriteria = [],
-  ) {
+  ) => {
     return this.service.getPaginatedItems(
-      { currentPage, itemsPerPage },
+      { currentPageNo, itemsPerPage },
       sortCriteria,
       filterCriteria,
     );
-  }
+  };
 
   sendEmail(userList) {
     return new Promise((resolve) => {

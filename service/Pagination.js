@@ -1,8 +1,8 @@
 export function getPaginatedElements(
   elementList,
-  { currentPage, itemsPerPage },
+  { currentPageNo, itemsPerPage },
 ) {
-  const start = (currentPage - 1) * itemsPerPage;
+  const start = (currentPageNo - 1) * itemsPerPage;
   const end = start + itemsPerPage;
 
   return elementList.slice(start, end);

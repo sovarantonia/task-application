@@ -5,18 +5,19 @@ export class TaskPresentationUI {
     this.taskRenderer = renderTasks("paginationContainer");
     this.taskLogic = taskLogic;
     // or something, atm i do this bcs i don't have other render function
-    this.paginationReponse = this.taskLogic.getResponse(); // i get the tasks from the task logic, the result
-    // not working 
+    this.paginationReponse = this.taskLogic.getPagination(); // i get the tasks from the task logic, the result
+    // not working
     this.createElementComponent = new CreateElementComponent();
     this.container = this.createElementComponent.createDiv();
     this.pageIndicator = this.createElementComponent.createSpan();
   }
 
   renderTasks() {
-    //   this.pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
+    //   this.pageIndicator.textContent = `Page ${currentPageNo} of ${totalPages}`;
     // this.taskRenderer(this.taskItems);
-    console.log(this.paginationReponse)
-    
+    // debugger;
+    console.log("ui");
+    console.log(this.taskLogic.getPagination());
   }
 
   // addContainer(containerId) {

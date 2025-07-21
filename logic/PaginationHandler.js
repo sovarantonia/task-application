@@ -12,13 +12,15 @@ export class PaginationHandler {
 
   //call the pagination function
   getItems() {
-    const { currentPage, itemsPerPage } = this.paginationData;
+    const { currentPageNo, itemsPerPage } = this.paginationData;
+    // issue is with the promise
     this.paginationFunction({
-      currentPage,
+      currentPageNo,
       itemsPerPage,
     }).then(({ paginatedItems, totalPages }) => {
       this.onPaginationResponse({ paginatedItems, totalPages });
     });
+    // return paginationFunctionPromise;
   }
 
   onNext = () => {
