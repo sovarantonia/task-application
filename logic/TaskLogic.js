@@ -1,3 +1,4 @@
+import { TaskPresentationUI } from "../ui/TaskPresentationUI";
 import { PaginationHandler } from "./PaginationHandler";
 
 export class TaskLogic {
@@ -8,32 +9,22 @@ export class TaskLogic {
       paginationFunction: this.taskService.getTasks, //or bind; this is an arrow function
       onPaginationResponse: this.onPaginationResponse,
     });
-    this.result = {};
+
+    this.taskPresentationUI = new TaskPresentationUI();
   }
 
   getPagination = () => {
-    // debugger;
-   
     this.paginationHandler.getItems();
-    // debugger;
-    // .then(({paginatedItems, totalPages}) => {
-    //   this.onPaginationResponse({paginatedItems, totalPages});
-    // })
-    // .then(this.getResponse);
-    return result;
   };
 
   onPaginationResponse = ({ paginatedItems, totalPages }) => {
-    // debugger;
-
-    this.result = { list: paginatedItems, totalPages: totalPages };
-
-    // issue related to promise
-    // return this.result;
+    this.taskPresentationUI.renderTasks(paginatedItems);
+    this.taskPresentationUI.renderPageControls(totalPages);
   };
 
-  getResponse = () => {
-    // debugger;
-    return this.result;
-  };
+  init() {
+    this.getPagination();
+    this.taskPresentationUI.addContainer("taskPageControlBtn")
+  }
+
 }

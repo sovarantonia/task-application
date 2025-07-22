@@ -1,27 +1,26 @@
 import { renderTasks } from "../ui/taskListRenderer";
 import { CreateElementComponent } from "../components/CreateElementComponent";
 export class TaskPresentationUI {
-  constructor(taskLogic = null) {
-    this.taskRenderer = renderTasks("paginationContainer");
-    this.taskLogic = taskLogic;
-    // or something, atm i do this bcs i don't have other render function
-    this.paginationReponse = this.taskLogic.getPagination(); // i get the tasks from the task logic, the result
-    // not working
+  constructor() {
+    this.taskRenderer = renderTasks("taskPaginationContainer");
+
     this.createElementComponent = new CreateElementComponent();
     this.container = this.createElementComponent.createDiv();
     this.pageIndicator = this.createElementComponent.createSpan();
   }
 
-  renderTasks() {
-    //   this.pageIndicator.textContent = `Page ${currentPageNo} of ${totalPages}`;
-    // this.taskRenderer(this.taskItems);
-    // debugger;
-    console.log("ui");
-    console.log(this.taskLogic.getPagination());
+  renderTasks = (taskList) => {
+    this.taskRenderer(taskList);
+  };
+
+  renderPageControls = (totalPages) => {
+    this.pageIndicator.textContent = `Page ${1} of ${totalPages}`;
+  };
+
+  addContainer(containerId) {
+    const target = document.getElementById(containerId);
+    target.appendChild(this.container);
+    this.container.append(this.pageIndicator);
   }
 
-  // addContainer(containerId) {
-  //   const target = document.getElementById(containerId);
-  //   target.appendChild(this.container);
-  // }
 }

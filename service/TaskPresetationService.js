@@ -19,23 +19,20 @@ export class TaskPresentationService {
     });
 
     this.taskService = new TaskService(initialTaskData);
-    this.taskPagerComponent = new PagerComponent({selectOptions : [5, 10]});
-    this.taskPagerComponent.addContainer("buttonContainer")
+    this.taskPagerComponent = new PagerComponent({ selectOptions: [5, 10] });
+    this.taskPagerComponent.addContainer("taskPageControlBtn");
     // this.taskPaginationHandler = new PaginationHandler();
 
     this.taskLogic = new TaskLogic({
       taskService: this.taskService,
     });
 
-    this.taskPresentationPage = new TaskPresentationUI(this.taskLogic);
-    // this.taskPresentationPage.addContainer("paginationContainer");
+    // this.taskPresentationPage.addContainer("taskPaginationContainer");
     // debugger;
-    this.taskPresentationPage.renderTasks();
-
 
     // this.taskPagerComponent.onNext = this.taskPaginationHandler.onNext;
     // this.taskPagerComponent.onPrevious = this.taskPaginationHandler.onPrevious;
-    // this.taskPagerComponent.addContainer("buttonContainer");
+    // this.taskPagerComponent.addContainer("taskPageControlBtn");
 
     // this.userService = new UserService(initialUserData);
 
@@ -67,7 +64,7 @@ export class TaskPresentationService {
   }
 
   init() {
-    this.taskLogic.getPagination();
+    this.taskLogic.init();
     // this.userLogic.getUsers();
   }
 }
