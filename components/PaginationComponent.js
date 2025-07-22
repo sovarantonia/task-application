@@ -3,7 +3,7 @@ export class PaginationComponent {
     this.taskService = taskService;
 
     this.container = document.getElementById("taskContainer");
-    this.select = document.getElementById("itemsPerPageSelect");
+    this.select = document.getElementById("taskPerPageSelect");
 
     this.previousBtn = document.getElementById("previousBtn");
     this.nextBtn = document.getElementById("nextBtn");

@@ -19,9 +19,6 @@ export class TaskPresentationService {
     });
 
     this.taskService = new TaskService(initialTaskData);
-    this.taskPagerComponent = new PagerComponent({ selectOptions: [5, 10] });
-    this.taskPagerComponent.addContainer("taskPageControlBtn");
-    // this.taskPaginationHandler = new PaginationHandler();
 
     this.taskLogic = new TaskLogic({
       taskService: this.taskService,

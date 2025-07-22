@@ -337,25 +337,6 @@
     return new Date(value);
   }
 
-  function renderTasks(containerId) {
-    const container = document.getElementById(containerId);
-
-    return (tasks) => {
-      container.innerHTML = "";
-
-      tasks.forEach((element) => {
-        const card = document.createElement("div");
-        card.className = "task-card";
-        card.innerHTML = `<h2>${element.title}</h2>
-        <p>Status: ${element.status}</p>
-        <p>${element.description}</p>
-        <p>Assigned to: ${element.userName}</p>
-        <p>Created at: ${element.creationDate}</p>`;
-        container.appendChild(card);
-      });
-    };
-  }
-
   class CreateElementComponent {
     createDiv() {
       return document.createElement("div");
@@ -401,6 +382,83 @@
     }
   }
 
+  class PagerData {
+    constructor(onPagerDataChanged = null) {
+      this.currentPageNo = 1;
+      this.itemsPerPage = 5;
+
+      this.onPagerDataChanged = onPagerDataChanged;
+    }
+
+    setItemsPerPage = (itemsPerPageNr) => {
+      this.itemsPerPage = itemsPerPageNr;
+      this.onPagerDataChanged();
+    };
+
+    setCurrentPageNo = (newPageNo) => {
+      this.currentPageNo = newPageNo;
+    };
+  }
+
+  class PagerComponent {
+    constructor({ selectOptions } = {}) {
+      // this.onNext = onNext;
+      // this.onPrevious = onPrev;
+      // this.pagerData = new PagerData();
+
+      this.createElementComponent = new CreateElementComponent();
+      this.container = this.createElementComponent.createDiv();
+
+      // this.selectItemsPerPage = this.createElementComponent.createSelect({
+      //   options: selectOptions,
+      //   eventToAdd: (e) => this.pagerData.setItemsPerPage(e.target.value),
+      // });
+
+      // this.container.append(this.selectItemsPerPage);
+    }
+
+    // renderPaginationResults({ totalPages, currentPageNo, result, renderFunction }) {
+
+    // this.previousBtn = this.createElementComponent.createButton({
+    //   text: "Previous",
+    //   eventToAdd: () => this.onPrevious?.(),
+    // });
+    // this.nextBtn = this.createElementComponent.createButton({
+    //   text: "Next",
+    //   eventToAdd: () => this.onNext?.(),
+    // });
+    // just put these here, they belong somwhere else
+    //   renderFunction(result)
+    //   this.pageIndicator.textContent = `Page ${currentPageNo} of ${totalPages}`;
+    //   this.previousBtn.disabled = currentPageNo <= 1;
+    //   this.nextBtn.disabled = currentPageNo >= totalPages;
+    // }
+
+    addContainer(containerId) {
+      const target = document.getElementById(containerId);
+      target.appendChild(this.container);
+    }
+  }
+
+  function renderTasks(containerId) {
+    const container = document.getElementById(containerId);
+
+    return (tasks) => {
+      container.innerHTML = "";
+
+      tasks.forEach((element) => {
+        const card = document.createElement("div");
+        card.className = "task-card";
+        card.innerHTML = `<h2>${element.title}</h2>
+        <p>Status: ${element.status}</p>
+        <p>${element.description}</p>
+        <p>Assigned to: ${element.userName}</p>
+        <p>Created at: ${element.creationDate}</p>`;
+        container.appendChild(card);
+      });
+    };
+  }
+
   class TaskPresentationUI {
     constructor() {
       this.taskRenderer = renderTasks("taskPaginationContainer");
@@ -423,33 +481,21 @@
       target.appendChild(this.container);
       this.container.append(this.pageIndicator);
     }
-
-  }
-
-  class PagerData {
-    constructor() {
-      this.currentPageNo = 1;
-      this.itemsPerPage = 5;
-    }
-
-    setItemsPerPage(itemsPerPageNr) {
-      this.itemsPerPage = itemsPerPageNr;
-    }
   }
 
   class PaginationHandler {
-    constructor({ paginationFunction = null, onPaginationResponse = null } = {}) {
+    constructor({ paginationFunction = null, onPaginationResponse = null, pagerData = null, } = {}) {
       this.paginationFunction = paginationFunction;
       this.onPaginationResponse = onPaginationResponse;
       // this.pagerComponent.onNext = this.onNext;
       // this.pagerComponent.onPrevious = this.onPrevious;
 
-      this.paginationData = new PagerData();
+      this.pagerData = pagerData;
     }
 
     //call the pagination function
-    getItems() {
-      const { currentPageNo, itemsPerPage } = this.paginationData;
+    getItems = ()  => {
+      const { currentPageNo, itemsPerPage } = this.pagerData;
       this.paginationFunction({
         currentPageNo,
         itemsPerPage,
@@ -460,30 +506,44 @@
 
     onNext = () => {
       //have to use pager data somehow
-      if (this.paginationData.currentPageNo < this.totalPages) {
-        this.paginationData.currentPageNo++;
+      if (this.pagerData.currentPageNo < this.totalPages) {
+        this.pagerData.currentPageNo++;
       }
       this.getItems();
     };
 
     onPrevious = () => {
-      if (this.paginationData.currentPageNo > 1) {
-        this.paginationData.currentPageNo--;
+      if (this.pagerData.currentPageNo > 1) {
+        this.pagerData.currentPageNo--;
       }
       this.getItems();
     };
+
   }
 
   class TaskLogic {
     constructor({ taskService = null } = {}) {
       this.taskService = taskService;
 
+      this.taskPresentationUI = new TaskPresentationUI();
+      this.pagerComponent = new PagerComponent({ selectOptions: [5, 10] });
+      this.pagerData = new PagerData();
+
+      this.createElementComponent = new CreateElementComponent();
+      this.selectItemsPerPage = this.createElementComponent.createSelect({
+        options: [5, 10],
+        eventToAdd: (e) => this.pagerData.setItemsPerPage(e.target.value),
+      });
+
       this.paginationHandler = new PaginationHandler({
         paginationFunction: this.taskService.getTasks, //or bind; this is an arrow function
         onPaginationResponse: this.onPaginationResponse,
+        pagerData: this.pagerData,
       });
 
-      this.taskPresentationUI = new TaskPresentationUI();
+      this.pagerData.onPagerDataChanged = this.paginationHandler.getItems;
+      
+      this.pagerComponent.container.append(this.selectItemsPerPage);
     }
 
     getPagination = () => {
@@ -498,50 +558,7 @@
     init() {
       this.getPagination();
       this.taskPresentationUI.addContainer("taskPageControlBtn");
-    }
-
-  }
-
-  class PagerComponent {
-    constructor({ selectOptions, onPageChange } = {}) {
-      // this.onNext = onNext;
-      // this.onPrevious = onPrev;
-
-      this.createElementComponent = new CreateElementComponent();
-      this.container = this.createElementComponent.createDiv();
-
-      // this.previousBtn = this.createElementComponent.createButton({
-      //   text: "Previous",
-      //   eventToAdd: () => this.onPrevious?.(),
-      // });
-      // this.nextBtn = this.createElementComponent.createButton({
-      //   text: "Next",
-      //   eventToAdd: () => this.onNext?.(),
-      // });
-
-      this.selectItemsPerPage = this.createElementComponent.createSelect({
-        options: selectOptions,
-        eventToAdd: (e) => onPageChange?.(e.target.value), // need to do something with this value and define this function somehow
-      });
-
-      this.container.append(this.selectItemsPerPage);
-    }
-
-    // setItemsPerPage = (itemNrPerPage) => {
-    //   this.paginationData.itemsPerPage = parseInt(itemNrPerPage);
-    //   this.paginationData.currentPageNo = 1;
-    // };
-
-    // renderPaginationResults({ totalPages, currentPageNo, result, renderFunction }) {
-    //   renderFunction(result)
-    //   this.pageIndicator.textContent = `Page ${currentPageNo} of ${totalPages}`;
-    //   this.previousBtn.disabled = currentPageNo <= 1;
-    //   this.nextBtn.disabled = currentPageNo >= totalPages;
-    // }
-
-    addContainer(containerId) {
-      const target = document.getElementById(containerId);
-      target.appendChild(this.container);
+      this.pagerComponent.addContainer("taskPerPageSelect");
     }
   }
 
@@ -552,9 +569,6 @@
       });
 
       this.taskService = new TaskService(initialTaskData);
-      this.taskPagerComponent = new PagerComponent({ selectOptions: [5, 10] });
-      this.taskPagerComponent.addContainer("taskPageControlBtn");
-      // this.taskPaginationHandler = new PaginationHandler();
 
       this.taskLogic = new TaskLogic({
         taskService: this.taskService,

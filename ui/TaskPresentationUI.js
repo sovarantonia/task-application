@@ -22,5 +22,4 @@ export class TaskPresentationUI {
     target.appendChild(this.container);
     this.container.append(this.pageIndicator);
   }
-
 }

@@ -1,18 +1,16 @@
-import { PagerData } from "./PagerData";
-
 export class PaginationHandler {
-  constructor({ paginationFunction = null, onPaginationResponse = null } = {}) {
+  constructor({ paginationFunction = null, onPaginationResponse = null, pagerData = null, } = {}) {
     this.paginationFunction = paginationFunction;
     this.onPaginationResponse = onPaginationResponse;
     // this.pagerComponent.onNext = this.onNext;
     // this.pagerComponent.onPrevious = this.onPrevious;
 
-    this.paginationData = new PagerData();
+    this.pagerData = pagerData;
   }
 
   //call the pagination function
-  getItems() {
-    const { currentPageNo, itemsPerPage } = this.paginationData;
+  getItems = ()  => {
+    const { currentPageNo, itemsPerPage } = this.pagerData;
     this.paginationFunction({
       currentPageNo,
       itemsPerPage,
@@ -23,16 +21,17 @@ export class PaginationHandler {
 
   onNext = () => {
     //have to use pager data somehow
-    if (this.paginationData.currentPageNo < this.totalPages) {
-      this.paginationData.currentPageNo++;
+    if (this.pagerData.currentPageNo < this.totalPages) {
+      this.pagerData.currentPageNo++;
     }
     this.getItems();
   };
 
   onPrevious = () => {
-    if (this.paginationData.currentPageNo > 1) {
-      this.paginationData.currentPageNo--;
+    if (this.pagerData.currentPageNo > 1) {
+      this.pagerData.currentPageNo--;
     }
     this.getItems();
   };
+
 }
