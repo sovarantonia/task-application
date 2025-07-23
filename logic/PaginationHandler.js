@@ -1,5 +1,9 @@
 export class PaginationHandler {
-  constructor({ paginationFunction = null, onPaginationResponse = null, pagerData = null, } = {}) {
+  constructor({
+    paginationFunction = null,
+    onPaginationResponse = null,
+    pagerData = null,
+  } = {}) {
     this.paginationFunction = paginationFunction;
     this.onPaginationResponse = onPaginationResponse;
     // this.pagerComponent.onNext = this.onNext;
@@ -9,14 +13,18 @@ export class PaginationHandler {
   }
 
   //calls the pagination function and passes the result to pagination response
-  getItems = ({currentPageNo, itemsPerPage})  => {
+  getItems = ({ currentPageNo, itemsPerPage }) => {
+    // console.log(
+    //   `Current pageNo ${currentPageNo} + and items per page ${itemsPerPage} in HANDLER`,
+    // );
+    // debugger;
     this.paginationFunction({
       currentPageNo,
       itemsPerPage,
     }).then(({ paginatedItems, totalPages }) => {
       this.onPaginationResponse({ paginatedItems, totalPages });
     });
-  }
+  };
 
   // onNext = () => {
   //   //have to use pager data somehow
@@ -32,5 +40,4 @@ export class PaginationHandler {
   //   }
   //   this.getItems();
   // };
-
 }

@@ -14,7 +14,7 @@ export class PagerComponentUI {
 
     this.selectItemsPerPage = this.createElementComponent.createSelect({
       options: [5, 10],
-      eventToAdd: (e) => this.onItemsPerPageChange(e.target.value),
+      eventToAdd: (e) => this.onItemsPerPageChange(parseInt(e.target.value)),
     });
 
     this.selectCurrentPageNo = this.createElementComponent.createSelect({
@@ -40,7 +40,6 @@ export class PagerComponentUI {
   //   this.previousBtn.disabled = currentPageNo <= 1;
   //   this.nextBtn.disabled = currentPageNo >= totalPages;
   // }
-
 
   addContainer(containerId) {
     const target = document.getElementById(containerId);

@@ -9,6 +9,10 @@ export class PagerData {
   setItemsPerPage = (itemsPerPageNr) => {
     this.itemsPerPage = itemsPerPageNr;
     this.currentPageNo = 1;
+    // console.log(
+    //   `Pager data in SET ITEMS PER page response page nr ${this.currentPageNo} + and items per page ${this.itemsPerPage}`,
+    // );
+    // debugger;
     this.onPagerDataChanged({
       currentPageNo: this.currentPageNo,
       itemsPerPageNo: this.itemsPerPage,
@@ -17,6 +21,10 @@ export class PagerData {
 
   setCurrentPageNo = (newPageNo) => {
     this.currentPageNo = newPageNo;
+    // console.log(
+    //   `Pager data in SET CURRENT pageNo response page nr ${this.currentPageNo} + and items per page ${this.itemsPerPage}`,
+    // );
+    // debugger;
     this.onPagerDataChanged({
       currentPageNo: this.currentPageNo,
       itemsPerPageNo: this.itemsPerPage,
@@ -24,6 +32,10 @@ export class PagerData {
   };
 
   init() {
+    // console.log(
+    //   `Pager data in INIT page nr ${this.currentPageNo} + and items per page ${this.itemsPerPage}`,
+    // );
+    // debugger;
     this.onPagerDataChanged({
       currentPageNo: this.currentPageNo,
       itemsPerPageNo: this.itemsPerPage,

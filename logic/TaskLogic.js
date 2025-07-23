@@ -30,6 +30,8 @@ export class TaskLogic {
       this.pagerComponentUI.selectCurrentPageNo,
       Array.from({ length: totalPages }, (_, i) => i + 1),
     );
+    // console.log(`Current page select options ${this.pagerComponentUI.selectCurrentPageNo.options}`)
+    // console.log(`Pager data in on PAGINATION page nr ${this.pagerData.currentPageNo} + and items per page ${this.pagerData.itemsPerPage}`)
     this.taskPresentationUI.renderTasks(paginatedItems);
     this.taskPresentationUI.renderPageControls(
       this.pagerData.currentPageNo,

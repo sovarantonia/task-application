@@ -228,7 +228,7 @@
 
       this.selectItemsPerPage = this.createElementComponent.createSelect({
         options: [5, 10],
-        eventToAdd: (e) => this.onItemsPerPageChange(e.target.value),
+        eventToAdd: (e) => this.onItemsPerPageChange(parseInt(e.target.value)),
       });
 
       this.selectCurrentPageNo = this.createElementComponent.createSelect({
@@ -254,7 +254,6 @@
     //   this.previousBtn.disabled = currentPageNo <= 1;
     //   this.nextBtn.disabled = currentPageNo >= totalPages;
     // }
-
 
     addContainer(containerId) {
       const target = document.getElementById(containerId);
@@ -489,6 +488,10 @@
     setItemsPerPage = (itemsPerPageNr) => {
       this.itemsPerPage = itemsPerPageNr;
       this.currentPageNo = 1;
+      // console.log(
+      //   `Pager data in SET ITEMS PER page response page nr ${this.currentPageNo} + and items per page ${this.itemsPerPage}`,
+      // );
+      // debugger;
       this.onPagerDataChanged({
         currentPageNo: this.currentPageNo,
         itemsPerPageNo: this.itemsPerPage,
@@ -497,6 +500,10 @@
 
     setCurrentPageNo = (newPageNo) => {
       this.currentPageNo = newPageNo;
+      // console.log(
+      //   `Pager data in SET CURRENT pageNo response page nr ${this.currentPageNo} + and items per page ${this.itemsPerPage}`,
+      // );
+      // debugger;
       this.onPagerDataChanged({
         currentPageNo: this.currentPageNo,
         itemsPerPageNo: this.itemsPerPage,
@@ -504,6 +511,10 @@
     };
 
     init() {
+      // console.log(
+      //   `Pager data in INIT page nr ${this.currentPageNo} + and items per page ${this.itemsPerPage}`,
+      // );
+      // debugger;
       this.onPagerDataChanged({
         currentPageNo: this.currentPageNo,
         itemsPerPageNo: this.itemsPerPage,
@@ -512,7 +523,11 @@
   }
 
   class PaginationHandler {
-    constructor({ paginationFunction = null, onPaginationResponse = null, pagerData = null, } = {}) {
+    constructor({
+      paginationFunction = null,
+      onPaginationResponse = null,
+      pagerData = null,
+    } = {}) {
       this.paginationFunction = paginationFunction;
       this.onPaginationResponse = onPaginationResponse;
       // this.pagerComponent.onNext = this.onNext;
@@ -522,14 +537,18 @@
     }
 
     //calls the pagination function and passes the result to pagination response
-    getItems = ({currentPageNo, itemsPerPage})  => {
+    getItems = ({ currentPageNo, itemsPerPage }) => {
+      // console.log(
+      //   `Current pageNo ${currentPageNo} + and items per page ${itemsPerPage} in HANDLER`,
+      // );
+      // debugger;
       this.paginationFunction({
         currentPageNo,
         itemsPerPage,
       }).then(({ paginatedItems, totalPages }) => {
         this.onPaginationResponse({ paginatedItems, totalPages });
       });
-    }
+    };
 
     // onNext = () => {
     //   //have to use pager data somehow
@@ -545,7 +564,6 @@
     //   }
     //   this.getItems();
     // };
-
   }
 
   function updateSelectOptions(selectComponent, options = []) {
@@ -589,6 +607,8 @@
         this.pagerComponentUI.selectCurrentPageNo,
         Array.from({ length: totalPages }, (_, i) => i + 1),
       );
+      // console.log(`Current page select options ${this.pagerComponentUI.selectCurrentPageNo.options}`)
+      // console.log(`Pager data in on PAGINATION page nr ${this.pagerData.currentPageNo} + and items per page ${this.pagerData.itemsPerPage}`)
       this.taskPresentationUI.renderTasks(paginatedItems);
       this.taskPresentationUI.renderPageControls(
         this.pagerData.currentPageNo,
@@ -605,6 +625,7 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     const taskLogic = new TaskLogic({initialTaskData});
+    // debugger;
     taskLogic.init();
   });
 
