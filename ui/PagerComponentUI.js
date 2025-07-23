@@ -12,6 +12,11 @@ export class PagerComponentUI {
     this.createElementComponent = new CreateElementComponent();
     this.container = this.createElementComponent.createDiv();
 
+    this.selectItemsPerPageSpan =
+      this.createElementComponent.createSpan("Items per page");
+    this.selectCurrentPageSpan =
+      this.createElementComponent.createSpan("Page");
+
     this.selectItemsPerPage = this.createElementComponent.createSelect({
       options: [5, 10],
       eventToAdd: (e) => this.onItemsPerPageChange(parseInt(e.target.value)),
@@ -21,7 +26,10 @@ export class PagerComponentUI {
       eventToAdd: (e) => this.onCurrentPageChange(parseInt(e.target.value)),
     });
 
-    this.container.append(this.selectItemsPerPage, this.selectCurrentPageNo);
+    this.container.append(
+      this.selectItemsPerPageSpan, this.selectItemsPerPage, this.selectCurrentPageSpan,
+      this.selectCurrentPageNo,
+    );
   }
 
   // renderPaginationResults({ totalPages, currentPageNo, result, renderFunction }) {

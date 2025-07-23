@@ -226,6 +226,11 @@
       this.createElementComponent = new CreateElementComponent();
       this.container = this.createElementComponent.createDiv();
 
+      this.selectItemsPerPageSpan =
+        this.createElementComponent.createSpan("Items per page");
+      this.selectCurrentPageSpan =
+        this.createElementComponent.createSpan("Page");
+
       this.selectItemsPerPage = this.createElementComponent.createSelect({
         options: [5, 10],
         eventToAdd: (e) => this.onItemsPerPageChange(parseInt(e.target.value)),
@@ -235,7 +240,10 @@
         eventToAdd: (e) => this.onCurrentPageChange(parseInt(e.target.value)),
       });
 
-      this.container.append(this.selectItemsPerPage, this.selectCurrentPageNo);
+      this.container.append(
+        this.selectItemsPerPageSpan, this.selectItemsPerPage, this.selectCurrentPageSpan,
+        this.selectCurrentPageNo,
+      );
     }
 
     // renderPaginationResults({ totalPages, currentPageNo, result, renderFunction }) {
@@ -462,13 +470,11 @@
       this.pageIndicator = this.createElementComponent.createSpan();
     }
 
-    renderTasks = (taskList) => {
-      this.taskRenderer(taskList);
-    };
-
-    renderPageControls = (currentPageNo, totalPages) => {
+    renderTasks = ({paginatedItems, totalPages}, currentPageNo) => {
+      this.taskRenderer(paginatedItems);
       this.pageIndicator.textContent = `Page ${currentPageNo} of ${totalPages}`;
     };
+
 
     addContainer(containerId) {
       const target = document.getElementById(containerId);
@@ -522,6 +528,9 @@
       // this.pagerComponent.onPrevious = this.onPrevious;
 
       this.pagerData = pagerData;
+
+      this.pagerData.onPagerDataChanged = () =>
+        this.getItems(this.pagerData);
     }
 
     //calls the pagination function and passes the result to pagination response
@@ -587,9 +596,6 @@
         onPaginationResponse: this.onPaginationResponse,
         pagerData: this.pagerData,
       });
-
-      this.pagerData.onPagerDataChanged = () =>
-        this.paginationHandler.getItems(this.pagerData);
     }
 
     onPaginationResponse = ({ paginatedItems, totalPages }) => {
@@ -598,11 +604,7 @@
         Array.from({ length: totalPages }, (_, i) => i + 1),
         this.pagerData.currentPageNo
       );
-      this.taskPresentationUI.renderTasks(paginatedItems);
-      this.taskPresentationUI.renderPageControls(
-        this.pagerData.currentPageNo,
-        totalPages,
-      );
+      this.taskPresentationUI.renderTasks({paginatedItems, totalPages}, this.pagerData.currentPageNo);
     };
 
     init() {

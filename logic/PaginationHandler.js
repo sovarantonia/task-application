@@ -10,6 +10,9 @@ export class PaginationHandler {
     // this.pagerComponent.onPrevious = this.onPrevious;
 
     this.pagerData = pagerData;
+
+    this.pagerData.onPagerDataChanged = () =>
+      this.getItems(this.pagerData);
   }
 
   //calls the pagination function and passes the result to pagination response

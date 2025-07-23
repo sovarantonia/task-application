@@ -9,13 +9,11 @@ export class TaskPresentationUI {
     this.pageIndicator = this.createElementComponent.createSpan();
   }
 
-  renderTasks = (taskList) => {
-    this.taskRenderer(taskList);
-  };
-
-  renderPageControls = (currentPageNo, totalPages) => {
+  renderTasks = ({paginatedItems, totalPages}, currentPageNo) => {
+    this.taskRenderer(paginatedItems);
     this.pageIndicator.textContent = `Page ${currentPageNo} of ${totalPages}`;
   };
+
 
   addContainer(containerId) {
     const target = document.getElementById(containerId);

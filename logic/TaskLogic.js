@@ -20,9 +20,6 @@ export class TaskLogic {
       onPaginationResponse: this.onPaginationResponse,
       pagerData: this.pagerData,
     });
-
-    this.pagerData.onPagerDataChanged = () =>
-      this.paginationHandler.getItems(this.pagerData);
   }
 
   onPaginationResponse = ({ paginatedItems, totalPages }) => {
@@ -31,11 +28,7 @@ export class TaskLogic {
       Array.from({ length: totalPages }, (_, i) => i + 1),
       this.pagerData.currentPageNo
     );
-    this.taskPresentationUI.renderTasks(paginatedItems);
-    this.taskPresentationUI.renderPageControls(
-      this.pagerData.currentPageNo,
-      totalPages,
-    );
+    this.taskPresentationUI.renderTasks({paginatedItems, totalPages}, this.pagerData.currentPageNo);
   };
 
   init() {
