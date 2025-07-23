@@ -31,13 +31,15 @@ export class CreateElementComponent {
 
   createSelect({ options = [], eventToAdd = null } = {}) {
     const select = document.createElement("select");
-    options.forEach((element) => {
-      const opt = document.createElement("option");
-      opt.value = element;
-      opt.textContent = element;
-      select.append(opt);
-    });
-    select.options[0].selected = true;
+    if (options.length > 0) {
+      options.forEach((element) => {
+        const opt = document.createElement("option");
+        opt.value = element;
+        opt.textContent = element;
+        select.append(opt);
+      });
+      select.options[0].selected = true;
+    }
     select.addEventListener("change", eventToAdd);
     return select;
   }

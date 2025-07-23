@@ -1,46 +1,46 @@
-import { CreateElementComponent } from "../components/CreateElementComponent";
-import { PagerComponent } from "../components/PagerComponent";
+import { PagerComponentUI } from "../ui/PagerComponentUI";
+import { TaskService } from "../service/TaskService";
 import { TaskPresentationUI } from "../ui/TaskPresentationUI";
 import { PagerData } from "./PagerData";
 import { PaginationHandler } from "./PaginationHandler";
 
 export class TaskLogic {
-  constructor({ taskService = null } = {}) {
-    this.taskService = taskService;
-
+  constructor({ initialTaskData = [] } = {}) {
+    this.taskService = new TaskService(initialTaskData);
     this.taskPresentationUI = new TaskPresentationUI();
-    this.pagerComponent = new PagerComponent({ selectOptions: [5, 10] });
+    this.pagerComponentUI = new PagerComponentUI();
     this.pagerData = new PagerData();
 
-    this.createElementComponent = new CreateElementComponent();
-    this.selectItemsPerPage = this.createElementComponent.createSelect({
-      options: [5, 10],
-      eventToAdd: (e) => this.pagerData.setItemsPerPage(e.target.value),
-    });
+    this.pagerComponentUI.onItemsPerPageChange = this.pagerData.setItemsPerPage;
+    this.pagerComponentUI.onCurrentPageChange = this.pagerData.setCurrentPageNo;
 
     this.paginationHandler = new PaginationHandler({
-      paginationFunction: this.taskService.getTasks, //or bind; this is an arrow function
+      paginationFunction: this.taskService.getTasks,
       onPaginationResponse: this.onPaginationResponse,
       pagerData: this.pagerData,
     });
 
-    this.pagerData.onPagerDataChanged = this.paginationHandler.getItems
-    
-    this.pagerComponent.container.append(this.selectItemsPerPage)
+    this.pagerData.onPagerDataChanged = () =>
+      this.paginationHandler.getItems(this.pagerData);
   }
 
-  getPagination = () => {
-    this.paginationHandler.getItems();
-  };
-
   onPaginationResponse = ({ paginatedItems, totalPages }) => {
+    // this.pagerComponentUI.selectCurrentPageNo.options = 
+    // debugger;
+    // this.pagerComponentUI.renderSelectCurrentPageNo(
+    //   Array.from({ length: totalPages }, (_, i) => i + 1),
+    // );
+    // console.log(Array.from({ length: totalPages }, (_, i) => i + 1));
     this.taskPresentationUI.renderTasks(paginatedItems);
-    this.taskPresentationUI.renderPageControls(totalPages);
+    this.taskPresentationUI.renderPageControls(
+      this.pagerData.currentPageNo,
+      totalPages,
+    );
   };
 
   init() {
-    this.getPagination();
+    this.pagerData.init();
     this.taskPresentationUI.addContainer("taskPageControlBtn");
-    this.pagerComponent.addContainer("taskPerPageSelect");
+    this.pagerComponentUI.addContainer("taskPerPageSelect");
   }
 }

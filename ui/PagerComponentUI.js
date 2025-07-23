@@ -1,21 +1,27 @@
-import { PagerData } from "../logic/PagerData";
-import { CreateElementComponent } from "./CreateElementComponent";
+import { CreateElementComponent } from "../components/CreateElementComponent";
 
-export class PagerComponent {
-  constructor({ selectOptions } = {}) {
-    // this.onNext = onNext;
-    // this.onPrevious = onPrev;
-    // this.pagerData = new PagerData();
+//** This renders the items per page and current page select */
+export class PagerComponentUI {
+  constructor({
+    onItemsPerPageChange = null,
+    onCurrentPageChange = null,
+  } = {}) {
+    this.onItemsPerPageChange = onItemsPerPageChange;
+    this.onCurrentPageChange = onCurrentPageChange;
 
     this.createElementComponent = new CreateElementComponent();
     this.container = this.createElementComponent.createDiv();
 
-    // this.selectItemsPerPage = this.createElementComponent.createSelect({
-    //   options: selectOptions,
-    //   eventToAdd: (e) => this.pagerData.setItemsPerPage(e.target.value),
-    // });
+    this.selectItemsPerPage = this.createElementComponent.createSelect({
+      options: [5, 10],
+      eventToAdd: (e) => this.onItemsPerPageChange(e.target.value),
+    });
 
-    // this.container.append(this.selectItemsPerPage);
+    this.selectCurrentPageNo = this.createElementComponent.createSelect({
+      eventToAdd: (e) => this.onItemsPerPageChange(parseInt(e.target.value)),
+    });
+
+    this.container.append(this.selectItemsPerPage, this.selectCurrentPageNo);
   }
 
   // renderPaginationResults({ totalPages, currentPageNo, result, renderFunction }) {
@@ -34,6 +40,7 @@ export class PagerComponent {
   //   this.previousBtn.disabled = currentPageNo <= 1;
   //   this.nextBtn.disabled = currentPageNo >= totalPages;
   // }
+
 
   addContainer(containerId) {
     const target = document.getElementById(containerId);

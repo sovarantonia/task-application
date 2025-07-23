@@ -167,6 +167,105 @@
     },
   ];
 
+  class CreateElementComponent {
+    createDiv() {
+      return document.createElement("div");
+    }
+    createButton({ text = "", eventToAdd = null } = {}) {
+      const button = document.createElement("button");
+      button.textContent = text;
+      button.addEventListener("click", eventToAdd);
+      return button;
+    }
+
+    createSpan(text = "") {
+      const span = document.createElement("span");
+      span.textContent = text;
+      return span;
+    }
+
+    createCheckbox({ value = "", eventToAdd = null } = {}) {
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.value = value;
+      checkbox.addEventListener("change", eventToAdd);
+      return checkbox;
+    }
+
+    createP(text = "") {
+      const p = document.createElement("p");
+      p.innerText = text;
+      return p;
+    }
+
+    createSelect({ options = [], eventToAdd = null } = {}) {
+      const select = document.createElement("select");
+      if (options.length > 0) {
+        options.forEach((element) => {
+          const opt = document.createElement("option");
+          opt.value = element;
+          opt.textContent = element;
+          select.append(opt);
+        });
+        select.options[0].selected = true;
+      }
+      select.addEventListener("change", eventToAdd);
+      return select;
+    }
+  }
+
+  //** This renders the items per page and current page select */
+  class PagerComponentUI {
+    constructor({
+      onItemsPerPageChange = null,
+      onCurrentPageChange = null,
+    } = {}) {
+      this.onItemsPerPageChange = onItemsPerPageChange;
+      this.onCurrentPageChange = onCurrentPageChange;
+
+      this.createElementComponent = new CreateElementComponent();
+      this.container = this.createElementComponent.createDiv();
+
+      this.selectItemsPerPage = this.createElementComponent.createSelect({
+        options: [5, 10],
+        eventToAdd: (e) => this.onItemsPerPageChange(e.target.value),
+      });
+
+      this.selectCurrentPageNo = this.createElementComponent.createSelect({
+        eventToAdd: (e) => this.onItemsPerPageChange(parseInt(e.target.value)),
+      });
+
+      this.container.append(this.selectItemsPerPage, this.selectCurrentPageNo);
+    }
+
+    // renderPaginationResults({ totalPages, currentPageNo, result, renderFunction }) {
+
+    // this.previousBtn = this.createElementComponent.createButton({
+    //   text: "Previous",
+    //   eventToAdd: () => this.onPrevious?.(),
+    // });
+    // this.nextBtn = this.createElementComponent.createButton({
+    //   text: "Next",
+    //   eventToAdd: () => this.onNext?.(),
+    // });
+    // just put these here, they belong somwhere else
+    //   renderFunction(result)
+    //   this.pageIndicator.textContent = `Page ${currentPageNo} of ${totalPages}`;
+    //   this.previousBtn.disabled = currentPageNo <= 1;
+    //   this.nextBtn.disabled = currentPageNo >= totalPages;
+    // }
+
+
+    addContainer(containerId) {
+      const target = document.getElementById(containerId);
+      target.appendChild(this.container);
+    }
+  }
+
+  function dateParser(value) {
+    return new Date(value);
+  }
+
   function generateGUID() {
     return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
       const r = (Math.random() * 16) | 0;
@@ -302,6 +401,9 @@
 
   class TaskService {
     constructor(taskData) {
+      taskData.forEach((task) => {
+        dateParser(task.creationDate);
+      });
       this.service = new DbService(taskData);
     }
 
@@ -331,113 +433,6 @@
         filterCriteria,
       );
     };
-  }
-
-  function dateParser(value) {
-    return new Date(value);
-  }
-
-  class CreateElementComponent {
-    createDiv() {
-      return document.createElement("div");
-    }
-    createButton({ text = "", eventToAdd = null } = {}) {
-      const button = document.createElement("button");
-      button.textContent = text;
-      button.addEventListener("click", eventToAdd);
-      return button;
-    }
-
-    createSpan(text = "") {
-      const span = document.createElement("span");
-      span.textContent = text;
-      return span;
-    }
-
-    createCheckbox({ value = "", eventToAdd = null } = {}) {
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.value = value;
-      checkbox.addEventListener("change", eventToAdd);
-      return checkbox;
-    }
-
-    createP(text = "") {
-      const p = document.createElement("p");
-      p.innerText = text;
-      return p;
-    }
-
-    createSelect({ options = [], eventToAdd = null } = {}) {
-      const select = document.createElement("select");
-      options.forEach((element) => {
-        const opt = document.createElement("option");
-        opt.value = element;
-        opt.textContent = element;
-        select.append(opt);
-      });
-      select.options[0].selected = true;
-      select.addEventListener("change", eventToAdd);
-      return select;
-    }
-  }
-
-  class PagerData {
-    constructor(onPagerDataChanged = null) {
-      this.currentPageNo = 1;
-      this.itemsPerPage = 5;
-
-      this.onPagerDataChanged = onPagerDataChanged;
-    }
-
-    setItemsPerPage = (itemsPerPageNr) => {
-      this.itemsPerPage = itemsPerPageNr;
-      this.onPagerDataChanged();
-    };
-
-    setCurrentPageNo = (newPageNo) => {
-      this.currentPageNo = newPageNo;
-    };
-  }
-
-  class PagerComponent {
-    constructor({ selectOptions } = {}) {
-      // this.onNext = onNext;
-      // this.onPrevious = onPrev;
-      // this.pagerData = new PagerData();
-
-      this.createElementComponent = new CreateElementComponent();
-      this.container = this.createElementComponent.createDiv();
-
-      // this.selectItemsPerPage = this.createElementComponent.createSelect({
-      //   options: selectOptions,
-      //   eventToAdd: (e) => this.pagerData.setItemsPerPage(e.target.value),
-      // });
-
-      // this.container.append(this.selectItemsPerPage);
-    }
-
-    // renderPaginationResults({ totalPages, currentPageNo, result, renderFunction }) {
-
-    // this.previousBtn = this.createElementComponent.createButton({
-    //   text: "Previous",
-    //   eventToAdd: () => this.onPrevious?.(),
-    // });
-    // this.nextBtn = this.createElementComponent.createButton({
-    //   text: "Next",
-    //   eventToAdd: () => this.onNext?.(),
-    // });
-    // just put these here, they belong somwhere else
-    //   renderFunction(result)
-    //   this.pageIndicator.textContent = `Page ${currentPageNo} of ${totalPages}`;
-    //   this.previousBtn.disabled = currentPageNo <= 1;
-    //   this.nextBtn.disabled = currentPageNo >= totalPages;
-    // }
-
-    addContainer(containerId) {
-      const target = document.getElementById(containerId);
-      target.appendChild(this.container);
-    }
   }
 
   function renderTasks(containerId) {
@@ -472,14 +467,46 @@
       this.taskRenderer(taskList);
     };
 
-    renderPageControls = (totalPages) => {
-      this.pageIndicator.textContent = `Page ${1} of ${totalPages}`;
+    renderPageControls = (currentPageNo, totalPages) => {
+      this.pageIndicator.textContent = `Page ${currentPageNo} of ${totalPages}`;
     };
 
     addContainer(containerId) {
       const target = document.getElementById(containerId);
       target.appendChild(this.container);
       this.container.append(this.pageIndicator);
+    }
+  }
+
+  class PagerData {
+    constructor(onPagerDataChanged = null) {
+      this.currentPageNo = 1;
+      this.itemsPerPage = 5;
+
+      this.onPagerDataChanged = onPagerDataChanged;
+    }
+
+    setItemsPerPage = (itemsPerPageNr) => {
+      this.itemsPerPage = itemsPerPageNr;
+      this.onPagerDataChanged({
+        currentPageNo: this.currentPageNo,
+        itemsPerPageNo: this.itemsPerPage,
+      });
+    };
+
+    setCurrentPageNo = (newPageNo) => {
+      this.currentPageNo = newPageNo;
+      this.onPagerDataChanged({
+        currentPageNo: this.currentPageNo,
+        itemsPerPageNo: this.itemsPerPage,
+      });
+    };
+
+    init() {
+      this.onPagerDataChanged({
+        currentPageNo: this.currentPageNo,
+        itemsPerPageNo: this.itemsPerPage,
+      });
     }
   }
 
@@ -493,9 +520,8 @@
       this.pagerData = pagerData;
     }
 
-    //call the pagination function
-    getItems = ()  => {
-      const { currentPageNo, itemsPerPage } = this.pagerData;
+    //calls the pagination function and passes the result to pagination response
+    getItems = ({currentPageNo, itemsPerPage})  => {
       this.paginationFunction({
         currentPageNo,
         itemsPerPage,
@@ -504,121 +530,67 @@
       });
     }
 
-    onNext = () => {
-      //have to use pager data somehow
-      if (this.pagerData.currentPageNo < this.totalPages) {
-        this.pagerData.currentPageNo++;
-      }
-      this.getItems();
-    };
+    // onNext = () => {
+    //   //have to use pager data somehow
+    //   if (this.pagerData.currentPageNo < this.totalPages) {
+    //     this.pagerData.currentPageNo++;
+    //   }
+    //   this.getItems();
+    // };
 
-    onPrevious = () => {
-      if (this.pagerData.currentPageNo > 1) {
-        this.pagerData.currentPageNo--;
-      }
-      this.getItems();
-    };
+    // onPrevious = () => {
+    //   if (this.pagerData.currentPageNo > 1) {
+    //     this.pagerData.currentPageNo--;
+    //   }
+    //   this.getItems();
+    // };
 
   }
 
   class TaskLogic {
-    constructor({ taskService = null } = {}) {
-      this.taskService = taskService;
-
+    constructor({ initialTaskData = [] } = {}) {
+      this.taskService = new TaskService(initialTaskData);
       this.taskPresentationUI = new TaskPresentationUI();
-      this.pagerComponent = new PagerComponent({ selectOptions: [5, 10] });
+      this.pagerComponentUI = new PagerComponentUI();
       this.pagerData = new PagerData();
 
-      this.createElementComponent = new CreateElementComponent();
-      this.selectItemsPerPage = this.createElementComponent.createSelect({
-        options: [5, 10],
-        eventToAdd: (e) => this.pagerData.setItemsPerPage(e.target.value),
-      });
+      this.pagerComponentUI.onItemsPerPageChange = this.pagerData.setItemsPerPage;
+      this.pagerComponentUI.onCurrentPageChange = this.pagerData.setCurrentPageNo;
 
       this.paginationHandler = new PaginationHandler({
-        paginationFunction: this.taskService.getTasks, //or bind; this is an arrow function
+        paginationFunction: this.taskService.getTasks,
         onPaginationResponse: this.onPaginationResponse,
         pagerData: this.pagerData,
       });
 
-      this.pagerData.onPagerDataChanged = this.paginationHandler.getItems;
-      
-      this.pagerComponent.container.append(this.selectItemsPerPage);
+      this.pagerData.onPagerDataChanged = () =>
+        this.paginationHandler.getItems(this.pagerData);
     }
-
-    getPagination = () => {
-      this.paginationHandler.getItems();
-    };
 
     onPaginationResponse = ({ paginatedItems, totalPages }) => {
+      // this.pagerComponentUI.selectCurrentPageNo.options = 
+      // debugger;
+      // this.pagerComponentUI.renderSelectCurrentPageNo(
+      //   Array.from({ length: totalPages }, (_, i) => i + 1),
+      // );
+      // console.log(Array.from({ length: totalPages }, (_, i) => i + 1));
       this.taskPresentationUI.renderTasks(paginatedItems);
-      this.taskPresentationUI.renderPageControls(totalPages);
+      this.taskPresentationUI.renderPageControls(
+        this.pagerData.currentPageNo,
+        totalPages,
+      );
     };
 
     init() {
-      this.getPagination();
+      this.pagerData.init();
       this.taskPresentationUI.addContainer("taskPageControlBtn");
-      this.pagerComponent.addContainer("taskPerPageSelect");
-    }
-  }
-
-  class TaskPresentationService {
-    constructor() {
-      initialTaskData.forEach((task) => {
-        dateParser(task.creationDate);
-      });
-
-      this.taskService = new TaskService(initialTaskData);
-
-      this.taskLogic = new TaskLogic({
-        taskService: this.taskService,
-      });
-
-      // this.taskPresentationPage.addContainer("taskPaginationContainer");
-      // debugger;
-
-      // this.taskPagerComponent.onNext = this.taskPaginationHandler.onNext;
-      // this.taskPagerComponent.onPrevious = this.taskPaginationHandler.onPrevious;
-      // this.taskPagerComponent.addContainer("taskPageControlBtn");
-
-      // this.userService = new UserService(initialUserData);
-
-      // this.userPager = new PagerComponent();
-      // this.checkboxSelectComponent = new CheckboxSelectComponent();
-
-      // this.userLogic = new UserLogic({
-      //   userService: this.userService,
-      //   pagerComponent: this.userPager,
-      //   checkboxSelectComponent: this.checkboxSelectComponent,
-      // });
-
-      // this.userPager.onNext = this.userLogic.onNext;
-      // this.userPager.onPrevious = this.userLogic.onPrevious;
-      // this.userPager.addContainer("userPageControls");
-
-      // this.checkboxSelectComponent.onClick = this.userLogic.onClick;
-      // this.checkboxSelectComponent.addContainer("sendActionControl");
-
-      // this.taskPage = new PaginationComponent(this.taskService);
-      // this.sortTasksControl = new SortTasksControl(
-      //   this.taskPage.sortingCriteria,
-      //   this.taskPage.renderPage.bind(this.taskPage),
-      // );
-      // this.filterTasksControl = new FilterTasksControl(
-      //   this.taskPage.filterCriteria,
-      //   this.taskPage.renderPage.bind(this.taskPage),
-      // );
-    }
-
-    init() {
-      this.taskLogic.init();
-      // this.userLogic.getUsers();
+      this.pagerComponentUI.addContainer("taskPerPageSelect");
     }
   }
 
   document.addEventListener("DOMContentLoaded", () => {
-    const taskPresentationService = new TaskPresentationService();
-    taskPresentationService.init();
+    const taskLogic = new TaskLogic({initialTaskData});
+    taskLogic.init();
   });
 
 })();

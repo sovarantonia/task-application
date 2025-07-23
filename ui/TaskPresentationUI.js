@@ -13,8 +13,8 @@ export class TaskPresentationUI {
     this.taskRenderer(taskList);
   };
 
-  renderPageControls = (totalPages) => {
-    this.pageIndicator.textContent = `Page ${1} of ${totalPages}`;
+  renderPageControls = (currentPageNo, totalPages) => {
+    this.pageIndicator.textContent = `Page ${currentPageNo} of ${totalPages}`;
   };
 
   addContainer(containerId) {

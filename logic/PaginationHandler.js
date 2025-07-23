@@ -8,9 +8,8 @@ export class PaginationHandler {
     this.pagerData = pagerData;
   }
 
-  //call the pagination function
-  getItems = ()  => {
-    const { currentPageNo, itemsPerPage } = this.pagerData;
+  //calls the pagination function and passes the result to pagination response
+  getItems = ({currentPageNo, itemsPerPage})  => {
     this.paginationFunction({
       currentPageNo,
       itemsPerPage,
@@ -19,19 +18,19 @@ export class PaginationHandler {
     });
   }
 
-  onNext = () => {
-    //have to use pager data somehow
-    if (this.pagerData.currentPageNo < this.totalPages) {
-      this.pagerData.currentPageNo++;
-    }
-    this.getItems();
-  };
+  // onNext = () => {
+  //   //have to use pager data somehow
+  //   if (this.pagerData.currentPageNo < this.totalPages) {
+  //     this.pagerData.currentPageNo++;
+  //   }
+  //   this.getItems();
+  // };
 
-  onPrevious = () => {
-    if (this.pagerData.currentPageNo > 1) {
-      this.pagerData.currentPageNo--;
-    }
-    this.getItems();
-  };
+  // onPrevious = () => {
+  //   if (this.pagerData.currentPageNo > 1) {
+  //     this.pagerData.currentPageNo--;
+  //   }
+  //   this.getItems();
+  // };
 
 }

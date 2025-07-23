@@ -1,8 +1,11 @@
+import { dateParser } from "../helpers/dateHelper";
 import { generateGUID } from "../helpers/guidHelper";
 import { DbService } from "./DbService";
-
 export class TaskService {
   constructor(taskData) {
+    taskData.forEach((task) => {
+      dateParser(task.creationDate);
+    });
     this.service = new DbService(taskData);
   }
 

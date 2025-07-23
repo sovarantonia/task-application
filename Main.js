@@ -1,7 +1,8 @@
 
-import { TaskPresentationService } from "./service/TaskPresetationService.js";
+import { initialTaskData } from "./data/initialTaskData.js";
+import { TaskLogic } from "./logic/TaskLogic.js";
 
 document.addEventListener("DOMContentLoaded", () => {
-  const taskPresentationService = new TaskPresentationService();
-  taskPresentationService.init();
+  const taskLogic = new TaskLogic({initialTaskData});
+  taskLogic.init();
 });

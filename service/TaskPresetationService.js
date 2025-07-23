@@ -5,63 +5,63 @@ import { dateParser } from "../helpers/dateHelper.js";
 import { SortTasksControl } from "../components/SortTasksControl.js";
 import { FilterTasksControl } from "../components/FilterTasksControl.js";
 import { TaskLogic } from "../logic/TaskLogic.js";
-import { PagerComponent } from "../components/PagerComponent.js";
+import { PagerComponentUI } from "../components/PagerComponentUI.js";
 import { UserLogic } from "../logic/UserLogic.js";
 import { initialUserData } from "../data/initialUserData.js";
 import { UserService } from "../service/UserService.js";
 import { CheckboxSelectComponent } from "../components/CheckboxSelectComponent.js";
 import { PaginationHandler } from "../logic/PaginationHandler.js";
 import { TaskPresentationUI } from "../ui/TaskPresentationUI.js";
-export class TaskPresentationService {
-  constructor() {
-    initialTaskData.forEach((task) => {
-      dateParser(task.creationDate);
-    });
+// export class TaskPresentationService {
+//   constructor() {
+//     // initialTaskData.forEach((task) => {
+//     //   dateParser(task.creationDate);
+//     // });
 
-    this.taskService = new TaskService(initialTaskData);
+//     // this.taskService = new TaskService(initialTaskData);
 
-    this.taskLogic = new TaskLogic({
-      taskService: this.taskService,
-    });
+//     // this.taskLogic = new TaskLogic({
+//     //   taskService: this.taskService,
+//     // });
 
-    // this.taskPresentationPage.addContainer("taskPaginationContainer");
-    // debugger;
+//     // this.taskPresentationPage.addContainer("taskPaginationContainer");
+//     // debugger;
 
-    // this.taskPagerComponent.onNext = this.taskPaginationHandler.onNext;
-    // this.taskPagerComponent.onPrevious = this.taskPaginationHandler.onPrevious;
-    // this.taskPagerComponent.addContainer("taskPageControlBtn");
+//     // this.taskPagerComponent.onNext = this.taskPaginationHandler.onNext;
+//     // this.taskPagerComponent.onPrevious = this.taskPaginationHandler.onPrevious;
+//     // this.taskPagerComponent.addContainer("taskPageControlBtn");
 
-    // this.userService = new UserService(initialUserData);
+//     // this.userService = new UserService(initialUserData);
 
-    // this.userPager = new PagerComponent();
-    // this.checkboxSelectComponent = new CheckboxSelectComponent();
+//     // this.userPager = new PagerComponentUI();
+//     // this.checkboxSelectComponent = new CheckboxSelectComponent();
 
-    // this.userLogic = new UserLogic({
-    //   userService: this.userService,
-    //   pagerComponent: this.userPager,
-    //   checkboxSelectComponent: this.checkboxSelectComponent,
-    // });
+//     // this.userLogic = new UserLogic({
+//     //   userService: this.userService,
+//     //   pagerComponent: this.userPager,
+//     //   checkboxSelectComponent: this.checkboxSelectComponent,
+//     // });
 
-    // this.userPager.onNext = this.userLogic.onNext;
-    // this.userPager.onPrevious = this.userLogic.onPrevious;
-    // this.userPager.addContainer("userPageControls");
+//     // this.userPager.onNext = this.userLogic.onNext;
+//     // this.userPager.onPrevious = this.userLogic.onPrevious;
+//     // this.userPager.addContainer("userPageControls");
 
-    // this.checkboxSelectComponent.onClick = this.userLogic.onClick;
-    // this.checkboxSelectComponent.addContainer("sendActionControl");
+//     // this.checkboxSelectComponent.onClick = this.userLogic.onClick;
+//     // this.checkboxSelectComponent.addContainer("sendActionControl");
 
-    // this.taskPage = new PaginationComponent(this.taskService);
-    // this.sortTasksControl = new SortTasksControl(
-    //   this.taskPage.sortingCriteria,
-    //   this.taskPage.renderPage.bind(this.taskPage),
-    // );
-    // this.filterTasksControl = new FilterTasksControl(
-    //   this.taskPage.filterCriteria,
-    //   this.taskPage.renderPage.bind(this.taskPage),
-    // );
-  }
+//     // this.taskPage = new PaginationComponent(this.taskService);
+//     // this.sortTasksControl = new SortTasksControl(
+//     //   this.taskPage.sortingCriteria,
+//     //   this.taskPage.renderPage.bind(this.taskPage),
+//     // );
+//     // this.filterTasksControl = new FilterTasksControl(
+//     //   this.taskPage.filterCriteria,
+//     //   this.taskPage.renderPage.bind(this.taskPage),
+//     // );
+//   }
 
-  init() {
-    this.taskLogic.init();
-    // this.userLogic.getUsers();
-  }
-}
+//   init() {
+//     this.taskLogic.init();
+//     // this.userLogic.getUsers();
+//   }
+// }
