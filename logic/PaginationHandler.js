@@ -14,7 +14,6 @@ export class PaginationHandler {
 
   //calls the pagination function and passes the result to pagination response
   getItems = ({ currentPageNo, itemsPerPage }) => {
-    // debugger;
     this.paginationFunction({
       currentPageNo,
       itemsPerPage,

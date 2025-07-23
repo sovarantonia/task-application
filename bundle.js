@@ -488,7 +488,6 @@
     setItemsPerPage = (itemsPerPageNr) => {
       this.itemsPerPage = itemsPerPageNr;
       this.currentPageNo = 1;
-      // debugger;
       this.onPagerDataChanged({
         currentPageNo: this.currentPageNo,
         itemsPerPageNo: this.itemsPerPage,
@@ -497,7 +496,6 @@
 
     setCurrentPageNo = (newPageNo) => {
       this.currentPageNo = newPageNo;
-      // debugger;
       this.onPagerDataChanged({
         currentPageNo: this.currentPageNo,
         itemsPerPageNo: this.itemsPerPage,
@@ -505,7 +503,6 @@
     };
 
     init() {
-      // debugger;
       this.onPagerDataChanged({
         currentPageNo: this.currentPageNo,
         itemsPerPageNo: this.itemsPerPage,
@@ -529,7 +526,6 @@
 
     //calls the pagination function and passes the result to pagination response
     getItems = ({ currentPageNo, itemsPerPage }) => {
-      // debugger;
       this.paginationFunction({
         currentPageNo,
         itemsPerPage,
@@ -618,7 +614,6 @@
 
   document.addEventListener("DOMContentLoaded", () => {
     const taskLogic = new TaskLogic({initialTaskData});
-    // debugger;
     taskLogic.init();
   });
 
