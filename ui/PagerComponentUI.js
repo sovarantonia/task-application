@@ -18,7 +18,7 @@ export class PagerComponentUI {
     });
 
     this.selectCurrentPageNo = this.createElementComponent.createSelect({
-      eventToAdd: (e) => this.onItemsPerPageChange(parseInt(e.target.value)),
+      eventToAdd: (e) => this.onCurrentPageChange(parseInt(e.target.value)),
     });
 
     this.container.append(this.selectItemsPerPage, this.selectCurrentPageNo);

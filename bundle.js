@@ -232,7 +232,7 @@
       });
 
       this.selectCurrentPageNo = this.createElementComponent.createSelect({
-        eventToAdd: (e) => this.onItemsPerPageChange(parseInt(e.target.value)),
+        eventToAdd: (e) => this.onCurrentPageChange(parseInt(e.target.value)),
       });
 
       this.container.append(this.selectItemsPerPage, this.selectCurrentPageNo);
@@ -488,6 +488,7 @@
 
     setItemsPerPage = (itemsPerPageNr) => {
       this.itemsPerPage = itemsPerPageNr;
+      this.currentPageNo = 1;
       this.onPagerDataChanged({
         currentPageNo: this.currentPageNo,
         itemsPerPageNo: this.itemsPerPage,
@@ -547,6 +548,22 @@
 
   }
 
+  function updateSelectOptions(selectComponent, options = []) {
+    let optionNo = selectComponent.options.length - 1;
+    if (optionNo > 0) {
+      for (let i = optionNo; i >= 0; i--) {
+        selectComponent.remove(i);
+      }
+    }
+
+    options.forEach((element) => {
+      const opt = document.createElement("option");
+      opt.value = element;
+      opt.textContent = element;
+      selectComponent.append(opt);
+    });
+  }
+
   class TaskLogic {
     constructor({ initialTaskData = [] } = {}) {
       this.taskService = new TaskService(initialTaskData);
@@ -568,12 +585,10 @@
     }
 
     onPaginationResponse = ({ paginatedItems, totalPages }) => {
-      // this.pagerComponentUI.selectCurrentPageNo.options = 
-      // debugger;
-      // this.pagerComponentUI.renderSelectCurrentPageNo(
-      //   Array.from({ length: totalPages }, (_, i) => i + 1),
-      // );
-      // console.log(Array.from({ length: totalPages }, (_, i) => i + 1));
+      updateSelectOptions(
+        this.pagerComponentUI.selectCurrentPageNo,
+        Array.from({ length: totalPages }, (_, i) => i + 1),
+      );
       this.taskPresentationUI.renderTasks(paginatedItems);
       this.taskPresentationUI.renderPageControls(
         this.pagerData.currentPageNo,

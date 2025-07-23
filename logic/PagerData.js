@@ -8,6 +8,7 @@ export class PagerData {
 
   setItemsPerPage = (itemsPerPageNr) => {
     this.itemsPerPage = itemsPerPageNr;
+    this.currentPageNo = 1;
     this.onPagerDataChanged({
       currentPageNo: this.currentPageNo,
       itemsPerPageNo: this.itemsPerPage,

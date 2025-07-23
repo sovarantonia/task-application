@@ -3,6 +3,7 @@ import { TaskService } from "../service/TaskService";
 import { TaskPresentationUI } from "../ui/TaskPresentationUI";
 import { PagerData } from "./PagerData";
 import { PaginationHandler } from "./PaginationHandler";
+import { updateSelectOptions } from "./updateSelect";
 
 export class TaskLogic {
   constructor({ initialTaskData = [] } = {}) {
@@ -25,12 +26,10 @@ export class TaskLogic {
   }
 
   onPaginationResponse = ({ paginatedItems, totalPages }) => {
-    // this.pagerComponentUI.selectCurrentPageNo.options = 
-    // debugger;
-    // this.pagerComponentUI.renderSelectCurrentPageNo(
-    //   Array.from({ length: totalPages }, (_, i) => i + 1),
-    // );
-    // console.log(Array.from({ length: totalPages }, (_, i) => i + 1));
+    updateSelectOptions(
+      this.pagerComponentUI.selectCurrentPageNo,
+      Array.from({ length: totalPages }, (_, i) => i + 1),
+    );
     this.taskPresentationUI.renderTasks(paginatedItems);
     this.taskPresentationUI.renderPageControls(
       this.pagerData.currentPageNo,
