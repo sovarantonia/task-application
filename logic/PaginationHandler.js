@@ -14,9 +14,6 @@ export class PaginationHandler {
 
   //calls the pagination function and passes the result to pagination response
   getItems = ({ currentPageNo, itemsPerPage }) => {
-    // console.log(
-    //   `Current pageNo ${currentPageNo} + and items per page ${itemsPerPage} in HANDLER`,
-    // );
     // debugger;
     this.paginationFunction({
       currentPageNo,

@@ -488,9 +488,6 @@
     setItemsPerPage = (itemsPerPageNr) => {
       this.itemsPerPage = itemsPerPageNr;
       this.currentPageNo = 1;
-      // console.log(
-      //   `Pager data in SET ITEMS PER page response page nr ${this.currentPageNo} + and items per page ${this.itemsPerPage}`,
-      // );
       // debugger;
       this.onPagerDataChanged({
         currentPageNo: this.currentPageNo,
@@ -500,9 +497,6 @@
 
     setCurrentPageNo = (newPageNo) => {
       this.currentPageNo = newPageNo;
-      // console.log(
-      //   `Pager data in SET CURRENT pageNo response page nr ${this.currentPageNo} + and items per page ${this.itemsPerPage}`,
-      // );
       // debugger;
       this.onPagerDataChanged({
         currentPageNo: this.currentPageNo,
@@ -511,9 +505,6 @@
     };
 
     init() {
-      // console.log(
-      //   `Pager data in INIT page nr ${this.currentPageNo} + and items per page ${this.itemsPerPage}`,
-      // );
       // debugger;
       this.onPagerDataChanged({
         currentPageNo: this.currentPageNo,
@@ -538,9 +529,6 @@
 
     //calls the pagination function and passes the result to pagination response
     getItems = ({ currentPageNo, itemsPerPage }) => {
-      // console.log(
-      //   `Current pageNo ${currentPageNo} + and items per page ${itemsPerPage} in HANDLER`,
-      // );
       // debugger;
       this.paginationFunction({
         currentPageNo,
@@ -566,7 +554,11 @@
     // };
   }
 
-  function updateSelectOptions(selectComponent, options = []) {
+  function updateSelectOptions(
+    selectComponent,
+    options = [],
+    currentPage,
+  ) {
     let optionNo = selectComponent.options.length - 1;
     if (optionNo > 0) {
       for (let i = optionNo; i >= 0; i--) {
@@ -580,6 +572,8 @@
       opt.textContent = element;
       selectComponent.append(opt);
     });
+
+    selectComponent.options[currentPage - 1].selected = true;
   }
 
   class TaskLogic {
@@ -606,9 +600,8 @@
       updateSelectOptions(
         this.pagerComponentUI.selectCurrentPageNo,
         Array.from({ length: totalPages }, (_, i) => i + 1),
+        this.pagerData.currentPageNo
       );
-      // console.log(`Current page select options ${this.pagerComponentUI.selectCurrentPageNo.options}`)
-      // console.log(`Pager data in on PAGINATION page nr ${this.pagerData.currentPageNo} + and items per page ${this.pagerData.itemsPerPage}`)
       this.taskPresentationUI.renderTasks(paginatedItems);
       this.taskPresentationUI.renderPageControls(
         this.pagerData.currentPageNo,
