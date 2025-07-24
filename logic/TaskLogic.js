@@ -8,8 +8,8 @@ import { updateSelectOptions } from "./updateSelect";
 export class TaskLogic {
   constructor({ initialTaskData = [] } = {}) {
     this.taskService = new TaskService(initialTaskData);
-    this.taskPresentationUI = new TaskPresentationUI();
-    this.pagerComponentUI = new PagerComponentUI();
+    this.taskPresentationUI = new TaskPresentationUI("taskPageControlBtn");
+    this.pagerComponentUI = new PagerComponentUI({containerId: "taskPerPageSelect"});
     this.pagerData = new PagerData();
 
     this.pagerComponentUI.onItemsPerPageChange = this.pagerData.setItemsPerPage;
@@ -26,14 +26,15 @@ export class TaskLogic {
     updateSelectOptions(
       this.pagerComponentUI.selectCurrentPageNo,
       Array.from({ length: totalPages }, (_, i) => i + 1),
-      this.pagerData.currentPageNo
+      this.pagerData.currentPageNo,
     );
-    this.taskPresentationUI.renderTasks({paginatedItems, totalPages}, this.pagerData.currentPageNo);
+    this.taskPresentationUI.renderTasks(
+      { paginatedItems, totalPages },
+      this.pagerData.currentPageNo,
+    );
   };
 
   init() {
     this.pagerData.init();
-    this.taskPresentationUI.addContainer("taskPageControlBtn");
-    this.pagerComponentUI.addContainer("taskPerPageSelect");
   }
 }

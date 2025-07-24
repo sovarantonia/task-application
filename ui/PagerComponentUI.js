@@ -5,6 +5,7 @@ export class PagerComponentUI {
   constructor({
     onItemsPerPageChange = null,
     onCurrentPageChange = null,
+    containerId
   } = {}) {
     this.onItemsPerPageChange = onItemsPerPageChange;
     this.onCurrentPageChange = onCurrentPageChange;
@@ -14,8 +15,7 @@ export class PagerComponentUI {
 
     this.selectItemsPerPageSpan =
       this.createElementComponent.createSpan("Items per page");
-    this.selectCurrentPageSpan =
-      this.createElementComponent.createSpan("Page");
+    this.selectCurrentPageSpan = this.createElementComponent.createSpan("Page");
 
     this.selectItemsPerPage = this.createElementComponent.createSelect({
       options: [5, 10],
@@ -27,9 +27,14 @@ export class PagerComponentUI {
     });
 
     this.container.append(
-      this.selectItemsPerPageSpan, this.selectItemsPerPage, this.selectCurrentPageSpan,
+      this.selectItemsPerPageSpan,
+      this.selectItemsPerPage,
+      this.selectCurrentPageSpan,
       this.selectCurrentPageNo,
     );
+
+    this.target = document.getElementById(containerId);
+    this.target.appendChild(this.container);
   }
 
   // renderPaginationResults({ totalPages, currentPageNo, result, renderFunction }) {
@@ -48,9 +53,4 @@ export class PagerComponentUI {
   //   this.previousBtn.disabled = currentPageNo <= 1;
   //   this.nextBtn.disabled = currentPageNo >= totalPages;
   // }
-
-  addContainer(containerId) {
-    const target = document.getElementById(containerId);
-    target.appendChild(this.container);
-  }
 }
