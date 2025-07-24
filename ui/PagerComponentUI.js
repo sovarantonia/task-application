@@ -1,11 +1,12 @@
 import { CreateElementComponent } from "../components/CreateElementComponent";
+import { updateSelectOptions } from "../logic/updateSelect";
 
 //** This renders the items per page and current page select */
 export class PagerComponentUI {
   constructor({
     onItemsPerPageChange = null,
     onCurrentPageChange = null,
-    containerId
+    containerId,
   } = {}) {
     this.onItemsPerPageChange = onItemsPerPageChange;
     this.onCurrentPageChange = onCurrentPageChange;
@@ -35,6 +36,14 @@ export class PagerComponentUI {
 
     this.target = document.getElementById(containerId);
     this.target.appendChild(this.container);
+  }
+
+  updateSelect(currentPageNo, totalPages) {
+    updateSelectOptions(
+      this.selectCurrentPageNo,
+      Array.from({ length: totalPages }, (_, i) => i + 1),
+      currentPageNo
+    );
   }
 
   // renderPaginationResults({ totalPages, currentPageNo, result, renderFunction }) {

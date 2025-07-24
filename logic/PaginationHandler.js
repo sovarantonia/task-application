@@ -3,6 +3,7 @@ export class PaginationHandler {
     paginationFunction = null,
     onPaginationResponse = null,
     pagerData = null,
+    sortCriteria = null,
   } = {}) {
     this.paginationFunction = paginationFunction;
     this.onPaginationResponse = onPaginationResponse;
@@ -11,16 +12,23 @@ export class PaginationHandler {
 
     this.pagerData = pagerData;
 
-    this.pagerData.onPagerDataChanged = () =>
+    this.pagerData.onPagerDataChanged = () => this.getItems(this.pagerData);
+
+    this.sortCriteria = sortCriteria;
+
+    this.sortCriteria.onSortCriteriaChanged = () =>
       this.getItems(this.pagerData);
   }
 
   //calls the pagination function and passes the result to pagination response
   getItems = ({ currentPageNo, itemsPerPage }) => {
-    this.paginationFunction({
-      currentPageNo,
-      itemsPerPage,
-    }).then(({ paginatedItems, totalPages }) => {
+    this.paginationFunction(
+      {
+        currentPageNo,
+        itemsPerPage,
+      },
+      this.sortCriteria.sortCriteriaList,
+    ).then(({ paginatedItems, totalPages }) => {
       this.onPaginationResponse({ paginatedItems, totalPages });
     });
   };
