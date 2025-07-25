@@ -731,7 +731,7 @@
       this.taskService = new TaskService(initialTaskData);
       this.pagerData = new PagerData();
       // this.taskSortCriteria = new TaskSortCriteria();
-      this.titleSortCriteria = new SortCriteria("title");
+      this.titleSortCriteria = new SortCriteria({ propertyType: "title" });
 
       this.taskPresentationUI = new TaskPresentationUI("taskPageControlBtn");
       this.pagerComponentUI = new PagerComponentUI({
@@ -744,7 +744,9 @@
         onSortCriteriaChanged: () => this.titleSortCriteria.setSortCriteria(),
       });
 
-      this.sortCriteriaHandler = new SortCriteriaHandler({sortCriteria: this.titleSortCriteria});
+      this.sortCriteriaHandler = new SortCriteriaHandler({
+        sortCriteria: this.titleSortCriteria,
+      });
 
       this.paginationHandler = new PaginationHandler({
         paginationFunction: this.taskService.getTasks,
@@ -752,8 +754,6 @@
         pagerData: this.pagerData,
         sortCriteria: this.sortCriteriaHandler,
       });
-
-      
     }
 
     onPaginationResponse = ({ paginatedItems, totalPages }) => {
