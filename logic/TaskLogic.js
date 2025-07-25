@@ -5,37 +5,37 @@ import { PagerData } from "./PagerData";
 import { PaginationHandler } from "./PaginationHandler";
 import { SortTaskControlUI } from "../ui/SortTaskControlUI";
 import { TaskSortCriteria } from "./TaskSortCriteria";
+import { SortCriteria } from "./SortCriteria";
+import { SortCriteriaHandler } from "./SortCriteriaHandler";
 
 export class TaskLogic {
   constructor({ initialTaskData = [] } = {}) {
     this.taskService = new TaskService(initialTaskData);
+    this.pagerData = new PagerData();
+    // this.taskSortCriteria = new TaskSortCriteria();
+    this.titleSortCriteria = new SortCriteria("title");
 
     this.taskPresentationUI = new TaskPresentationUI("taskPageControlBtn");
     this.pagerComponentUI = new PagerComponentUI({
       containerId: "taskPerPageSelect",
+      onItemsPerPageChange: this.pagerData.setItemsPerPage,
+      onCurrentPageChange: this.pagerData.setCurrentPageNo,
     });
     this.sortTaskControlUI = new SortTaskControlUI({
       containerId: "sortTaskContainer",
+      onSortCriteriaChanged: () => this.titleSortCriteria.setSortCriteria(),
     });
 
-    this.pagerData = new PagerData();
-
-    this.taskSortCriteria = new TaskSortCriteria();
-
-    this.pagerComponentUI.onItemsPerPageChange = this.pagerData.setItemsPerPage;
-    this.pagerComponentUI.onCurrentPageChange = this.pagerData.setCurrentPageNo;
-
-    this.sortTaskControlUI.onSortByTitleCriteriaChanged =
-      this.taskSortCriteria.setSortByTitleCriteria;
-    this.sortTaskControlUI.onSortByDateCriteriaChanged =
-      this.taskSortCriteria.setSortByDateCriteria;
+    this.sortCriteriaHandler = new SortCriteriaHandler({sortCriteria: this.titleSortCriteria});
 
     this.paginationHandler = new PaginationHandler({
       paginationFunction: this.taskService.getTasks,
       onPaginationResponse: this.onPaginationResponse,
       pagerData: this.pagerData,
-      sortCriteria: this.taskSortCriteria,
+      sortCriteria: this.sortCriteriaHandler,
     });
+
+    
   }
 
   onPaginationResponse = ({ paginatedItems, totalPages }) => {
@@ -47,12 +47,12 @@ export class TaskLogic {
       { paginatedItems, totalPages },
       this.pagerData.currentPageNo,
     );
-    this.sortTaskControlUI.setTitleArrow(
-      this.taskSortCriteria.titleSortDirection,
-    );
-    this.sortTaskControlUI.setDateArrow(
-      this.taskSortCriteria.dateSortDirection,
-    );
+    // this.sortTaskControlUI.setTitleArrow(
+    //   this.taskSortCriteria.titleSortDirection,
+    // );
+    // this.sortTaskControlUI.setDateArrow(
+    //   this.taskSortCriteria.dateSortDirection,
+    // );
   };
 
   init() {

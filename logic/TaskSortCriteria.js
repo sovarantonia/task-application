@@ -5,15 +5,15 @@ export class TaskSortCriteria {
     this.sortCriteriaList = [];
     this.titleSortDirection = 0;
     this.dateSortDirection = 0;
-    this.titleCounter = 0;
-    this.dateCounter = 0;
+    this.titleClickBtnCounter = 0;
+    this.dateClickBtnCounter = 0;
 
     this.onSortCriteriaChanged = onSortCriteriaChanged;
   }
 
   setSortByTitleCriteria = () => {
-    this.titleCounter = (this.titleCounter + 1) % 3;
-    this.titleSortDirection = this.getSortDirection(this.titleCounter);
+    this.titleClickBtnCounter = (this.titleClickBtnCounter + 1) % 3;
+    this.titleSortDirection = this.getSortDirection(this.titleClickBtnCounter);
 
     const titleSortOption = {
       property: "title",
@@ -30,8 +30,8 @@ export class TaskSortCriteria {
   };
 
   setSortByDateCriteria = () => {
-    this.dateCounter = (this.dateCounter + 1) % 3;
-    this.dateSortDirection = this.getSortDirection(this.dateCounter);
+    this.dateClickBtnCounter = (this.dateClickBtnCounter + 1) % 3;
+    this.dateSortDirection = this.getSortDirection(this.dateClickBtnCounter);
 
     const dateSortOption = {
       property: "creationDate",

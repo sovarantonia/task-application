@@ -16,8 +16,10 @@ export class PaginationHandler {
 
     this.sortCriteria = sortCriteria;
 
-    this.sortCriteria.onSortCriteriaChanged = () =>
+    this.sortCriteria.onSortListCriteriaChanged = () =>
       this.getItems(this.pagerData);
+
+    // this.sortCriteria.onSortCriteriaListChange = () => this.getItems(this.pagerData);
   }
 
   //calls the pagination function and passes the result to pagination response

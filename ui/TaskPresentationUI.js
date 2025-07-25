@@ -2,8 +2,6 @@ import { renderTasks } from "../ui/taskListRenderer";
 import { CreateElementComponent } from "../components/CreateElementComponent";
 export class TaskPresentationUI {
   constructor(containerId) {
-    this.taskRenderer = renderTasks("taskPaginationContainer");
-
     this.createElementComponent = new CreateElementComponent();
     this.container = this.createElementComponent.createDiv();
     this.pageIndicator = this.createElementComponent.createSpan();
@@ -14,8 +12,7 @@ export class TaskPresentationUI {
   }
 
   renderTasks = ({ paginatedItems, totalPages }, currentPageNo) => {
-    this.taskRenderer(paginatedItems);
+    renderTasks("taskPaginationContainer", paginatedItems);
     this.pageIndicator.textContent = `Page ${currentPageNo} of ${totalPages}`;
   };
-
 }

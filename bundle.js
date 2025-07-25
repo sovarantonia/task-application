@@ -472,13 +472,11 @@
     };
   }
 
-  function renderTasks(containerId) {
+  function renderTasks(containerId, taskList) {
     const container = document.getElementById(containerId);
-
-    return (tasks) => {
       container.innerHTML = "";
 
-      tasks.forEach((element) => {
+      taskList.forEach((element) => {
         const card = document.createElement("div");
         card.className = "task-card";
         card.innerHTML = `<h2>${element.title}</h2>
@@ -488,13 +486,11 @@
         <p>Created at: ${element.creationDate}</p>`;
         container.appendChild(card);
       });
-    };
+      return taskList;
   }
 
   class TaskPresentationUI {
     constructor(containerId) {
-      this.taskRenderer = renderTasks("taskPaginationContainer");
-
       this.createElementComponent = new CreateElementComponent();
       this.container = this.createElementComponent.createDiv();
       this.pageIndicator = this.createElementComponent.createSpan();
@@ -505,10 +501,9 @@
     }
 
     renderTasks = ({ paginatedItems, totalPages }, currentPageNo) => {
-      this.taskRenderer(paginatedItems);
+      renderTasks("taskPaginationContainer", paginatedItems);
       this.pageIndicator.textContent = `Page ${currentPageNo} of ${totalPages}`;
     };
-
   }
 
   class PagerData {
@@ -562,8 +557,10 @@
 
       this.sortCriteria = sortCriteria;
 
-      this.sortCriteria.onSortCriteriaChanged = () =>
+      this.sortCriteria.onSortListCriteriaChanged = () =>
         this.getItems(this.pagerData);
+
+      // this.sortCriteria.onSortCriteriaListChange = () => this.getItems(this.pagerData);
     }
 
     //calls the pagination function and passes the result to pagination response
@@ -598,23 +595,21 @@
   class SortTaskControlUI {
     constructor({
       containerId,
-      onSortByTitleCriteriaChanged = null,
-      onSortByDateCriteriaChanged = null,
+      onSortCriteriaChanged,
     }) {
-      this.onSortByTitleCriteriaChanged = onSortByTitleCriteriaChanged;
-      this.onSortByDateCriteriaChanged = onSortByDateCriteriaChanged;
+      this.onSortCriteriaChanged = onSortCriteriaChanged;
 
       this.createElementComponent = new CreateElementComponent();
       this.container = this.createElementComponent.createDiv();
 
       this.sortByTitleBtn = this.createElementComponent.createButton({
         text: "Sort by title",
-        eventToAdd: () => this.onSortByTitleCriteriaChanged(),
+        eventToAdd: () => this.onSortCriteriaChanged("title"),
       });
-
+    
       this.sortByDateBtn = this.createElementComponent.createButton({
         text: "Sort by date",
-        eventToAdd: () => this.onSortByDateCriteriaChanged(),
+        eventToAdd: () => this.onSortCriteriaChanged("creationDate"),
       });
 
       this.titleArrow = this.createElementComponent.createSpan();
@@ -677,51 +672,25 @@
     return optionList;
   }
 
-  class TaskSortCriteria {
-    constructor(onSortCriteriaChanged = null) {
-      this.sortCriteriaList = [];
-      this.titleSortDirection = 0;
-      this.dateSortDirection = 0;
-      this.titleCounter = 0;
-      this.dateCounter = 0;
+  //** this creates the sorting criteria for the property propertyType */
+  class SortCriteria {
+    constructor({ propertyType, onSortCriteriaCreated } = {}) {
+      this.propertyType = propertyType;
+      this.clickCounter = 0;
+      this.sortOption = { property: propertyType, direction: 0 };
 
-      this.onSortCriteriaChanged = onSortCriteriaChanged;
+      this.onSortCriteriaCreated = onSortCriteriaCreated;
     }
 
-    setSortByTitleCriteria = () => {
-      this.titleCounter = (this.titleCounter + 1) % 3;
-      this.titleSortDirection = this.getSortDirection(this.titleCounter);
+    setSortCriteria = () => {
+      this.clickCounter = (this.clickCounter + 1) % 3;
+      this.sortOption.direction = this.getSortDirection(this.clickCounter);
+      // const propertySortOption = {
+      //   property: this.propertyType,
+      //   direction: this.sortDirection,
+      // };
 
-      const titleSortOption = {
-        property: "title",
-        direction: this.titleSortDirection,
-      };
-
-      updateCriteria({
-        optionList: this.sortCriteriaList,
-        option: titleSortOption,
-        removingCriteria: (opt) => opt.direction === 0,
-      });
-
-      this.onSortCriteriaChanged();
-    };
-
-    setSortByDateCriteria = () => {
-      this.dateCounter = (this.dateCounter + 1) % 3;
-      this.dateSortDirection = this.getSortDirection(this.dateCounter);
-
-      const dateSortOption = {
-        property: "creationDate",
-        direction: this.dateSortDirection,
-      };
-
-      updateCriteria({
-        optionList: this.sortCriteriaList,
-        option: dateSortOption,
-        removingCriteria: (opt) => opt.direction === 0,
-      });
-
-      this.onSortCriteriaChanged();
+      this.onSortCriteriaCreated(this.sortOption); // sa adauge/modifice optiunea din sortare, functia va fi in sort handler
     };
 
     getSortDirection(counter) {
@@ -736,36 +705,55 @@
     }
   }
 
+  class SortCriteriaHandler {
+    constructor({onSortCriteriaListChange = null, sortCriteria = null} = {}) {
+      this.sortCriteriaList = [];
+      this.onSortCriteriaListChange = onSortCriteriaListChange;
+
+      this.sortCriteria = sortCriteria;
+
+      this.sortCriteria.onSortCriteriaCreated = () => this.setSortOption(this.sortCriteria.sortOption);
+    }
+
+    setSortOption = (option) => {
+      updateCriteria({
+        optionList: this.sortCriteriaList,
+        option: option,
+        removingCriteria: (opt) => opt.direction === 0,
+      });
+
+      this.onSortCriteriaListChange(); // pass this list to pagination handler
+    }
+  }
+
   class TaskLogic {
     constructor({ initialTaskData = [] } = {}) {
       this.taskService = new TaskService(initialTaskData);
+      this.pagerData = new PagerData();
+      // this.taskSortCriteria = new TaskSortCriteria();
+      this.titleSortCriteria = new SortCriteria("title");
 
       this.taskPresentationUI = new TaskPresentationUI("taskPageControlBtn");
       this.pagerComponentUI = new PagerComponentUI({
         containerId: "taskPerPageSelect",
+        onItemsPerPageChange: this.pagerData.setItemsPerPage,
+        onCurrentPageChange: this.pagerData.setCurrentPageNo,
       });
       this.sortTaskControlUI = new SortTaskControlUI({
         containerId: "sortTaskContainer",
+        onSortCriteriaChanged: () => this.titleSortCriteria.setSortCriteria(),
       });
 
-      this.pagerData = new PagerData();
-
-      this.taskSortCriteria = new TaskSortCriteria();
-
-      this.pagerComponentUI.onItemsPerPageChange = this.pagerData.setItemsPerPage;
-      this.pagerComponentUI.onCurrentPageChange = this.pagerData.setCurrentPageNo;
-
-      this.sortTaskControlUI.onSortByTitleCriteriaChanged =
-        this.taskSortCriteria.setSortByTitleCriteria;
-      this.sortTaskControlUI.onSortByDateCriteriaChanged =
-        this.taskSortCriteria.setSortByDateCriteria;
+      this.sortCriteriaHandler = new SortCriteriaHandler({sortCriteria: this.titleSortCriteria});
 
       this.paginationHandler = new PaginationHandler({
         paginationFunction: this.taskService.getTasks,
         onPaginationResponse: this.onPaginationResponse,
         pagerData: this.pagerData,
-        sortCriteria: this.taskSortCriteria,
+        sortCriteria: this.sortCriteriaHandler,
       });
+
+      
     }
 
     onPaginationResponse = ({ paginatedItems, totalPages }) => {
@@ -777,12 +765,12 @@
         { paginatedItems, totalPages },
         this.pagerData.currentPageNo,
       );
-      this.sortTaskControlUI.setTitleArrow(
-        this.taskSortCriteria.titleSortDirection,
-      );
-      this.sortTaskControlUI.setDateArrow(
-        this.taskSortCriteria.dateSortDirection,
-      );
+      // this.sortTaskControlUI.setTitleArrow(
+      //   this.taskSortCriteria.titleSortDirection,
+      // );
+      // this.sortTaskControlUI.setDateArrow(
+      //   this.taskSortCriteria.dateSortDirection,
+      // );
     };
 
     init() {

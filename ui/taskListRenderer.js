@@ -1,10 +1,8 @@
-export function renderTasks(containerId) {
+export function renderTasks(containerId, taskList) {
   const container = document.getElementById(containerId);
-
-  return (tasks) => {
     container.innerHTML = "";
 
-    tasks.forEach((element) => {
+    taskList.forEach((element) => {
       const card = document.createElement("div");
       card.className = "task-card";
       card.innerHTML = `<h2>${element.title}</h2>
@@ -14,5 +12,5 @@ export function renderTasks(containerId) {
         <p>Created at: ${element.creationDate}</p>`;
       container.appendChild(card);
     });
-  };
+    return taskList;
 }

@@ -3,23 +3,21 @@ import { CreateElementComponent } from "../components/CreateElementComponent";
 export class SortTaskControlUI {
   constructor({
     containerId,
-    onSortByTitleCriteriaChanged = null,
-    onSortByDateCriteriaChanged = null,
+    onSortCriteriaChanged,
   }) {
-    this.onSortByTitleCriteriaChanged = onSortByTitleCriteriaChanged;
-    this.onSortByDateCriteriaChanged = onSortByDateCriteriaChanged;
+    this.onSortCriteriaChanged = onSortCriteriaChanged;
 
     this.createElementComponent = new CreateElementComponent();
     this.container = this.createElementComponent.createDiv();
 
     this.sortByTitleBtn = this.createElementComponent.createButton({
       text: "Sort by title",
-      eventToAdd: () => this.onSortByTitleCriteriaChanged(),
+      eventToAdd: () => this.onSortCriteriaChanged("title"),
     });
-
+  
     this.sortByDateBtn = this.createElementComponent.createButton({
       text: "Sort by date",
-      eventToAdd: () => this.onSortByDateCriteriaChanged(),
+      eventToAdd: () => this.onSortCriteriaChanged("creationDate"),
     });
 
     this.titleArrow = this.createElementComponent.createSpan();
