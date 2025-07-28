@@ -9,7 +9,7 @@ export function renderTasks(containerId, taskList) {
         <p>Status: ${element.status}</p>
         <p>${element.description}</p>
         <p>Assigned to: ${element.userName}</p>
-        <p>Created at: ${element.creationDate}</p>`;
+        <p>Created at: ${element.date}</p>`;
       container.appendChild(card);
     });
     return taskList;

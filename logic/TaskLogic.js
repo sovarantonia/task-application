@@ -12,8 +12,7 @@ export class TaskLogic {
   constructor({ initialTaskData = [] } = {}) {
     this.taskService = new TaskService(initialTaskData);
     this.pagerData = new PagerData();
-    // this.taskSortCriteria = new TaskSortCriteria();
-    this.titleSortCriteria = new SortCriteria({ propertyType: "title" });
+    this.sortCriteriaHandler = new SortCriteriaHandler();
 
     this.taskPresentationUI = new TaskPresentationUI("taskPageControlBtn");
     this.pagerComponentUI = new PagerComponentUI({
@@ -23,18 +22,16 @@ export class TaskLogic {
     });
     this.sortTaskControlUI = new SortTaskControlUI({
       containerId: "sortTaskContainer",
-      onSortCriteriaChanged: () => this.titleSortCriteria.setSortCriteria(),
-    });
-
-    this.sortCriteriaHandler = new SortCriteriaHandler({
-      sortCriteria: this.titleSortCriteria,
+      onSortCriteriaChanged: (column) =>
+        this.sortCriteriaHandler.onSortCriteriaChanged(column),
+      columnList: ["title", "date"],
     });
 
     this.paginationHandler = new PaginationHandler({
       paginationFunction: this.taskService.getTasks,
       onPaginationResponse: this.onPaginationResponse,
       pagerData: this.pagerData,
-      sortCriteria: this.sortCriteriaHandler,
+      sortCriteriaHandler: this.sortCriteriaHandler,
     });
   }
 

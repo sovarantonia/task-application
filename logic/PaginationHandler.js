@@ -3,7 +3,7 @@ export class PaginationHandler {
     paginationFunction = null,
     onPaginationResponse = null,
     pagerData = null,
-    sortCriteria = null,
+    sortCriteriaHandler = null,
   } = {}) {
     this.paginationFunction = paginationFunction;
     this.onPaginationResponse = onPaginationResponse;
@@ -14,22 +14,20 @@ export class PaginationHandler {
 
     this.pagerData.onPagerDataChanged = () => this.getItems(this.pagerData);
 
-    this.sortCriteria = sortCriteria;
+    this.sortCriteriaHandler = sortCriteriaHandler;
 
-    this.sortCriteria.onSortListCriteriaChanged = () =>
-      this.getItems(this.pagerData);
-
-    // this.sortCriteria.onSortCriteriaListChange = () => this.getItems(this.pagerData);
+    this.sortCriteriaHandler.onSortCriteriaListChanged = (sortCriteria) =>
+      this.getItems(this.pagerData, sortCriteria);
   }
 
   //calls the pagination function and passes the result to pagination response
-  getItems = ({ currentPageNo, itemsPerPage }) => {
+  getItems = ({ currentPageNo, itemsPerPage }, sortCriteria) => {
     this.paginationFunction(
       {
         currentPageNo,
         itemsPerPage,
       },
-      this.sortCriteria.sortCriteriaList,
+      sortCriteria,
     ).then(({ paginatedItems, totalPages }) => {
       this.onPaginationResponse({ paginatedItems, totalPages });
     });

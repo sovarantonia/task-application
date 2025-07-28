@@ -4,7 +4,7 @@ import { DbService } from "./DbService";
 export class TaskService {
   constructor(taskData) {
     taskData.forEach((task) => {
-      dateParser(task.creationDate);
+      dateParser(task.date);
     });
     this.service = new DbService(taskData);
   }

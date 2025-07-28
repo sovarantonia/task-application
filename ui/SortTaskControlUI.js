@@ -4,31 +4,30 @@ export class SortTaskControlUI {
   constructor({
     containerId,
     onSortCriteriaChanged,
+    columnList = []
   }) {
     this.onSortCriteriaChanged = onSortCriteriaChanged;
 
     this.createElementComponent = new CreateElementComponent();
     this.container = this.createElementComponent.createDiv();
 
-    this.sortByTitleBtn = this.createElementComponent.createButton({
-      text: "Sort by title",
-      eventToAdd: () => this.onSortCriteriaChanged("title"),
-    });
-  
-    this.sortByDateBtn = this.createElementComponent.createButton({
-      text: "Sort by date",
-      eventToAdd: () => this.onSortCriteriaChanged("creationDate"),
-    });
+    for (let column of columnList) {
+      this.sortByColumnBtn = this.createElementComponent.createButton({
+        text: `Sort by ${column}`,
+        eventToAdd: () => this.onSortCriteriaChanged(column),
+      })
+      this.container.append(this.sortByColumnBtn);
+    }
 
     this.titleArrow = this.createElementComponent.createSpan();
     this.dateArrow = this.createElementComponent.createSpan();
 
-    this.container.append(
-      this.sortByTitleBtn,
-      this.titleArrow,
-      this.sortByDateBtn,
-      this.dateArrow,
-    );
+    // this.container.append(
+    //   this.sortByTitleBtn,
+    //   this.titleArrow,
+    //   this.sortByDateBtn,
+    //   this.dateArrow,
+    // );
     this.target = document.getElementById(containerId);
     this.target.append(this.container);
   }

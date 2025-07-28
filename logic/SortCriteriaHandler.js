@@ -1,12 +1,9 @@
 import { updateCriteria } from "../helpers/updateCriteriaHelper";
+import { SortCriteria } from "./SortCriteria";
 export class SortCriteriaHandler {
-  constructor({onSortCriteriaListChange = null, sortCriteria = null} = {}) {
+  constructor({ onSortCriteriaListChanged = null } = {}) {
     this.sortCriteriaList = [];
-    this.onSortCriteriaListChange = onSortCriteriaListChange;
-
-    this.sortCriteria = sortCriteria;
-
-    this.sortCriteria.onSortCriteriaCreated = () => this.setSortOption(this.sortCriteria.sortOption);
+    this.onSortCriteriaListChanged = onSortCriteriaListChanged;
   }
 
   setSortOption = (option) => {
@@ -16,6 +13,23 @@ export class SortCriteriaHandler {
       removingCriteria: (opt) => opt.direction === 0,
     });
 
-    this.onSortCriteriaListChange(); // pass this list to pagination handler
-  }
+    this.onSortCriteriaListChanged(this.sortCriteriaList); // pass this list to pagination handler
+  };
+
+  onSortCriteriaChanged = (column) => {
+    const index = this.sortCriteriaList.findIndex((o) => o.property === column);
+    let sortCriteria;
+    index === -1
+      ? (sortCriteria = new SortCriteria({
+          propertyType: column,
+          onSortCriteriaCreated: (option) => this.setSortOption(option),
+        }))
+      : (sortCriteria = new SortCriteria({
+          propertyType: this.sortCriteriaList[index].property,
+          direction: this.sortCriteriaList[index].direction,
+          onSortCriteriaCreated: (option) => this.setSortOption(option),
+        }));
+
+    sortCriteria.setSortCriteria();
+  };
 }
