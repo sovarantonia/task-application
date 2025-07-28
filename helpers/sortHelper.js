@@ -11,11 +11,13 @@ export function combineComparisonFunctions(compareFunctions) {
 }
 
 export function multiFieldSort(criteria) {
-  const compareFunctions = criteria.map(({ property, direction }) => {
-    return (a, b) => {
-      if (a[property] === b[property]) return 0;
-      return a[property] < b[property] ? -direction : direction;
-    };
+  const compareFunctions = criteria.map((arr) => {
+    return arr.map(() => {
+      return (a, b) => {
+        if (a[0] === b[0]) return 0;
+        return a[0] < b[0] ? -1 : 1;
+      };
+    });
   });
 
   return combineComparisonFunctions(compareFunctions);

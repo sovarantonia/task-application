@@ -338,11 +338,13 @@
   }
 
   function multiFieldSort(criteria) {
-    const compareFunctions = criteria.map(({ property, direction }) => {
-      return (a, b) => {
-        if (a[property] === b[property]) return 0;
-        return a[property] < b[property] ? -direction : direction;
-      };
+    const compareFunctions = criteria.map((arr) => {
+      return arr.map(() => {
+        return (a, b) => {
+          if (a[0] === b[0]) return 0;
+          return a[0] < b[0] ? -1 : 1;
+        };
+      });
     });
 
     return combineComparisonFunctions(compareFunctions);
@@ -544,7 +546,6 @@
       paginationFunction = null,
       onPaginationResponse = null,
       pagerData = null,
-      sortCriteriaHandler = null,
     } = {}) {
       this.paginationFunction = paginationFunction;
       this.onPaginationResponse = onPaginationResponse;
@@ -552,26 +553,22 @@
       // this.pagerComponent.onPrevious = this.onPrevious;
 
       this.pagerData = pagerData;
-
       this.pagerData.onPagerDataChanged = () => this.getItems(this.pagerData);
-
-      this.sortCriteriaHandler = sortCriteriaHandler;
-
-      this.sortCriteriaHandler.onSortCriteriaListChanged = (sortCriteria) =>
-        this.getItems(this.pagerData, sortCriteria);
     }
 
     //calls the pagination function and passes the result to pagination response
     getItems = ({ currentPageNo, itemsPerPage }, sortCriteria) => {
-      this.paginationFunction(
-        {
-          currentPageNo,
-          itemsPerPage,
-        },
-        sortCriteria,
-      ).then(({ paginatedItems, totalPages }) => {
+      this.paginationFunction({
+        currentPageNo,
+        itemsPerPage,
+      }, sortCriteria).then(({ paginatedItems, totalPages }) => {
         this.onPaginationResponse({ paginatedItems, totalPages });
       });
+    };
+
+    onSortCriteriaChanged = (sortCriteria) => {
+      // debugger;
+      this.getItems(this.pagerData, Array.from(sortCriteria));
     };
 
     // onNext = () => {
@@ -591,11 +588,7 @@
   }
 
   class SortTaskControlUI {
-    constructor({
-      containerId,
-      onSortCriteriaChanged,
-      columnList = []
-    }) {
+    constructor({ containerId, onSortCriteriaChanged, columnList = [] }) {
       this.onSortCriteriaChanged = onSortCriteriaChanged;
 
       this.createElementComponent = new CreateElementComponent();
@@ -604,7 +597,9 @@
       for (let column of columnList) {
         this.sortByColumnBtn = this.createElementComponent.createButton({
           text: `Sort by ${column}`,
-          eventToAdd: () => this.onSortCriteriaChanged(column),
+          eventToAdd: () => {
+            this.onSortCriteriaChanged(column);
+          },
         });
         this.container.append(this.sortByColumnBtn);
       }
@@ -651,24 +646,6 @@
     }
   }
 
-  function updateCriteria({ optionList, option, removingCriteria }) {
-    const elementIndex = optionList.findIndex(
-      (o) => o.property === option.property,
-    );
-
-    if (elementIndex === -1) {
-      optionList.push(option);
-    }
-    
-    if (removingCriteria(option)) {
-      optionList.splice(elementIndex, 1);
-    } else {
-      optionList[elementIndex] = option;
-    }
-
-    return optionList;
-  }
-
   //** this creates the sorting criteria for the property propertyType */
   class SortCriteria {
     constructor({ propertyType, direction = 0, onSortCriteriaCreated } = {}) {
@@ -686,32 +663,26 @@
   }
 
   class SortCriteriaHandler {
-    constructor({ onSortCriteriaListChanged = null } = {}) {
-      this.sortCriteriaList = [];
-      this.onSortCriteriaListChanged = onSortCriteriaListChanged;
+    constructor({ onNotifyPaginationHandler = null } = {}) {
+      this.sortCriteriaList = new Map();
+      this.onNotifyPaginationHandler = onNotifyPaginationHandler;
     }
 
     setSortOption = (option) => {
-      updateCriteria({
-        optionList: this.sortCriteriaList,
-        option: option,
-        removingCriteria: (opt) => opt.direction === 0,
-      });
-
-      this.onSortCriteriaListChanged(this.sortCriteriaList); // pass this list to pagination handler
+      this.sortCriteriaList.set(option.property, option.direction);
+      this.onNotifyPaginationHandler(this.sortCriteriaList); // pass this list to pagination handler
     };
 
     onSortCriteriaChanged = (column) => {
-      const index = this.sortCriteriaList.findIndex((o) => o.property === column);
       let sortCriteria;
-      index === -1
+      !this.sortCriteriaList.has(column)
         ? (sortCriteria = new SortCriteria({
             propertyType: column,
             onSortCriteriaCreated: (option) => this.setSortOption(option),
           }))
         : (sortCriteria = new SortCriteria({
-            propertyType: this.sortCriteriaList[index].property,
-            direction: this.sortCriteriaList[index].direction,
+            propertyType: column,
+            direction: this.sortCriteriaList.get(column),
             onSortCriteriaCreated: (option) => this.setSortOption(option),
           }));
 
@@ -723,7 +694,6 @@
     constructor({ initialTaskData = [] } = {}) {
       this.taskService = new TaskService(initialTaskData);
       this.pagerData = new PagerData();
-      this.sortCriteriaHandler = new SortCriteriaHandler();
 
       this.taskPresentationUI = new TaskPresentationUI("taskPageControlBtn");
       this.pagerComponentUI = new PagerComponentUI({
@@ -742,7 +712,10 @@
         paginationFunction: this.taskService.getTasks,
         onPaginationResponse: this.onPaginationResponse,
         pagerData: this.pagerData,
-        sortCriteriaHandler: this.sortCriteriaHandler,
+      });
+
+      this.sortCriteriaHandler = new SortCriteriaHandler({
+        onNotifyPaginationHandler: (sortCriteria) => this.paginationHandler.onSortCriteriaChanged(sortCriteria),
       });
     }
 

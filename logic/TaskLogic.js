@@ -12,7 +12,6 @@ export class TaskLogic {
   constructor({ initialTaskData = [] } = {}) {
     this.taskService = new TaskService(initialTaskData);
     this.pagerData = new PagerData();
-    this.sortCriteriaHandler = new SortCriteriaHandler();
 
     this.taskPresentationUI = new TaskPresentationUI("taskPageControlBtn");
     this.pagerComponentUI = new PagerComponentUI({
@@ -31,7 +30,10 @@ export class TaskLogic {
       paginationFunction: this.taskService.getTasks,
       onPaginationResponse: this.onPaginationResponse,
       pagerData: this.pagerData,
-      sortCriteriaHandler: this.sortCriteriaHandler,
+    });
+
+    this.sortCriteriaHandler = new SortCriteriaHandler({
+      onNotifyPaginationHandler: (sortCriteria) => this.paginationHandler.onSortCriteriaChanged(sortCriteria),
     });
   }
 

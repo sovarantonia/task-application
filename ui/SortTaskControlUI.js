@@ -1,11 +1,7 @@
 import { CreateElementComponent } from "../components/CreateElementComponent";
 
 export class SortTaskControlUI {
-  constructor({
-    containerId,
-    onSortCriteriaChanged,
-    columnList = []
-  }) {
+  constructor({ containerId, onSortCriteriaChanged, columnList = [] }) {
     this.onSortCriteriaChanged = onSortCriteriaChanged;
 
     this.createElementComponent = new CreateElementComponent();
@@ -14,8 +10,10 @@ export class SortTaskControlUI {
     for (let column of columnList) {
       this.sortByColumnBtn = this.createElementComponent.createButton({
         text: `Sort by ${column}`,
-        eventToAdd: () => this.onSortCriteriaChanged(column),
-      })
+        eventToAdd: () => {
+          this.onSortCriteriaChanged(column);
+        },
+      });
       this.container.append(this.sortByColumnBtn);
     }
 
