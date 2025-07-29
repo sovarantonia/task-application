@@ -476,7 +476,9 @@
   class TaskPresentationUI {
     constructor(containerId) {
       this.createElementComponent = new CreateElementComponent(containerId);
-      this.pageIndicator = this.createElementComponent.createElement({elementType: "span"});
+      this.pageIndicator = this.createElementComponent.createElement({
+        elementType: "span",
+      });
     }
 
     renderTasks = ({ paginatedItems, totalPages }, currentPageNo) => {
@@ -569,7 +571,7 @@
     // };
   }
 
-  class SortTaskControlUI {
+  class SortControlUI {
     constructor({ containerId, onSortCriteriaChanged, columnList = [] }) {
       this.onSortCriteriaChanged = onSortCriteriaChanged;
 
@@ -718,7 +720,7 @@
     };
   }
 
-  class FilterTaskControlUI {
+  class FilterControlUI {
     constructor({ containerId, onFilterCriteriaChanged, columnOptionList }) {
       this.onFilterCriteriaChanged = onFilterCriteriaChanged;
 
@@ -756,61 +758,61 @@
   const initialUserData = [
     {
       id: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
-      userName: "Alice Morgan",
+      name: "Alice Morgan",
       email: "alice.morgan@example.com",
-      department: "Backend Development", 
-    },
-    {
-      id: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
-      userName: "Bob Daniels",
-      email: "bob.daniels@example.com",
-      department: "Frontend Development", 
-    },
-    {
-      id: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
-      userName: "Charlie Wu",
-      email: "charlie.wu@example.com",
-      department: "Database Engineering", 
+      department: "Backend Development",
     },
     {
       id: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
-      userName: "Dana Kim",
+      name: "Dana Kim",
       email: "dana.kim@example.com",
-      department: "UX/UI Design", 
+      department: "UX/UI Design",
     },
     {
       id: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
-      userName: "Eva Thompson",
+      name: "Eva Thompson",
       email: "eva.thompson@example.com",
-      department: "Quality Assurance", 
+      department: "Quality Assurance",
     },
     {
-      id: "4f2fd22d-74cc-40bb-9600-2e9e83f223db",
-      userName: "Frank Ortega",
-      email: "frank.ortega@example.com",
-      department: "Project Management",
+      id: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
+      name: "Bob Daniels",
+      email: "bob.daniels@example.com",
+      department: "Frontend Development",
     },
     {
-      id: "8ea1de6b-681b-4d47-a4f7-abc9c7e19e02",
-      userName: "Grace Lee",
-      email: "grace.lee@example.com",
-      department: "Customer Support",
+      id: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
+      name: "Charlie Wu",
+      email: "charlie.wu@example.com",
+      department: "Database Engineering",
     },
     {
       id: "f8c2f610-08c3-42f6-bbde-f94fc53119ea",
-      userName: "Henry Patel",
+      name: "Henry Patel",
       email: "henry.patel@example.com",
       department: "IT Support",
     },
     {
       id: "bd23c62f-205b-44aa-8b63-d0bfb749d4b9",
-      userName: "Isla Novak",
+      name: "Isla Novak",
       email: "isla.novak@example.com",
       department: "Legal",
     },
     {
+      id: "4f2fd22d-74cc-40bb-9600-2e9e83f223db",
+      name: "Frank Ortega",
+      email: "frank.ortega@example.com",
+      department: "Project Management",
+    },
+    {
+      id: "8ea1de6b-681b-4d47-a4f7-abc9c7e19e02",
+      name: "Grace Lee",
+      email: "grace.lee@example.com",
+      department: "Customer Support",
+    },
+    {
       id: "3e4a3c5f-f6c7-442b-8c17-ccdd75ef1b7e",
-      userName: "Jack Reynolds",
+      name: "Jack Reynolds",
       email: "jack.reynolds@example.com",
       department: "Operations",
     },
@@ -821,25 +823,25 @@
       this.taskService = new TaskService(initialTaskData);
       this.pagerData = new PagerData();
 
-      this.taskPresentationUI = new TaskPresentationUI("taskPageControlBtn");
+      this.taskPresentationUI = new TaskPresentationUI("taskPageIndicator");
       this.pagerComponentUI = new PagerComponentUI({
         containerId: "taskPerPageSelect",
         onItemsPerPageChange: this.pagerData.setItemsPerPage,
         onCurrentPageChange: this.pagerData.setCurrentPageNo,
       });
-      this.sortTaskControlUI = new SortTaskControlUI({
+      this.sortTaskControlUI = new SortControlUI({
         containerId: "sortTaskContainer",
         onSortCriteriaChanged: (column) =>
           this.sortCriteriaHandler.onSortCriteriaChanged(column),
         columnList: ["title", "date"],
       });
-      this.filterTaskControlUI = new FilterTaskControlUI({
+      this.filterTaskControlUI = new FilterControlUI({
         containerId: "filterTaskContainer",
         onFilterCriteriaChanged: (column, newValue) =>
           this.filterCriteriaHandler.onFilterCriteriaChanged(column, newValue),
         columnOptionList: [
           transformOptionList(taskStatus, "status"),
-          transformOptionList(initialUserData, "userName"),
+          transformOptionList(initialUserData, "name"),
         ],
       });
 
@@ -882,9 +884,180 @@
     }
   }
 
+  function renderUsers(users, containerId) {
+    const container = document.getElementById(containerId);
+    const createElementComponent = new CreateElementComponent(containerId);
+
+    container.innerHTML = "";
+
+    users.forEach((element) => {
+      const card = createElementComponent.createElement({ elementType: "div" });
+      card.className = "user-card";
+      // const checkbox = createElementComponent.createCheckbox({
+      //   value: element.id,
+      //   eventToAdd: (e) => {
+      //     eventToAdd?.(e.target.value, e.target.checked);
+      //   },
+      // });
+      // checkbox.id = element.id;
+      const nameInfo = createElementComponent.createElement({
+        elementType: "p",
+        text: `${element.name}`,
+      });
+      const emailInfo = createElementComponent.createElement({
+        elementType: "p",
+        text: `Email: ${element.email}`,
+      });
+      const departmentInfo = createElementComponent.createElement({
+        elementType: "p",
+        text: `Department: ${element.department}`,
+      });
+
+      card.append(nameInfo, emailInfo, departmentInfo);
+      container.appendChild(card);
+    });
+    return users;
+  }
+
+  class UserService {
+    constructor(userData) {
+      this.service = new DbService(userData);
+    }
+
+    getUsers = (
+      { currentPageNo, itemsPerPage },
+      sortCriteria = [],
+      filterCriteria = [],
+    ) => {
+      return this.service.getPaginatedItems(
+        { currentPageNo, itemsPerPage },
+        sortCriteria,
+        filterCriteria,
+      );
+    };
+
+    sendEmail(userList) {
+      return new Promise((resolve) => {
+        const infoList = userList.map((element) => {
+          const msg = `Sent mail to ${element.userName} (${element.email})`;
+          console.log(msg);
+          return msg;
+        });
+        resolve(infoList);
+      });
+    }
+
+    getById(userId) {
+      return this.service.findById(userId);
+    }
+  }
+
+  class UserPresentationUI {
+    constructor(containerId) {
+      this.createElement = new CreateElementComponent(containerId);
+      this.pageIndicator = this.createElement.createElement({
+        elementType: "span",
+      });
+      this.containerId = containerId;
+    }
+
+    renderUsers = ({ paginatedItems, totalPages }, currentPageNo) => {
+      renderUsers(paginatedItems, this.containerId);
+      this.pageIndicator.textContent = `Page ${currentPageNo} of ${totalPages}`;
+    };
+  }
+
+  class UserLogic {
+    constructor({ initialUserData = [] }) {
+      this.userService = new UserService(initialUserData);
+      this.pagerData = new PagerData();
+
+      this.userPresentationUI = new UserPresentationUI("userContainer");
+
+      this.pagerComponentUI = new PagerComponentUI({
+        containerId: "userPageControls",
+        onItemsPerPageChange: this.pagerData.setItemsPerPage,
+        onCurrentPageChange: this.pagerData.setCurrentPageNo,
+      });
+      this.sortUserControlUI = new SortControlUI({
+        containerId: "sortUserContainer",
+        onSortCriteriaChanged: (column) =>
+          this.sortCriteriaHandler.onSortCriteriaChanged(column),
+        columnList: ["name"],
+      });
+
+      this.filterUserControlUI = new FilterControlUI({
+        containerId: "filterUserContainer",
+        onFilterCriteriaChanged: (column, newValue) =>
+          this.filterCriteriaHandler.onFilterCriteriaChanged(column, newValue),
+        columnOptionList: [],
+      });
+
+      this.paginationHandler = new PaginationHandler({
+        paginationFunction: this.userService.getUsers,
+        onPaginationResponse: this.onPaginationResponse,
+        pagerData: this.pagerData,
+      });
+
+      this.sortCriteriaHandler = new SortCriteriaHandler({
+        onNotifyPaginationHandler: (sortCriteria) =>
+          this.paginationHandler.onSortCriteriaChanged(sortCriteria),
+      });
+
+      this.filterCriteriaHandler = new FilterCriteriaHandler({
+        onNotifyPaginationHandler: (filterCriteria) =>
+          this.paginationHandler.onFilterCriteriaChanged(filterCriteria),
+      });
+
+      // this.checkboxStateMap = new Map();
+    }
+
+    onPaginationResponse = ({ paginatedItems, totalPages }) => {
+      this.userPresentationUI.renderUsers(
+        { paginatedItems, totalPages },
+        this.pagerData.currentPageNo,
+      );
+
+      this.pagerComponentUI.updateSelect(
+        this.pagerData.currentPageNo,
+        totalPages,
+      );
+    };
+
+    init() {
+      this.pagerData.init();
+    }
+
+    // onSelect = (userId, isChecked) => {
+    //   isChecked
+    //     ? this.checkboxStateMap.set(userId, isChecked)
+    //     : this.checkboxStateMap.delete(userId);
+    //   this.checkboxSelectComponent.renderSelectedItemNr(
+    //     this.checkboxStateMap.size,
+    //   );
+    // };
+
+    // onClick = () => {
+    //   const promises = [];
+    //   for (const id of this.checkboxStateMap.keys()) {
+    //     promises.push(this.userService.getById(id));
+    //   }
+
+    //   Promise.all(promises)
+    //     .then((userInfoList) => {
+    //       return this.userService.sendEmail(userInfoList);
+    //     })
+    //     .then((messages) => {
+    //       messages;
+    //     });
+    // };
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
-    const taskLogic = new TaskLogic({initialTaskData});
+    const taskLogic = new TaskLogic({ initialTaskData });
     taskLogic.init();
+    const userLogic = new UserLogic({ initialUserData });
+    userLogic.init();
   });
 
 })();

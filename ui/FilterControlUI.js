@@ -1,6 +1,6 @@
 import { CreateElementComponent } from "../components/CreateElementComponent";
 
-export class FilterTaskControlUI {
+export class FilterControlUI {
   constructor({ containerId, onFilterCriteriaChanged, columnOptionList }) {
     this.onFilterCriteriaChanged = onFilterCriteriaChanged;
 

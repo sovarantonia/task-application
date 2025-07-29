@@ -1,6 +1,6 @@
 import { CreateElementComponent } from "../components/CreateElementComponent";
 
-export class SortTaskControlUI {
+export class SortControlUI {
   constructor({ containerId, onSortCriteriaChanged, columnList = [] }) {
     this.onSortCriteriaChanged = onSortCriteriaChanged;
 

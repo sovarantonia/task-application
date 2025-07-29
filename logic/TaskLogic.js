@@ -3,10 +3,10 @@ import { TaskService } from "../service/TaskService";
 import { TaskPresentationUI } from "../ui/TaskPresentationUI";
 import { PagerData } from "./PagerData";
 import { PaginationHandler } from "./PaginationHandler";
-import { SortTaskControlUI } from "../ui/SortTaskControlUI";
+import { SortControlUI } from "../ui/SortControlUI";
 import { SortCriteriaHandler } from "./SortCriteriaHandler";
 import { FilterCriteriaHandler } from "./FilterCriteriaHandler";
-import { FilterTaskControlUI } from "../ui/FilterTaskControlUI";
+import { FilterControlUI } from "../ui/FilterControlUI";
 import { taskStatus } from "../data/taskStatus";
 import { modify, transformOptionList } from "./transformOptionList";
 import { initialUserData } from "../data/initialUserData";
@@ -15,25 +15,25 @@ export class TaskLogic {
     this.taskService = new TaskService(initialTaskData);
     this.pagerData = new PagerData();
 
-    this.taskPresentationUI = new TaskPresentationUI("taskPageControlBtn");
+    this.taskPresentationUI = new TaskPresentationUI("taskPageIndicator");
     this.pagerComponentUI = new PagerComponentUI({
       containerId: "taskPerPageSelect",
       onItemsPerPageChange: this.pagerData.setItemsPerPage,
       onCurrentPageChange: this.pagerData.setCurrentPageNo,
     });
-    this.sortTaskControlUI = new SortTaskControlUI({
+    this.sortTaskControlUI = new SortControlUI({
       containerId: "sortTaskContainer",
       onSortCriteriaChanged: (column) =>
         this.sortCriteriaHandler.onSortCriteriaChanged(column),
       columnList: ["title", "date"],
     });
-    this.filterTaskControlUI = new FilterTaskControlUI({
+    this.filterTaskControlUI = new FilterControlUI({
       containerId: "filterTaskContainer",
       onFilterCriteriaChanged: (column, newValue) =>
         this.filterCriteriaHandler.onFilterCriteriaChanged(column, newValue),
       columnOptionList: [
         transformOptionList(taskStatus, "status"),
-        transformOptionList(initialUserData, "userName"),
+        transformOptionList(initialUserData, "name"),
       ],
     });
 

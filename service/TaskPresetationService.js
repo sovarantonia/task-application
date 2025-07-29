@@ -29,7 +29,7 @@ import { TaskPresentationUI } from "../ui/TaskPresentationUI.js";
 
 //     // this.taskPagerComponent.onNext = this.taskPaginationHandler.onNext;
 //     // this.taskPagerComponent.onPrevious = this.taskPaginationHandler.onPrevious;
-//     // this.taskPagerComponent.addContainer("taskPageControlBtn");
+//     // this.taskPagerComponent.addContainer("taskPageIndicator");
 
 //     // this.userService = new UserService(initialUserData);
 

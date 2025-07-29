@@ -1,80 +1,96 @@
 import { getCheckboxesState, renderUsers } from "../ui/renderUsers";
-
+import { UserService } from "../service/UserService";
+import { PagerData } from "./PagerData";
+import { PagerComponentUI } from "../ui/PagerComponentUI";
+import { SortControlUI } from "../ui/SortControlUI";
+import { FilterControlUI } from "../ui/FilterControlUI";
+import { PaginationHandler } from "./PaginationHandler";
+import { SortCriteriaHandler } from "./SortCriteriaHandler";
+import { FilterCriteriaHandler } from "./FilterCriteriaHandler";
+import { UserPresentationUI } from "../ui/UserPresentationUI";
+import { transformOptionList } from "./transformOptionList";
 export class UserLogic {
-  constructor({
-    userService = null,
-    pagerComponent = null,
-    checkboxSelectComponent = null,
-  } = {}) {
-    this.userService = userService;
-    this.pagerComponent = pagerComponent;
-    this.checkboxSelectComponent = checkboxSelectComponent;
+  constructor({ initialUserData = [] }) {
+    this.userService = new UserService(initialUserData);
+    this.pagerData = new PagerData();
 
-    this.paginationData = this.pagerComponent.paginationData;
+    this.userPresentationUI = new UserPresentationUI("userContainer");
 
-    this.userRenderer = renderUsers("userContainer");
+    this.pagerComponentUI = new PagerComponentUI({
+      containerId: "userPageControls",
+      onItemsPerPageChange: this.pagerData.setItemsPerPage,
+      onCurrentPageChange: this.pagerData.setCurrentPageNo,
+    });
+    this.sortUserControlUI = new SortControlUI({
+      containerId: "sortUserContainer",
+      onSortCriteriaChanged: (column) =>
+        this.sortCriteriaHandler.onSortCriteriaChanged(column),
+      columnList: ["name"],
+    });
 
-    this.checkboxStateMap = new Map();
+    this.filterUserControlUI = new FilterControlUI({
+      containerId: "filterUserContainer",
+      onFilterCriteriaChanged: (column, newValue) =>
+        this.filterCriteriaHandler.onFilterCriteriaChanged(column, newValue),
+      columnOptionList: [],
+    });
+
+    this.paginationHandler = new PaginationHandler({
+      paginationFunction: this.userService.getUsers,
+      onPaginationResponse: this.onPaginationResponse,
+      pagerData: this.pagerData,
+    });
+
+    this.sortCriteriaHandler = new SortCriteriaHandler({
+      onNotifyPaginationHandler: (sortCriteria) =>
+        this.paginationHandler.onSortCriteriaChanged(sortCriteria),
+    });
+
+    this.filterCriteriaHandler = new FilterCriteriaHandler({
+      onNotifyPaginationHandler: (filterCriteria) =>
+        this.paginationHandler.onFilterCriteriaChanged(filterCriteria),
+    });
+
+    // this.checkboxStateMap = new Map();
   }
 
-  //   setItemsPerPage = (itemNrPerPage) => {
-  //     this.itemsPerPage = parseInt(itemNrPerPage);
-  //     this.currentPageNo = 1;
-  //     this.getUsers();
-  //   };
+  onPaginationResponse = ({ paginatedItems, totalPages }) => {
+    this.userPresentationUI.renderUsers(
+      { paginatedItems, totalPages },
+      this.pagerData.currentPageNo,
+    );
 
-  getUsers() {
-    this.userService
-      .getPaginatedUsers(this.paginationData)
-      .then(({ paginatedItems, totalPages }) => {
-        this.userRenderer(paginatedItems, this.onSelect);
-        this.totalPages = totalPages;
-        this.pagerComponent.renderPaginationResults({
-          totalPages: totalPages,
-          currentPageNo: this.paginationData.currentPageNo,
-        });
-        this.checkboxSelectComponent.renderSelectedItemNr(
-          this.checkboxStateMap.size,
-        );
-        getCheckboxesState(this.checkboxStateMap);
-      });
-  }
-
-  onNext = () => {
-    if (this.paginationData.currentPageNo < this.totalPages) {
-      this.paginationData.currentPageNo++;
-    }
-    this.getUsers();
-  };
-
-  onPrevious = () => {
-    if (this.paginationData.currentPageNo > 1) {
-      this.paginationData.currentPageNo--;
-    }
-    this.getUsers();
-  };
-
-  onSelect = (userId, isChecked) => {
-    isChecked
-      ? this.checkboxStateMap.set(userId, isChecked)
-      : this.checkboxStateMap.delete(userId);
-    this.checkboxSelectComponent.renderSelectedItemNr(
-      this.checkboxStateMap.size,
+    this.pagerComponentUI.updateSelect(
+      this.pagerData.currentPageNo,
+      totalPages,
     );
   };
 
-  onClick = () => {
-    const promises = [];
-    for (const id of this.checkboxStateMap.keys()) {
-      promises.push(this.userService.getById(id));
-    }
+  init() {
+    this.pagerData.init();
+  }
 
-    Promise.all(promises)
-      .then((userInfoList) => {
-        return this.userService.sendEmail(userInfoList);
-      })
-      .then((messages) => {
-        messages;
-      });
-  };
+  // onSelect = (userId, isChecked) => {
+  //   isChecked
+  //     ? this.checkboxStateMap.set(userId, isChecked)
+  //     : this.checkboxStateMap.delete(userId);
+  //   this.checkboxSelectComponent.renderSelectedItemNr(
+  //     this.checkboxStateMap.size,
+  //   );
+  // };
+
+  // onClick = () => {
+  //   const promises = [];
+  //   for (const id of this.checkboxStateMap.keys()) {
+  //     promises.push(this.userService.getById(id));
+  //   }
+
+  //   Promise.all(promises)
+  //     .then((userInfoList) => {
+  //       return this.userService.sendEmail(userInfoList);
+  //     })
+  //     .then((messages) => {
+  //       messages;
+  //     });
+  // };
 }
