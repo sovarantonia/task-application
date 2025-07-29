@@ -25,7 +25,7 @@ export class PaginationHandler {
 
   onSortCriteriaChanged = (sortCriteria) => {
     // debugger;
-    this.getItems(this.pagerData, Array.from(sortCriteria));
+    this.getItems(this.pagerData, sortCriteria);
   };
 
   // onNext = () => {

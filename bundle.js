@@ -338,13 +338,11 @@
   }
 
   function multiFieldSort(criteria) {
-    const compareFunctions = criteria.map((arr) => {
-      return arr.map(() => {
-        return (a, b) => {
-          if (a[0] === b[0]) return 0;
-          return a[0] < b[0] ? -1 : 1;
-        };
-      });
+    const compareFunctions = criteria.map(({ property, direction }) => {
+      return (a, b) => {
+        if (a[property] === b[property]) return 0;
+        return a[property] < b[property] ? -direction : direction;
+      };
     });
 
     return combineComparisonFunctions(compareFunctions);
@@ -568,7 +566,7 @@
 
     onSortCriteriaChanged = (sortCriteria) => {
       // debugger;
-      this.getItems(this.pagerData, Array.from(sortCriteria));
+      this.getItems(this.pagerData, sortCriteria);
     };
 
     // onNext = () => {
@@ -670,7 +668,16 @@
 
     setSortOption = (option) => {
       this.sortCriteriaList.set(option.property, option.direction);
-      this.onNotifyPaginationHandler(this.sortCriteriaList); // pass this list to pagination handler
+      const sortCriteria = this.sortCriteriaList.entries().reduce((acc, [key, value]) => {
+        if (value != 0) {
+          acc.push({
+            property: key,
+            direction: value
+          });
+        }
+        return acc;
+      }, []);
+      this.onNotifyPaginationHandler(sortCriteria); // pass this list to pagination handler
     };
 
     onSortCriteriaChanged = (column) => {

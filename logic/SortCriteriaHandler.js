@@ -7,7 +7,16 @@ export class SortCriteriaHandler {
 
   setSortOption = (option) => {
     this.sortCriteriaList.set(option.property, option.direction);
-    this.onNotifyPaginationHandler(this.sortCriteriaList); // pass this list to pagination handler
+    const sortCriteria = this.sortCriteriaList.entries().reduce((acc, [key, value]) => {
+      if (value != 0) {
+        acc.push({
+          property: key,
+          direction: value
+        });
+      }
+      return acc;
+    }, []);
+    this.onNotifyPaginationHandler(sortCriteria); // pass this list to pagination handler
   };
 
   onSortCriteriaChanged = (column) => {
