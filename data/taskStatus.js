@@ -1,4 +1,4 @@
-export const TaskStatus = [
+export const taskStatus = [
   { id: "ad06176e-88cd-4eee-90b5-44fcea585434", status: "To Do" },
   { id: "44d21520-d383-4bc3-b6db-848f3545df56", status: "In Progress" },
   { id: "b9920485-9f7e-4e82-bba6-3b761df91cb4", status: "In Review" },

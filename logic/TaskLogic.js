@@ -4,10 +4,12 @@ import { TaskPresentationUI } from "../ui/TaskPresentationUI";
 import { PagerData } from "./PagerData";
 import { PaginationHandler } from "./PaginationHandler";
 import { SortTaskControlUI } from "../ui/SortTaskControlUI";
-import { TaskSortCriteria } from "./TaskSortCriteria";
-import { SortCriteria } from "./SortCriteria";
 import { SortCriteriaHandler } from "./SortCriteriaHandler";
-
+import { FilterCriteriaHandler } from "./FilterCriteriaHandler";
+import { FilterTaskControlUI } from "../ui/FilterTaskControlUI";
+import { taskStatus } from "../data/taskStatus";
+import { modify, transformOptionList } from "./transformOptionList";
+import { initialUserData } from "../data/initialUserData";
 export class TaskLogic {
   constructor({ initialTaskData = [] } = {}) {
     this.taskService = new TaskService(initialTaskData);
@@ -25,6 +27,15 @@ export class TaskLogic {
         this.sortCriteriaHandler.onSortCriteriaChanged(column),
       columnList: ["title", "date"],
     });
+    this.filterTaskControlUI = new FilterTaskControlUI({
+      containerId: "filterTaskContainer",
+      onFilterCriteriaChanged: (column, newValue) =>
+        this.filterCriteriaHandler.onFilterCriteriaChanged(column, newValue),
+      columnOptionList: [
+        transformOptionList(taskStatus, "status"),
+        transformOptionList(initialUserData, "userName"),
+      ],
+    });
 
     this.paginationHandler = new PaginationHandler({
       paginationFunction: this.taskService.getTasks,
@@ -33,7 +44,13 @@ export class TaskLogic {
     });
 
     this.sortCriteriaHandler = new SortCriteriaHandler({
-      onNotifyPaginationHandler: (sortCriteria) => this.paginationHandler.onSortCriteriaChanged(sortCriteria),
+      onNotifyPaginationHandler: (sortCriteria) =>
+        this.paginationHandler.onSortCriteriaChanged(sortCriteria),
+    });
+
+    this.filterCriteriaHandler = new FilterCriteriaHandler({
+      onNotifyPaginationHandler: (filterCriteria) =>
+        this.paginationHandler.onFilterCriteriaChanged(filterCriteria),
     });
   }
 

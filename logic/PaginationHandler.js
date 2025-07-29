@@ -14,19 +14,24 @@ export class PaginationHandler {
   }
 
   //calls the pagination function and passes the result to pagination response
-  getItems = ({ currentPageNo, itemsPerPage }, sortCriteria) => {
+  getItems = ({ currentPageNo, itemsPerPage }) => {
     this.paginationFunction({
       currentPageNo,
       itemsPerPage,
-    }, sortCriteria).then(({ paginatedItems, totalPages }) => {
+    }, this.sortCriteria, this.filterCriteria).then(({ paginatedItems, totalPages }) => {
       this.onPaginationResponse({ paginatedItems, totalPages });
     });
   };
 
   onSortCriteriaChanged = (sortCriteria) => {
-    // debugger;
-    this.getItems(this.pagerData, sortCriteria);
+    this.sortCriteria = sortCriteria
+    this.getItems(this.pagerData, this.sortCriteria, this.filterCriteria);
   };
+
+  onFilterCriteriaChanged = (filterCriteria) => {
+    this.filterCriteria = filterCriteria;
+    this.getItems(this.pagerData, this.sortCriteria, this.filterCriteria)
+  }
 
   // onNext = () => {
   //   //have to use pager data somehow
