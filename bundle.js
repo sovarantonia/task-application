@@ -168,49 +168,51 @@
   ];
 
   class CreateElementComponent {
-    createDiv() {
-      return document.createElement("div");
-    }
-    createButton({ text = "", eventToAdd = null } = {}) {
-      const button = document.createElement("button");
-      button.textContent = text;
-      button.addEventListener("click", eventToAdd);
-      return button;
+    constructor(containerId = null) {
+      this.target = document.getElementById(containerId);
     }
 
-    createSpan(text = "") {
-      const span = document.createElement("span");
-      span.textContent = text;
-      return span;
-    }
+    createElement({
+      elementType = "",
+      options = [],
+      text = "",
+      eventToAdd = null,
+      inputType = "",
+    } = {}) {
+      let element = document.createElement(elementType);
+      switch (elementType) {
+        case "button":
+          element.textContent = text;
+          element.addEventListener("click", eventToAdd);
+          break;
 
-    createCheckbox({ value = "", eventToAdd = null } = {}) {
-      const checkbox = document.createElement("input");
-      checkbox.type = "checkbox";
-      checkbox.value = value;
-      checkbox.addEventListener("change", eventToAdd);
-      return checkbox;
-    }
+        case "span":
+          element.textContent = text;
+          break;
 
-    createP(text = "") {
-      const p = document.createElement("p");
-      p.innerText = text;
-      return p;
-    }
+        case "div":
+          break;
 
-    createSelect({ options = [], eventToAdd = null } = {}) {
-      const select = document.createElement("select");
-      if (options.length > 0) {
-        options.forEach((element) => {
-          const opt = document.createElement("option");
-          opt.value = element;
-          opt.textContent = element;
-          select.append(opt);
-        });
-        select.options[0].selected = true;
+        case "select":
+          if (options.length > 0) {
+            options.forEach((e) => {
+              const opt = document.createElement("option");
+              opt.value = e;
+              opt.textContent = e;
+              element.append(opt);
+            });
+            element.options[0].selected = true;
+          }
+          element.addEventListener("change", eventToAdd);
+          break;
+
+        case "p":
+          element.innerText = text;
+          break;
       }
-      select.addEventListener("change", eventToAdd);
-      return select;
+      this.target.append(element);
+
+      return element;
     }
   }
 
@@ -233,7 +235,9 @@
       selectComponent.append(opt);
     });
 
-    selectComponent.options[currentPage - 1].selected = true;
+    if (currentPage > 0) {
+      selectComponent.options[currentPage - 1].selected = true;
+    }
   }
 
   //** This renders the items per page and current page select */
@@ -246,57 +250,37 @@
       this.onItemsPerPageChange = onItemsPerPageChange;
       this.onCurrentPageChange = onCurrentPageChange;
 
-      this.createElementComponent = new CreateElementComponent();
-      this.container = this.createElementComponent.createDiv();
+      this.createElementComponent = new CreateElementComponent(containerId);
 
-      this.selectItemsPerPageSpan =
-        this.createElementComponent.createSpan("Items per page");
-      this.selectCurrentPageSpan = this.createElementComponent.createSpan("Page");
+      this.selectItemsPerPageSpan = this.createElementComponent.createElement({
+        elementType: "span",
+        text: "Items per page",
+      });
 
-      this.selectItemsPerPage = this.createElementComponent.createSelect({
+      this.selectItemsPerPage = this.createElementComponent.createElement({
+        elementType: "select",
         options: [5, 10],
         eventToAdd: (e) => this.onItemsPerPageChange(parseInt(e.target.value)),
       });
 
-      this.selectCurrentPageNo = this.createElementComponent.createSelect({
-        eventToAdd: (e) => this.onCurrentPageChange(parseInt(e.target.value)),
+      this.selectCurrentPageSpan = this.createElementComponent.createElement({
+        elementType: "span",
+        text: "Page",
       });
 
-      this.container.append(
-        this.selectItemsPerPageSpan,
-        this.selectItemsPerPage,
-        this.selectCurrentPageSpan,
-        this.selectCurrentPageNo,
-      );
-
-      this.target = document.getElementById(containerId);
-      this.target.appendChild(this.container);
+      this.selectCurrentPageNo = this.createElementComponent.createElement({
+        elementType: "select",
+        eventToAdd: (e) => this.onCurrentPageChange(parseInt(e.target.value)),
+      });
     }
 
     updateSelect(currentPageNo, totalPages) {
       updateSelectOptions(
         this.selectCurrentPageNo,
         Array.from({ length: totalPages }, (_, i) => i + 1),
-        currentPageNo
+        currentPageNo,
       );
     }
-
-    // renderPaginationResults({ totalPages, currentPageNo, result, renderFunction }) {
-
-    // this.previousBtn = this.createElementComponent.createButton({
-    //   text: "Previous",
-    //   eventToAdd: () => this.onPrevious?.(),
-    // });
-    // this.nextBtn = this.createElementComponent.createButton({
-    //   text: "Next",
-    //   eventToAdd: () => this.onNext?.(),
-    // });
-    // just put these here, they belong somwhere else
-    //   renderFunction(result)
-    //   this.pageIndicator.textContent = `Page ${currentPageNo} of ${totalPages}`;
-    //   this.previousBtn.disabled = currentPageNo <= 1;
-    //   this.nextBtn.disabled = currentPageNo >= totalPages;
-    // }
   }
 
   function dateParser(value) {
@@ -491,13 +475,8 @@
 
   class TaskPresentationUI {
     constructor(containerId) {
-      this.createElementComponent = new CreateElementComponent();
-      this.container = this.createElementComponent.createDiv();
-      this.pageIndicator = this.createElementComponent.createSpan();
-
-      this.target = document.getElementById(containerId);
-      this.target.appendChild(this.container);
-      this.container.append(this.pageIndicator);
+      this.createElementComponent = new CreateElementComponent(containerId);
+      this.pageIndicator = this.createElementComponent.createElement({elementType: "span"});
     }
 
     renderTasks = ({ paginatedItems, totalPages }, currentPageNo) => {
@@ -594,59 +573,49 @@
     constructor({ containerId, onSortCriteriaChanged, columnList = [] }) {
       this.onSortCriteriaChanged = onSortCriteriaChanged;
 
-      this.createElementComponent = new CreateElementComponent();
-      this.container = this.createElementComponent.createDiv();
+      this.createElementComponent = new CreateElementComponent(containerId);
 
       for (let column of columnList) {
-        this.sortByColumnBtn = this.createElementComponent.createButton({
+        this.sortByColumnBtn = this.createElementComponent.createElement({
+          elementType: "button",
           text: `Sort by ${column}`,
           eventToAdd: () => {
             this.onSortCriteriaChanged(column);
           },
         });
-        this.container.append(this.sortByColumnBtn);
       }
 
-      this.titleArrow = this.createElementComponent.createSpan();
-      this.dateArrow = this.createElementComponent.createSpan();
-
-      // this.container.append(
-      //   this.sortByTitleBtn,
-      //   this.titleArrow,
-      //   this.sortByDateBtn,
-      //   this.dateArrow,
-      // );
-      this.target = document.getElementById(containerId);
-      this.target.append(this.container);
+      // this.titleArrow = this.createElementComponent.createSpan();
+      // this.dateArrow = this.createElementComponent.createSpan();
     }
 
-    setTitleArrow(sortDirection) {
-      switch (sortDirection) {
-        case 1:
-          this.titleArrow.textContent = "\u2191";
-          break;
-        case -1:
-          this.titleArrow.textContent = "\u2193";
-          break;
-        default:
-          this.titleArrow.textContent = "";
-          break;
-      }
-    }
+    // setTitleArrow(sortDirection) {
+    //   switch (sortDirection) {
+    //     case 1:
+    //       this.titleArrow.textContent = "\u2191";
+    //       break;
+    //     case -1:
+    //       this.titleArrow.textContent = "\u2193";
+    //       break;
+    //     default:
+    //       this.titleArrow.textContent = "";
+    //       break;
+    //   }
+    // }
 
-    setDateArrow(sortDirection) {
-      switch (sortDirection) {
-        case 1:
-          this.dateArrow.textContent = "\u2191";
-          break;
-        case -1:
-          this.dateArrow.textContent = "\u2193";
-          break;
-        default:
-          this.dateArrow.textContent = "";
-          break;
-      }
-    }
+    // setDateArrow(sortDirection) {
+    //   switch (sortDirection) {
+    //     case 1:
+    //       this.dateArrow.textContent = "\u2191";
+    //       break;
+    //     case -1:
+    //       this.dateArrow.textContent = "\u2193";
+    //       break;
+    //     default:
+    //       this.dateArrow.textContent = "";
+    //       break;
+    //   }
+    // }
   }
 
   //** this creates the sorting criteria for the property propertyType */
@@ -753,21 +722,20 @@
     constructor({ containerId, onFilterCriteriaChanged, columnOptionList }) {
       this.onFilterCriteriaChanged = onFilterCriteriaChanged;
 
-      this.createElementComponent = new CreateElementComponent();
-      this.container = this.createElementComponent.createDiv();
+      this.createElementComponent = new CreateElementComponent(containerId);
 
       for (let list of columnOptionList) {
-        this.filterBySpan = this.createElementComponent.createSpan(`Filter by ${list["column"]}: `);
-        this.filterByColumnSelect = this.createElementComponent.createSelect({
+        this.filterBySpan = this.createElementComponent.createElement({
+          elementType: "span",
+          text: `Filter by ${list["column"]}: `,
+        });
+        this.filterByColumnSelect = this.createElementComponent.createElement({
+          elementType: "select",
           options: list["values"],
           eventToAdd: (e) =>
             this.onFilterCriteriaChanged(list["column"], e.target.value),
         });
-        this.container.append(this.filterBySpan, this.filterByColumnSelect);
       }
-
-      this.target = document.getElementById(containerId);
-      this.target.append(this.container);
     }
   }
 

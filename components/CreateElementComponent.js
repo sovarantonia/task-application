@@ -1,46 +1,58 @@
 export class CreateElementComponent {
-  createDiv() {
-    return document.createElement("div");
-  }
-  createButton({ text = "", eventToAdd = null } = {}) {
-    const button = document.createElement("button");
-    button.textContent = text;
-    button.addEventListener("click", eventToAdd);
-    return button;
+  constructor(containerId = null) {
+    this.target = document.getElementById(containerId);
   }
 
-  createSpan(text = "") {
-    const span = document.createElement("span");
-    span.textContent = text;
-    return span;
-  }
+  createElement({
+    elementType = "",
+    options = [],
+    text = "",
+    eventToAdd = null,
+    inputType = "",
+  } = {}) {
+    let element = document.createElement(elementType);
+    switch (elementType) {
+      case "button":
+        element.textContent = text;
+        element.addEventListener("click", eventToAdd);
+        break;
 
-  createCheckbox({ value = "", eventToAdd = null } = {}) {
-    const checkbox = document.createElement("input");
-    checkbox.type = "checkbox";
-    checkbox.value = value;
-    checkbox.addEventListener("change", eventToAdd);
-    return checkbox;
-  }
+      case "span":
+        element.textContent = text;
+        break;
 
-  createP(text = "") {
-    const p = document.createElement("p");
-    p.innerText = text;
-    return p;
-  }
+      case "div":
+        break;
 
-  createSelect({ options = [], eventToAdd = null } = {}) {
-    const select = document.createElement("select");
-    if (options.length > 0) {
-      options.forEach((element) => {
-        const opt = document.createElement("option");
-        opt.value = element;
-        opt.textContent = element;
-        select.append(opt);
-      });
-      select.options[0].selected = true;
+      case "select":
+        if (options.length > 0) {
+          options.forEach((e) => {
+            const opt = document.createElement("option");
+            opt.value = e;
+            opt.textContent = e;
+            element.append(opt);
+          });
+          element.options[0].selected = true;
+        }
+        element.addEventListener("change", eventToAdd);
+        break;
+
+      case "p":
+        element.innerText = text;
+        break;
+
+      case "checkbox":
+        // element = document.createElement("input");
+        // element.type = "checkbox";
+        // element.value = value;
+        // element.addEventListener("change", eventToAdd);
+        break;
+
+      default:
+        break;
     }
-    select.addEventListener("change", eventToAdd);
-    return select;
+    this.target.append(element);
+
+    return element;
   }
 }

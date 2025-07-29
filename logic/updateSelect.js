@@ -17,5 +17,7 @@ export function updateSelectOptions(
     selectComponent.append(opt);
   });
 
-  selectComponent.options[currentPage - 1].selected = true;
+  if (currentPage > 0) {
+    selectComponent.options[currentPage - 1].selected = true;
+  }
 }
