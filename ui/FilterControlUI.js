@@ -22,6 +22,7 @@ export class FilterControlUI {
           this.onFilterCriteriaChanged(keyValue[i].value, e.target.value),
         key: keyValue[i].key,
         value: keyValue[i].value,
+        defaultOptionLabel: "All"
       });
       this.filterBySpan = this.createElementComponent.createElement({
         elementType: "span",

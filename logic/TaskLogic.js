@@ -8,7 +8,6 @@ import { SortCriteriaHandler } from "./SortCriteriaHandler";
 import { FilterCriteriaHandler } from "./FilterCriteriaHandler";
 import { FilterControlUI } from "../ui/FilterControlUI";
 import { taskStatus } from "../data/taskStatus";
-import { modify, transformOptionList } from "./transformOptionList";
 import { initialUserData } from "../data/initialUserData";
 export class TaskLogic {
   constructor({ initialTaskData = [] } = {}) {
@@ -26,8 +25,7 @@ export class TaskLogic {
     });
 
     this.filterCriteriaHandler = new FilterCriteriaHandler({
-      onNotifyPaginationHandler: 
-        this.paginationHandler.onFilterCriteriaChanged,
+      onNotifyPaginationHandler: this.paginationHandler.onFilterCriteriaChanged,
     });
 
     this.taskPresentationUI = new TaskPresentationUI("taskPageIndicator");

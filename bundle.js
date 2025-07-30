@@ -1,5 +1,5 @@
 (function () {
-  "use strict";
+  'use strict';
 
   const initialTaskData = [
     {
@@ -112,8 +112,7 @@
     {
       id: "95a896da-f3be-4f92-b60e-c5c390e1e4c4",
       title: "Improve dark mode contrast",
-      description:
-        "Adjust color palette for better accessibility in dark mode.",
+      description: "Adjust color palette for better accessibility in dark mode.",
       status: "44d21520-d383-4bc3-b6db-848f3545df56",
       user: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
       date: "2025-06-20",
@@ -209,24 +208,37 @@
       onSelectionChanged = null,
       key = null,
       value = null,
+      defaultOptionLabel = "",
     }) {
       const select = document.createElement("select");
+      if (defaultOptionLabel) {
+        select.append(this.getOption(defaultOptionLabel));
+      }
       list.forEach((element) => {
-        const opt = document.createElement("option");
-        opt.value = element;
-        opt.textContent = element;
-        if (key && value) {
-          opt.value = element[key];
-          opt.textContent = element[value];
-        }
-        select.append(opt);
+        select.append(this.getOption(element, key, value));
       });
+
       select.addEventListener("change", onSelectionChanged);
       return select;
     }
+
+    getOption(element, key = null, value = null) {
+      const opt = document.createElement("option");
+      opt.value = element;
+      opt.textContent = element;
+      if (key && value) {
+        opt.value = element[key];
+        opt.textContent = element[value];
+      }
+      return opt;
+    }
   }
 
-  function updateSelectOptions(selectComponent, options = [], currentPage) {
+  function updateSelectOptions(
+    selectComponent,
+    options = [],
+    currentPage,
+  ) {
     let optionNo = selectComponent.options.length - 1;
     if (optionNo > 0) {
       for (let i = optionNo; i >= 0; i--) {
@@ -300,17 +312,17 @@
   }
 
   function generateGUID() {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
-      /[xy]/g,
-      function (c) {
-        const r = (Math.random() * 16) | 0;
-        const v = c === "x" ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      },
-    );
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+      const r = (Math.random() * 16) | 0;
+      const v = c === "x" ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
   }
 
-  function getPaginatedElements(elementList, { currentPageNo, itemsPerPage }) {
+  function getPaginatedElements(
+    elementList,
+    { currentPageNo, itemsPerPage },
+  ) {
     const start = (currentPageNo - 1) * itemsPerPage;
     const end = start + itemsPerPage;
 
@@ -470,19 +482,19 @@
 
   function renderTasks(containerId, taskList) {
     const container = document.getElementById(containerId);
-    container.innerHTML = "";
+      container.innerHTML = "";
 
-    taskList.forEach((element) => {
-      const card = document.createElement("div");
-      card.className = "task-card";
-      card.innerHTML = `<h2>${element.title}</h2>
+      taskList.forEach((element) => {
+        const card = document.createElement("div");
+        card.className = "task-card";
+        card.innerHTML = `<h2>${element.title}</h2>
         <p>Status: ${element.status}</p>
         <p>${element.description}</p>
         <p>Assigned to: ${element.user}</p>
         <p>Created at: ${element.date}</p>`;
-      container.appendChild(card);
-    });
-    return taskList;
+        container.appendChild(card);
+      });
+      return taskList;
   }
 
   class TaskPresentationUI {
@@ -549,14 +561,10 @@
 
     //calls the pagination function and passes the result to pagination response
     getItems = ({ currentPageNo, itemsPerPage }) => {
-      this.paginationFunction(
-        {
-          currentPageNo,
-          itemsPerPage,
-        },
-        this.sortCriteria,
-        this.filterCriteria,
-      ).then(({ paginatedItems, totalPages }) => {
+      this.paginationFunction({
+        currentPageNo,
+        itemsPerPage,
+      }, this.sortCriteria, this.filterCriteria).then(({ paginatedItems, totalPages }) => {
         this.onPaginationResponse({ paginatedItems, totalPages });
       });
     };
@@ -569,7 +577,7 @@
     onFilterCriteriaChanged = (filterCriteria) => {
       this.filterCriteria = filterCriteria;
       this.getItems(this.pagerData, this.sortCriteria, this.filterCriteria);
-    };
+    }
 
     // onNext = () => {
     //   //have to use pager data somehow
@@ -704,7 +712,7 @@
   }
 
   class FilterCriteriaHandler {
-    constructor({ onNotifyPaginationHandler }) {
+    constructor({onNotifyPaginationHandler}) {
       this.onNotifyPaginationHandler = onNotifyPaginationHandler;
 
       this.filterCriteriaList = new Map();
@@ -757,6 +765,7 @@
             this.onFilterCriteriaChanged(keyValue[i].value, e.target.value),
           key: keyValue[i].key,
           value: keyValue[i].value,
+          defaultOptionLabel: "All"
         });
         this.filterBySpan = this.createElementComponent.createElement({
           elementType: "span",
@@ -853,8 +862,7 @@
       });
 
       this.filterCriteriaHandler = new FilterCriteriaHandler({
-        onNotifyPaginationHandler:
-          this.paginationHandler.onFilterCriteriaChanged,
+        onNotifyPaginationHandler: this.paginationHandler.onFilterCriteriaChanged,
       });
 
       this.taskPresentationUI = new TaskPresentationUI("taskPageIndicator");
@@ -992,27 +1000,6 @@
       this.userService = new UserService(initialUserData);
       this.pagerData = new PagerData();
 
-      this.userPresentationUI = new UserPresentationUI("userContainer");
-
-      this.pagerComponentUI = new PagerComponentUI({
-        containerId: "userPageControls",
-        onItemsPerPageChange: this.pagerData.setItemsPerPage,
-        onCurrentPageChange: this.pagerData.setCurrentPageNo,
-      });
-      this.sortUserControlUI = new SortControlUI({
-        containerId: "sortUserContainer",
-        onSortCriteriaChanged: (column) =>
-          this.sortCriteriaHandler.onSortCriteriaChanged(column),
-        columnList: ["user"],
-      });
-
-      this.filterUserControlUI = new FilterControlUI({
-        containerId: "filterUserContainer",
-        onFilterCriteriaChanged: (column, newValue) =>
-          this.filterCriteriaHandler.onFilterCriteriaChanged(column, newValue),
-        columnOptionList: [],
-      });
-
       this.paginationHandler = new PaginationHandler({
         paginationFunction: this.userService.getUsers,
         onPaginationResponse: this.onPaginationResponse,
@@ -1024,8 +1011,27 @@
       });
 
       this.filterCriteriaHandler = new FilterCriteriaHandler({
-        onNotifyPaginationHandler:
-          this.paginationHandler.onFilterCriteriaChanged,
+        onNotifyPaginationHandler: this.paginationHandler.onFilterCriteriaChanged,
+      });
+
+      this.userPresentationUI = new UserPresentationUI("userContainer");
+
+      this.pagerComponentUI = new PagerComponentUI({
+        containerId: "userPageControls",
+        onItemsPerPageChange: this.pagerData.setItemsPerPage,
+        onCurrentPageChange: this.pagerData.setCurrentPageNo,
+      });
+      this.sortUserControlUI = new SortControlUI({
+        containerId: "sortUserContainer",
+        onSortCriteriaChanged: this.sortCriteriaHandler.onSortCriteriaChanged,
+        columnList: ["user"],
+      });
+
+      this.filterUserControlUI = new FilterControlUI({
+        containerId: "filterUserContainer",
+        onFilterCriteriaChanged:
+          this.filterCriteriaHandler.onFilterCriteriaChanged,
+        columnOptionList: [],
       });
 
       // this.checkboxStateMap = new Map();
@@ -1078,4 +1084,5 @@
     const userLogic = new UserLogic({ initialUserData });
     userLogic.init();
   });
+
 })();
