@@ -2,10 +2,8 @@ import { UserService } from "../service/UserService";
 import { PagerData } from "./PagerData";
 import { PagerComponentUI } from "../ui/PagerComponentUI";
 import { SortControlUI } from "../ui/SortControlUI";
-import { FilterControlUI } from "../ui/FilterControlUI";
 import { PaginationHandler } from "./PaginationHandler";
 import { SortCriteriaHandler } from "./SortCriteriaHandler";
-import { FilterCriteriaHandler } from "./FilterCriteriaHandler";
 import { UserPresentationUI } from "../ui/UserPresentationUI";
 export class UserLogic {
   constructor({ initialUserData = [] }) {
@@ -22,10 +20,6 @@ export class UserLogic {
       onNotifyPaginationHandler: this.paginationHandler.onSortCriteriaChanged,
     });
 
-    this.filterCriteriaHandler = new FilterCriteriaHandler({
-      onNotifyPaginationHandler: this.paginationHandler.onFilterCriteriaChanged,
-    });
-
     this.userPresentationUI = new UserPresentationUI("userContainer");
 
     this.pagerComponentUI = new PagerComponentUI({
@@ -37,13 +31,6 @@ export class UserLogic {
       containerId: "sortUserContainer",
       onSortCriteriaChanged: this.sortCriteriaHandler.onSortCriteriaChanged,
       columnList: ["user"],
-    });
-
-    this.filterUserControlUI = new FilterControlUI({
-      containerId: "filterUserContainer",
-      onFilterCriteriaChanged:
-        this.filterCriteriaHandler.onFilterCriteriaChanged,
-      columnOptionList: [],
     });
 
     // this.checkboxStateMap = new Map();

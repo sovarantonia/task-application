@@ -1,15 +1,15 @@
 import { renderTasks } from "../ui/taskListRenderer";
-import { CreateElementComponent } from "../components/CreateElementComponent";
+import { createElementComponent } from "../components/createElementComponentFunction";
 export class TaskPresentationUI {
   constructor(containerId) {
-    this.createElementComponent = new CreateElementComponent(containerId);
-    this.pageIndicator = this.createElementComponent.createElement({
+    const target = document.getElementById(containerId);
+    this.pageIndicator = createElementComponent({
       elementType: "span",
     });
+    target.append(this.pageIndicator);
   }
 
   renderTasks = ({ paginatedItems, totalPages }, currentPageNo) => {
     renderTasks("taskPaginationContainer", paginatedItems);
-    this.pageIndicator.textContent = `Page ${currentPageNo} of ${totalPages}`;
   };
 }

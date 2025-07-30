@@ -167,39 +167,22 @@
     },
   ];
 
-  class CreateElementComponent {
-    constructor(containerId = null) {
-      this.target = document.getElementById(containerId);
+  function createElementComponent({ elementType = "", text = "" }) {
+    let element = document.createElement(elementType);
+    switch (elementType) {
+      case "span":
+        element.textContent = text;
+        break;
+
+      case "div":
+        break;
+
+      case "p":
+        element.innerText = text;
+        break;
     }
 
-    createElement({
-      elementType = "",
-      text = "",
-      eventToAdd = null,
-      inputType = "",
-    } = {}) {
-      let element = document.createElement(elementType);
-      switch (elementType) {
-        case "button":
-          element.textContent = text;
-          element.addEventListener("click", eventToAdd);
-          break;
-
-        case "span":
-          element.textContent = text;
-          break;
-
-        case "div":
-          break;
-
-        case "p":
-          element.innerText = text;
-          break;
-      }
-      this.target.append(element);
-
-      return element;
-    }
+    return element;
   }
 
   class SelectComponent {
@@ -268,34 +251,37 @@
       this.onItemsPerPageChange = onItemsPerPageChange;
       this.onCurrentPageChange = onCurrentPageChange;
 
-      this.createElementComponent = new CreateElementComponent(containerId);
-      this.target = document.getElementById(containerId);
+      const target = document.getElementById(containerId);
 
-      this.select = new SelectComponent();
+      const select = new SelectComponent();
 
-      this.selectItemsPerPage = this.select.createSelect({
+      this.selectItemsPerPage = select.createSelect({
         list: [5, 10],
         onSelectionChanged: (e) =>
           this.onItemsPerPageChange(parseInt(e.target.value)),
       });
 
-      this.selectItemsPerPageSpan = this.createElementComponent.createElement({
+      this.selectItemsPerPageSpan = createElementComponent({
         elementType: "span",
         text: "Items per page",
       });
 
-      this.target.append(this.selectItemsPerPage);
-
-      this.selectCurrentPageSpan = this.createElementComponent.createElement({
+      this.selectCurrentPageSpan = createElementComponent({
         elementType: "span",
         text: "Page",
       });
 
-      this.selectCurrentPageNo = this.select.createSelect({
+      this.selectCurrentPageNo = select.createSelect({
         onSelectionChanged: (e) =>
           this.onCurrentPageChange(parseInt(e.target.value)),
       });
-      this.target.append(this.selectCurrentPageNo);
+
+      target.append(
+        this.selectItemsPerPageSpan,
+        this.selectItemsPerPage,
+        this.selectCurrentPageSpan,
+        this.selectCurrentPageNo,
+      );
     }
 
     updateSelect(currentPageNo, totalPages) {
@@ -499,15 +485,15 @@
 
   class TaskPresentationUI {
     constructor(containerId) {
-      this.createElementComponent = new CreateElementComponent(containerId);
-      this.pageIndicator = this.createElementComponent.createElement({
+      const target = document.getElementById(containerId);
+      this.pageIndicator = createElementComponent({
         elementType: "span",
       });
+      target.append(this.pageIndicator);
     }
 
     renderTasks = ({ paginatedItems, totalPages }, currentPageNo) => {
       renderTasks("taskPaginationContainer", paginatedItems);
-      this.pageIndicator.textContent = `Page ${currentPageNo} of ${totalPages}`;
     };
   }
 
@@ -593,6 +579,36 @@
     //   }
     //   this.getItems();
     // };
+  }
+
+  class CreateElementComponent {
+    constructor(containerId = null) {
+      this.target = document.getElementById(containerId);
+    }
+
+    createElement({ elementType = "", text = "", eventToAdd = null } = {}) {
+      let element = document.createElement(elementType);
+      switch (elementType) {
+        case "button":
+          element.textContent = text;
+          element.addEventListener("click", eventToAdd);
+          break;
+
+        case "span":
+          element.textContent = text;
+          break;
+
+        case "div":
+          break;
+
+        case "p":
+          element.innerText = text;
+          break;
+      }
+      this.target.append(element);
+
+      return element;
+    }
   }
 
   class SortControlUI {
@@ -753,25 +769,25 @@
     }) {
       this.onFilterCriteriaChanged = onFilterCriteriaChanged;
 
-      this.target = document.getElementById(containerId);
+      const target = document.getElementById(containerId);
 
-      this.createElementComponent = new CreateElementComponent(containerId);
-      this.select = new SelectComponent();
+      const select = new SelectComponent();
 
       for (let i = 0; i < columnOptionList.length; i++) {
-        this.createSelectComponent = this.select.createSelect({
+        this.createSelectComponent = select.createSelect({
           list: columnOptionList[i],
           onSelectionChanged: (e) =>
             this.onFilterCriteriaChanged(keyValue[i].value, e.target.value),
           key: keyValue[i].key,
           value: keyValue[i].value,
-          defaultOptionLabel: "All"
+          defaultOptionLabel: "All",
         });
-        this.filterBySpan = this.createElementComponent.createElement({
+        this.filterBySpan = createElementComponent({
           elementType: "span",
           text: `Filter by ${keyValue[i].value}: `,
         });
-        this.target.append(this.createSelectComponent);
+
+        target.append(this.filterBySpan, this.createSelectComponent);
       }
     }
   }
@@ -867,10 +883,11 @@
 
       this.taskPresentationUI = new TaskPresentationUI("taskPageIndicator");
 
+      const { setItemsPerPage, setCurrentPageNo } = this.pagerData;
       this.pagerComponentUI = new PagerComponentUI({
         containerId: "taskPerPageSelect",
-        onItemsPerPageChange: this.pagerData.setItemsPerPage,
-        onCurrentPageChange: this.pagerData.setCurrentPageNo,
+        onItemsPerPageChange: setItemsPerPage,
+        onCurrentPageChange: setCurrentPageNo,
       });
 
       this.sortTaskControlUI = new SortControlUI({
@@ -947,12 +964,12 @@
 
   function renderUsers(users, containerId) {
     const container = document.getElementById(containerId);
-    const createElementComponent = new CreateElementComponent(containerId);
+    // const createElementComponent = new CreateElementComponent(containerId);
 
     container.innerHTML = "";
 
     users.forEach((element) => {
-      const card = createElementComponent.createElement({ elementType: "div" });
+      const card = createElementComponent({ elementType: "div" });
       card.className = "user-card";
       // const checkbox = createElementComponent.createCheckbox({
       //   value: element.id,
@@ -961,15 +978,15 @@
       //   },
       // });
       // checkbox.id = element.id;
-      const nameInfo = createElementComponent.createElement({
+      const nameInfo = createElementComponent({
         elementType: "p",
         text: `${element.user}`,
       });
-      const emailInfo = createElementComponent.createElement({
+      const emailInfo = createElementComponent({
         elementType: "p",
         text: `Email: ${element.email}`,
       });
-      const departmentInfo = createElementComponent.createElement({
+      const departmentInfo = createElementComponent({
         elementType: "p",
         text: `Department: ${element.department}`,
       });
@@ -982,16 +999,11 @@
 
   class UserPresentationUI {
     constructor(containerId) {
-      this.createElement = new CreateElementComponent(containerId);
-      this.pageIndicator = this.createElement.createElement({
-        elementType: "span",
-      });
       this.containerId = containerId;
     }
 
     renderUsers = ({ paginatedItems, totalPages }, currentPageNo) => {
       renderUsers(paginatedItems, this.containerId);
-      this.pageIndicator.textContent = `Page ${currentPageNo} of ${totalPages}`;
     };
   }
 
@@ -1010,10 +1022,6 @@
         onNotifyPaginationHandler: this.paginationHandler.onSortCriteriaChanged,
       });
 
-      this.filterCriteriaHandler = new FilterCriteriaHandler({
-        onNotifyPaginationHandler: this.paginationHandler.onFilterCriteriaChanged,
-      });
-
       this.userPresentationUI = new UserPresentationUI("userContainer");
 
       this.pagerComponentUI = new PagerComponentUI({
@@ -1025,13 +1033,6 @@
         containerId: "sortUserContainer",
         onSortCriteriaChanged: this.sortCriteriaHandler.onSortCriteriaChanged,
         columnList: ["user"],
-      });
-
-      this.filterUserControlUI = new FilterControlUI({
-        containerId: "filterUserContainer",
-        onFilterCriteriaChanged:
-          this.filterCriteriaHandler.onFilterCriteriaChanged,
-        columnOptionList: [],
       });
 
       // this.checkboxStateMap = new Map();

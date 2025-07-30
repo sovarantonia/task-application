@@ -3,12 +3,7 @@ export class CreateElementComponent {
     this.target = document.getElementById(containerId);
   }
 
-  createElement({
-    elementType = "",
-    text = "",
-    eventToAdd = null,
-    inputType = "",
-  } = {}) {
+  createElement({ elementType = "", text = "", eventToAdd = null } = {}) {
     let element = document.createElement(elementType);
     switch (elementType) {
       case "button":
@@ -26,13 +21,6 @@ export class CreateElementComponent {
       case "p":
         element.innerText = text;
         break;
-
-      // case "checkbox":
-      //   // element = document.createElement("input");
-      //   // element.type = "checkbox";
-      //   // element.value = value;
-      //   // element.addEventListener("change", eventToAdd);
-      //   break;
 
       default:
         break;

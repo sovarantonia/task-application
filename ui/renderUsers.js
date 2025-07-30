@@ -1,13 +1,13 @@
-import { CreateElementComponent } from "../components/CreateElementComponent";
+import { createElementComponent } from "../components/createElementComponentFunction";
 
 export function renderUsers(users, containerId) {
   const container = document.getElementById(containerId);
-  const createElementComponent = new CreateElementComponent(containerId);
+  // const createElementComponent = new CreateElementComponent(containerId);
 
   container.innerHTML = "";
 
   users.forEach((element) => {
-    const card = createElementComponent.createElement({ elementType: "div" });
+    const card = createElementComponent({ elementType: "div" });
     card.className = "user-card";
     // const checkbox = createElementComponent.createCheckbox({
     //   value: element.id,
@@ -16,15 +16,15 @@ export function renderUsers(users, containerId) {
     //   },
     // });
     // checkbox.id = element.id;
-    const nameInfo = createElementComponent.createElement({
+    const nameInfo = createElementComponent({
       elementType: "p",
       text: `${element.user}`,
     });
-    const emailInfo = createElementComponent.createElement({
+    const emailInfo = createElementComponent({
       elementType: "p",
       text: `Email: ${element.email}`,
     });
-    const departmentInfo = createElementComponent.createElement({
+    const departmentInfo = createElementComponent({
       elementType: "p",
       text: `Department: ${element.department}`,
     });

@@ -30,10 +30,11 @@ export class TaskLogic {
 
     this.taskPresentationUI = new TaskPresentationUI("taskPageIndicator");
 
+    const { setItemsPerPage, setCurrentPageNo } = this.pagerData;
     this.pagerComponentUI = new PagerComponentUI({
       containerId: "taskPerPageSelect",
-      onItemsPerPageChange: this.pagerData.setItemsPerPage,
-      onCurrentPageChange: this.pagerData.setCurrentPageNo,
+      onItemsPerPageChange: setItemsPerPage,
+      onCurrentPageChange: setCurrentPageNo,
     });
 
     this.sortTaskControlUI = new SortControlUI({
