@@ -1,4 +1,5 @@
 import { CreateElementComponent } from "../components/CreateElementComponent";
+import { SelectComponent } from "../components/SelectComponent";
 import { updateSelectOptions } from "../logic/updateSelect";
 
 //** This renders the items per page and current page select */
@@ -12,27 +13,33 @@ export class PagerComponentUI {
     this.onCurrentPageChange = onCurrentPageChange;
 
     this.createElementComponent = new CreateElementComponent(containerId);
+    this.target = document.getElementById(containerId);
+
+    this.select = new SelectComponent();
+
+    this.selectItemsPerPage = this.select.createSelect({
+      list: [5, 10],
+      onSelectionChanged: (e) =>
+        this.onItemsPerPageChange(parseInt(e.target.value)),
+    });
 
     this.selectItemsPerPageSpan = this.createElementComponent.createElement({
       elementType: "span",
       text: "Items per page",
     });
 
-    this.selectItemsPerPage = this.createElementComponent.createElement({
-      elementType: "select",
-      options: [5, 10],
-      eventToAdd: (e) => this.onItemsPerPageChange(parseInt(e.target.value)),
-    });
+    this.target.append(this.selectItemsPerPage);
 
     this.selectCurrentPageSpan = this.createElementComponent.createElement({
       elementType: "span",
       text: "Page",
     });
 
-    this.selectCurrentPageNo = this.createElementComponent.createElement({
-      elementType: "select",
-      eventToAdd: (e) => this.onCurrentPageChange(parseInt(e.target.value)),
+    this.selectCurrentPageNo = this.select.createSelect({
+      onSelectionChanged: (e) =>
+        this.onCurrentPageChange(parseInt(e.target.value)),
     });
+    this.target.append(this.selectCurrentPageNo);
   }
 
   updateSelect(currentPageNo, totalPages) {

@@ -4,7 +4,7 @@ const initialTaskData = [
     title: "Fix login bug",
     description: "Users cannot log in with correct credentials.",
     status: "44d21520-d383-4bc3-b6db-848f3545df56",
-    userName: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
+    user: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
     date: "2025-06-15",
   },
   {
@@ -13,7 +13,7 @@ const initialTaskData = [
     description:
       "Create a page where users can update their personal information.",
     status: "ad06176e-88cd-4eee-90b5-44fcea585434",
-    userName: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
+    user: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
     date: "2025-06-14",
   },
   {
@@ -22,7 +22,7 @@ const initialTaskData = [
     description:
       "Improve the performance of slow-loading pages by optimizing queries.",
     status: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79",
-    userName: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
+    user: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
     date: "2025-06-12",
   },
   {
@@ -30,7 +30,7 @@ const initialTaskData = [
     title: "Implement dark mode",
     description: "Add an option for users to toggle dark mode in settings.",
     status: "ad06176e-88cd-4eee-90b5-44fcea585434",
-    userName: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
+    user: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
     date: "2025-06-13",
   },
   {
@@ -39,7 +39,7 @@ const initialTaskData = [
     description:
       "Ensure critical user workflows are covered by integration tests.",
     status: "b9920485-9f7e-4e82-bba6-3b761df91cb4",
-    userName: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
+    user: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
     date: "2025-06-15",
   },
   {
@@ -47,7 +47,7 @@ const initialTaskData = [
     title: "Fix password reset issue",
     description: "Reset link fails for accounts created before 2024.",
     status: "44d21520-d383-4bc3-b6db-848f3545df56",
-    userName: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
+    user: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
     date: "2025-06-16",
   },
   {
@@ -55,7 +55,7 @@ const initialTaskData = [
     title: "Redesign user profile UI",
     description: "Modernize the layout of the user profile page.",
     status: "44d21520-d383-4bc3-b6db-848f3545df56",
-    userName: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
+    user: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
     date: "2025-06-17",
   },
   {
@@ -63,7 +63,7 @@ const initialTaskData = [
     title: "Add indexing to improve search speed",
     description: "Use PostgreSQL indexing to enhance filtering by title.",
     status: "ad06176e-88cd-4eee-90b5-44fcea585434",
-    userName: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
+    user: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
     date: "2025-06-17",
   },
   {
@@ -71,7 +71,7 @@ const initialTaskData = [
     title: "Add system-wide color theme toggle",
     description: "Support dynamic switching between themes.",
     status: "ad06176e-88cd-4eee-90b5-44fcea585434",
-    userName: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
+    user: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
     date: "2025-06-18",
   },
   {
@@ -79,7 +79,7 @@ const initialTaskData = [
     title: "Refactor test suite structure",
     description: "Organize unit and integration tests into separate folders.",
     status: "44d21520-d383-4bc3-b6db-848f3545df56",
-    userName: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
+    user: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
     date: "2025-06-18",
   },
   {
@@ -87,7 +87,7 @@ const initialTaskData = [
     title: "Fix login redirect bug",
     description: "Users stay on login page even after successful login.",
     status: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79",
-    userName: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
+    user: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
     date: "2025-06-10",
   },
   {
@@ -95,7 +95,7 @@ const initialTaskData = [
     title: "Add avatar upload on profile page",
     description: "Users can upload and crop their profile picture.",
     status: "ad06176e-88cd-4eee-90b5-44fcea585434",
-    userName: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
+    user: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
     date: "2025-06-19",
   },
   {
@@ -103,7 +103,7 @@ const initialTaskData = [
     title: "Clean up deprecated SQL queries",
     description: "Remove old joins and improve query structure.",
     status: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79",
-    userName: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
+    user: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
     date: "2025-06-09",
   },
   {
@@ -111,7 +111,7 @@ const initialTaskData = [
     title: "Improve dark mode contrast",
     description: "Adjust color palette for better accessibility in dark mode.",
     status: "44d21520-d383-4bc3-b6db-848f3545df56",
-    userName: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
+    user: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
     date: "2025-06-20",
   },
   {
@@ -119,7 +119,7 @@ const initialTaskData = [
     title: "Test PDF export functionality",
     description: "Validate correctness of downloaded PDFs for shared notes.",
     status: "b9920485-9f7e-4e82-bba6-3b761df91cb4",
-    userName: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
+    user: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
     date: "2025-06-20",
   },
   {
@@ -127,7 +127,7 @@ const initialTaskData = [
     title: "Fix session timeout bug",
     description: "Auto logout occurs prematurely after login.",
     status: "ad06176e-88cd-4eee-90b5-44fcea585434",
-    userName: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
+    user: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
     date: "2025-06-21",
   },
   {
@@ -135,7 +135,7 @@ const initialTaskData = [
     title: "Add contact information section",
     description: "Enable users to save multiple contact details.",
     status: "44d21520-d383-4bc3-b6db-848f3545df56",
-    userName: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
+    user: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
     date: "2025-06-21",
   },
   {
@@ -143,7 +143,7 @@ const initialTaskData = [
     title: "Analyze DB performance metrics",
     description: "Generate weekly reports on slow queries and memory usage.",
     status: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79",
-    userName: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
+    user: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
     date: "2025-06-11",
   },
   {
@@ -151,7 +151,7 @@ const initialTaskData = [
     title: "Add auto dark mode using system preference",
     description: "Use media query to detect and apply user's OS theme.",
     status: "ad06176e-88cd-4eee-90b5-44fcea585434",
-    userName: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
+    user: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
     date: "2025-06-22",
   },
   {
@@ -159,7 +159,7 @@ const initialTaskData = [
     title: "Expand test coverage for PDF module",
     description: "Cover edge cases and error handling in export logic.",
     status: "b9920485-9f7e-4e82-bba6-3b761df91cb4",
-    userName: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
+    user: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
     date: "2025-06-22",
   },
 ];

@@ -5,7 +5,6 @@ export class CreateElementComponent {
 
   createElement({
     elementType = "",
-    options = [],
     text = "",
     eventToAdd = null,
     inputType = "",
@@ -24,29 +23,16 @@ export class CreateElementComponent {
       case "div":
         break;
 
-      case "select":
-        if (options.length > 0) {
-          options.forEach((e) => {
-            const opt = document.createElement("option");
-            opt.value = e;
-            opt.textContent = e;
-            element.append(opt);
-          });
-          element.options[0].selected = true;
-        }
-        element.addEventListener("change", eventToAdd);
-        break;
-
       case "p":
         element.innerText = text;
         break;
 
-      case "checkbox":
-        // element = document.createElement("input");
-        // element.type = "checkbox";
-        // element.value = value;
-        // element.addEventListener("change", eventToAdd);
-        break;
+      // case "checkbox":
+      //   // element = document.createElement("input");
+      //   // element.type = "checkbox";
+      //   // element.value = value;
+      //   // element.addEventListener("change", eventToAdd);
+      //   break;
 
       default:
         break;

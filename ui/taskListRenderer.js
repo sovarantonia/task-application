@@ -8,7 +8,7 @@ export function renderTasks(containerId, taskList) {
       card.innerHTML = `<h2>${element.title}</h2>
         <p>Status: ${element.status}</p>
         <p>${element.description}</p>
-        <p>Assigned to: ${element.userName}</p>
+        <p>Assigned to: ${element.user}</p>
         <p>Created at: ${element.date}</p>`;
       container.appendChild(card);
     });

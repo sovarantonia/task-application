@@ -1,4 +1,3 @@
-import { getCheckboxesState, renderUsers } from "../ui/renderUsers";
 import { UserService } from "../service/UserService";
 import { PagerData } from "./PagerData";
 import { PagerComponentUI } from "../ui/PagerComponentUI";
@@ -8,7 +7,6 @@ import { PaginationHandler } from "./PaginationHandler";
 import { SortCriteriaHandler } from "./SortCriteriaHandler";
 import { FilterCriteriaHandler } from "./FilterCriteriaHandler";
 import { UserPresentationUI } from "../ui/UserPresentationUI";
-import { transformOptionList } from "./transformOptionList";
 export class UserLogic {
   constructor({ initialUserData = [] }) {
     this.userService = new UserService(initialUserData);
@@ -23,15 +21,14 @@ export class UserLogic {
     });
     this.sortUserControlUI = new SortControlUI({
       containerId: "sortUserContainer",
-      onSortCriteriaChanged: (column) =>
-        this.sortCriteriaHandler.onSortCriteriaChanged(column),
-      columnList: ["name"],
+      onSortCriteriaChanged: this.sortCriteriaHandler.onSortCriteriaChanged,
+      columnList: ["user"],
     });
 
     this.filterUserControlUI = new FilterControlUI({
       containerId: "filterUserContainer",
-      onFilterCriteriaChanged: (column, newValue) =>
-        this.filterCriteriaHandler.onFilterCriteriaChanged(column, newValue),
+      onFilterCriteriaChanged:
+        this.filterCriteriaHandler.onFilterCriteriaChanged,
       columnOptionList: [],
     });
 
@@ -42,13 +39,11 @@ export class UserLogic {
     });
 
     this.sortCriteriaHandler = new SortCriteriaHandler({
-      onNotifyPaginationHandler: (sortCriteria) =>
-        this.paginationHandler.onSortCriteriaChanged(sortCriteria),
+      onNotifyPaginationHandler: this.paginationHandler.onSortCriteriaChanged,
     });
 
     this.filterCriteriaHandler = new FilterCriteriaHandler({
-      onNotifyPaginationHandler: (filterCriteria) =>
-        this.paginationHandler.onFilterCriteriaChanged(filterCriteria),
+      onNotifyPaginationHandler: this.paginationHandler.onFilterCriteriaChanged,
     });
 
     // this.checkboxStateMap = new Map();

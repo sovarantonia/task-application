@@ -1,5 +1,5 @@
 (function () {
-  'use strict';
+  "use strict";
 
   const initialTaskData = [
     {
@@ -7,7 +7,7 @@
       title: "Fix login bug",
       description: "Users cannot log in with correct credentials.",
       status: "44d21520-d383-4bc3-b6db-848f3545df56",
-      userName: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
+      user: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
       date: "2025-06-15",
     },
     {
@@ -16,7 +16,7 @@
       description:
         "Create a page where users can update their personal information.",
       status: "ad06176e-88cd-4eee-90b5-44fcea585434",
-      userName: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
+      user: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
       date: "2025-06-14",
     },
     {
@@ -25,7 +25,7 @@
       description:
         "Improve the performance of slow-loading pages by optimizing queries.",
       status: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79",
-      userName: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
+      user: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
       date: "2025-06-12",
     },
     {
@@ -33,7 +33,7 @@
       title: "Implement dark mode",
       description: "Add an option for users to toggle dark mode in settings.",
       status: "ad06176e-88cd-4eee-90b5-44fcea585434",
-      userName: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
+      user: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
       date: "2025-06-13",
     },
     {
@@ -42,7 +42,7 @@
       description:
         "Ensure critical user workflows are covered by integration tests.",
       status: "b9920485-9f7e-4e82-bba6-3b761df91cb4",
-      userName: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
+      user: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
       date: "2025-06-15",
     },
     {
@@ -50,7 +50,7 @@
       title: "Fix password reset issue",
       description: "Reset link fails for accounts created before 2024.",
       status: "44d21520-d383-4bc3-b6db-848f3545df56",
-      userName: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
+      user: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
       date: "2025-06-16",
     },
     {
@@ -58,7 +58,7 @@
       title: "Redesign user profile UI",
       description: "Modernize the layout of the user profile page.",
       status: "44d21520-d383-4bc3-b6db-848f3545df56",
-      userName: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
+      user: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
       date: "2025-06-17",
     },
     {
@@ -66,7 +66,7 @@
       title: "Add indexing to improve search speed",
       description: "Use PostgreSQL indexing to enhance filtering by title.",
       status: "ad06176e-88cd-4eee-90b5-44fcea585434",
-      userName: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
+      user: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
       date: "2025-06-17",
     },
     {
@@ -74,7 +74,7 @@
       title: "Add system-wide color theme toggle",
       description: "Support dynamic switching between themes.",
       status: "ad06176e-88cd-4eee-90b5-44fcea585434",
-      userName: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
+      user: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
       date: "2025-06-18",
     },
     {
@@ -82,7 +82,7 @@
       title: "Refactor test suite structure",
       description: "Organize unit and integration tests into separate folders.",
       status: "44d21520-d383-4bc3-b6db-848f3545df56",
-      userName: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
+      user: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
       date: "2025-06-18",
     },
     {
@@ -90,7 +90,7 @@
       title: "Fix login redirect bug",
       description: "Users stay on login page even after successful login.",
       status: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79",
-      userName: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
+      user: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
       date: "2025-06-10",
     },
     {
@@ -98,7 +98,7 @@
       title: "Add avatar upload on profile page",
       description: "Users can upload and crop their profile picture.",
       status: "ad06176e-88cd-4eee-90b5-44fcea585434",
-      userName: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
+      user: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
       date: "2025-06-19",
     },
     {
@@ -106,15 +106,16 @@
       title: "Clean up deprecated SQL queries",
       description: "Remove old joins and improve query structure.",
       status: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79",
-      userName: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
+      user: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
       date: "2025-06-09",
     },
     {
       id: "95a896da-f3be-4f92-b60e-c5c390e1e4c4",
       title: "Improve dark mode contrast",
-      description: "Adjust color palette for better accessibility in dark mode.",
+      description:
+        "Adjust color palette for better accessibility in dark mode.",
       status: "44d21520-d383-4bc3-b6db-848f3545df56",
-      userName: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
+      user: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
       date: "2025-06-20",
     },
     {
@@ -122,7 +123,7 @@
       title: "Test PDF export functionality",
       description: "Validate correctness of downloaded PDFs for shared notes.",
       status: "b9920485-9f7e-4e82-bba6-3b761df91cb4",
-      userName: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
+      user: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
       date: "2025-06-20",
     },
     {
@@ -130,7 +131,7 @@
       title: "Fix session timeout bug",
       description: "Auto logout occurs prematurely after login.",
       status: "ad06176e-88cd-4eee-90b5-44fcea585434",
-      userName: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
+      user: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
       date: "2025-06-21",
     },
     {
@@ -138,7 +139,7 @@
       title: "Add contact information section",
       description: "Enable users to save multiple contact details.",
       status: "44d21520-d383-4bc3-b6db-848f3545df56",
-      userName: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
+      user: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
       date: "2025-06-21",
     },
     {
@@ -146,7 +147,7 @@
       title: "Analyze DB performance metrics",
       description: "Generate weekly reports on slow queries and memory usage.",
       status: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79",
-      userName: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
+      user: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
       date: "2025-06-11",
     },
     {
@@ -154,7 +155,7 @@
       title: "Add auto dark mode using system preference",
       description: "Use media query to detect and apply user's OS theme.",
       status: "ad06176e-88cd-4eee-90b5-44fcea585434",
-      userName: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
+      user: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
       date: "2025-06-22",
     },
     {
@@ -162,7 +163,7 @@
       title: "Expand test coverage for PDF module",
       description: "Cover edge cases and error handling in export logic.",
       status: "b9920485-9f7e-4e82-bba6-3b761df91cb4",
-      userName: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
+      user: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
       date: "2025-06-22",
     },
   ];
@@ -174,7 +175,6 @@
 
     createElement({
       elementType = "",
-      options = [],
       text = "",
       eventToAdd = null,
       inputType = "",
@@ -193,19 +193,6 @@
         case "div":
           break;
 
-        case "select":
-          if (options.length > 0) {
-            options.forEach((e) => {
-              const opt = document.createElement("option");
-              opt.value = e;
-              opt.textContent = e;
-              element.append(opt);
-            });
-            element.options[0].selected = true;
-          }
-          element.addEventListener("change", eventToAdd);
-          break;
-
         case "p":
           element.innerText = text;
           break;
@@ -216,11 +203,30 @@
     }
   }
 
-  function updateSelectOptions(
-    selectComponent,
-    options = [],
-    currentPage,
-  ) {
+  class SelectComponent {
+    createSelect({
+      list = [],
+      onSelectionChanged = null,
+      key = null,
+      value = null,
+    }) {
+      const select = document.createElement("select");
+      list.forEach((element) => {
+        const opt = document.createElement("option");
+        opt.value = element;
+        opt.textContent = element;
+        if (key && value) {
+          opt.value = element[key];
+          opt.textContent = element[value];
+        }
+        select.append(opt);
+      });
+      select.addEventListener("change", onSelectionChanged);
+      return select;
+    }
+  }
+
+  function updateSelectOptions(selectComponent, options = [], currentPage) {
     let optionNo = selectComponent.options.length - 1;
     if (optionNo > 0) {
       for (let i = optionNo; i >= 0; i--) {
@@ -251,27 +257,33 @@
       this.onCurrentPageChange = onCurrentPageChange;
 
       this.createElementComponent = new CreateElementComponent(containerId);
+      this.target = document.getElementById(containerId);
+
+      this.select = new SelectComponent();
+
+      this.selectItemsPerPage = this.select.createSelect({
+        list: [5, 10],
+        onSelectionChanged: (e) =>
+          this.onItemsPerPageChange(parseInt(e.target.value)),
+      });
 
       this.selectItemsPerPageSpan = this.createElementComponent.createElement({
         elementType: "span",
         text: "Items per page",
       });
 
-      this.selectItemsPerPage = this.createElementComponent.createElement({
-        elementType: "select",
-        options: [5, 10],
-        eventToAdd: (e) => this.onItemsPerPageChange(parseInt(e.target.value)),
-      });
+      this.target.append(this.selectItemsPerPage);
 
       this.selectCurrentPageSpan = this.createElementComponent.createElement({
         elementType: "span",
         text: "Page",
       });
 
-      this.selectCurrentPageNo = this.createElementComponent.createElement({
-        elementType: "select",
-        eventToAdd: (e) => this.onCurrentPageChange(parseInt(e.target.value)),
+      this.selectCurrentPageNo = this.select.createSelect({
+        onSelectionChanged: (e) =>
+          this.onCurrentPageChange(parseInt(e.target.value)),
       });
+      this.target.append(this.selectCurrentPageNo);
     }
 
     updateSelect(currentPageNo, totalPages) {
@@ -288,17 +300,17 @@
   }
 
   function generateGUID() {
-    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
-      const r = (Math.random() * 16) | 0;
-      const v = c === "x" ? r : (r & 0x3) | 0x8;
-      return v.toString(16);
-    });
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(
+      /[xy]/g,
+      function (c) {
+        const r = (Math.random() * 16) | 0;
+        const v = c === "x" ? r : (r & 0x3) | 0x8;
+        return v.toString(16);
+      },
+    );
   }
 
-  function getPaginatedElements(
-    elementList,
-    { currentPageNo, itemsPerPage },
-  ) {
+  function getPaginatedElements(elementList, { currentPageNo, itemsPerPage }) {
     const start = (currentPageNo - 1) * itemsPerPage;
     const end = start + itemsPerPage;
 
@@ -458,19 +470,19 @@
 
   function renderTasks(containerId, taskList) {
     const container = document.getElementById(containerId);
-      container.innerHTML = "";
+    container.innerHTML = "";
 
-      taskList.forEach((element) => {
-        const card = document.createElement("div");
-        card.className = "task-card";
-        card.innerHTML = `<h2>${element.title}</h2>
+    taskList.forEach((element) => {
+      const card = document.createElement("div");
+      card.className = "task-card";
+      card.innerHTML = `<h2>${element.title}</h2>
         <p>Status: ${element.status}</p>
         <p>${element.description}</p>
-        <p>Assigned to: ${element.userName}</p>
+        <p>Assigned to: ${element.user}</p>
         <p>Created at: ${element.date}</p>`;
-        container.appendChild(card);
-      });
-      return taskList;
+      container.appendChild(card);
+    });
+    return taskList;
   }
 
   class TaskPresentationUI {
@@ -537,10 +549,14 @@
 
     //calls the pagination function and passes the result to pagination response
     getItems = ({ currentPageNo, itemsPerPage }) => {
-      this.paginationFunction({
-        currentPageNo,
-        itemsPerPage,
-      }, this.sortCriteria, this.filterCriteria).then(({ paginatedItems, totalPages }) => {
+      this.paginationFunction(
+        {
+          currentPageNo,
+          itemsPerPage,
+        },
+        this.sortCriteria,
+        this.filterCriteria,
+      ).then(({ paginatedItems, totalPages }) => {
         this.onPaginationResponse({ paginatedItems, totalPages });
       });
     };
@@ -553,7 +569,7 @@
     onFilterCriteriaChanged = (filterCriteria) => {
       this.filterCriteria = filterCriteria;
       this.getItems(this.pagerData, this.sortCriteria, this.filterCriteria);
-    }
+    };
 
     // onNext = () => {
     //   //have to use pager data somehow
@@ -688,7 +704,7 @@
   }
 
   class FilterCriteriaHandler {
-    constructor({onNotifyPaginationHandler}) {
+    constructor({ onNotifyPaginationHandler }) {
       this.onNotifyPaginationHandler = onNotifyPaginationHandler;
 
       this.filterCriteriaList = new Map();
@@ -721,22 +737,32 @@
   }
 
   class FilterControlUI {
-    constructor({ containerId, onFilterCriteriaChanged, columnOptionList }) {
+    constructor({
+      containerId,
+      onFilterCriteriaChanged,
+      columnOptionList = [],
+      keyValue = [],
+    }) {
       this.onFilterCriteriaChanged = onFilterCriteriaChanged;
 
-      this.createElementComponent = new CreateElementComponent(containerId);
+      this.target = document.getElementById(containerId);
 
-      for (let list of columnOptionList) {
+      this.createElementComponent = new CreateElementComponent(containerId);
+      this.select = new SelectComponent();
+
+      for (let i = 0; i < columnOptionList.length; i++) {
+        this.createSelectComponent = this.select.createSelect({
+          list: columnOptionList[i],
+          onSelectionChanged: (e) =>
+            this.onFilterCriteriaChanged(keyValue[i].value, e.target.value),
+          key: keyValue[i].key,
+          value: keyValue[i].value,
+        });
         this.filterBySpan = this.createElementComponent.createElement({
           elementType: "span",
-          text: `Filter by ${list["column"]}: `,
+          text: `Filter by ${keyValue[i].value}: `,
         });
-        this.filterByColumnSelect = this.createElementComponent.createElement({
-          elementType: "select",
-          options: list["values"],
-          eventToAdd: (e) =>
-            this.onFilterCriteriaChanged(list["column"], e.target.value),
-        });
+        this.target.append(this.createSelectComponent);
       }
     }
   }
@@ -748,71 +774,64 @@
     { id: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79", status: "Done" },
   ];
 
-  function transformOptionList(list, property) {
-    return {
-      column: property,
-      values: ["All", ...list.map((item) => item["id"])],
-    };
-  }
-
   const initialUserData = [
     {
       id: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
-      name: "Alice Morgan",
+      user: "Alice Morgan",
       email: "alice.morgan@example.com",
       department: "Backend Development",
     },
     {
       id: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
-      name: "Dana Kim",
+      user: "Dana Kim",
       email: "dana.kim@example.com",
       department: "UX/UI Design",
     },
     {
       id: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
-      name: "Eva Thompson",
+      user: "Eva Thompson",
       email: "eva.thompson@example.com",
       department: "Quality Assurance",
     },
     {
       id: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
-      name: "Bob Daniels",
+      user: "Bob Daniels",
       email: "bob.daniels@example.com",
       department: "Frontend Development",
     },
     {
       id: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
-      name: "Charlie Wu",
+      user: "Charlie Wu",
       email: "charlie.wu@example.com",
       department: "Database Engineering",
     },
     {
       id: "f8c2f610-08c3-42f6-bbde-f94fc53119ea",
-      name: "Henry Patel",
+      user: "Henry Patel",
       email: "henry.patel@example.com",
       department: "IT Support",
     },
     {
       id: "bd23c62f-205b-44aa-8b63-d0bfb749d4b9",
-      name: "Isla Novak",
+      user: "Isla Novak",
       email: "isla.novak@example.com",
       department: "Legal",
     },
     {
       id: "4f2fd22d-74cc-40bb-9600-2e9e83f223db",
-      name: "Frank Ortega",
+      user: "Frank Ortega",
       email: "frank.ortega@example.com",
       department: "Project Management",
     },
     {
       id: "8ea1de6b-681b-4d47-a4f7-abc9c7e19e02",
-      name: "Grace Lee",
+      user: "Grace Lee",
       email: "grace.lee@example.com",
       department: "Customer Support",
     },
     {
       id: "3e4a3c5f-f6c7-442b-8c17-ccdd75ef1b7e",
-      name: "Jack Reynolds",
+      user: "Jack Reynolds",
       email: "jack.reynolds@example.com",
       department: "Operations",
     },
@@ -823,28 +842,6 @@
       this.taskService = new TaskService(initialTaskData);
       this.pagerData = new PagerData();
 
-      this.taskPresentationUI = new TaskPresentationUI("taskPageIndicator");
-      this.pagerComponentUI = new PagerComponentUI({
-        containerId: "taskPerPageSelect",
-        onItemsPerPageChange: this.pagerData.setItemsPerPage,
-        onCurrentPageChange: this.pagerData.setCurrentPageNo,
-      });
-      this.sortTaskControlUI = new SortControlUI({
-        containerId: "sortTaskContainer",
-        onSortCriteriaChanged: (column) =>
-          this.sortCriteriaHandler.onSortCriteriaChanged(column),
-        columnList: ["title", "date"],
-      });
-      this.filterTaskControlUI = new FilterControlUI({
-        containerId: "filterTaskContainer",
-        onFilterCriteriaChanged: (column, newValue) =>
-          this.filterCriteriaHandler.onFilterCriteriaChanged(column, newValue),
-        columnOptionList: [
-          transformOptionList(taskStatus, "status"),
-          transformOptionList(initialUserData, "name"),
-        ],
-      });
-
       this.paginationHandler = new PaginationHandler({
         paginationFunction: this.taskService.getTasks,
         onPaginationResponse: this.onPaginationResponse,
@@ -852,13 +849,36 @@
       });
 
       this.sortCriteriaHandler = new SortCriteriaHandler({
-        onNotifyPaginationHandler: (sortCriteria) =>
-          this.paginationHandler.onSortCriteriaChanged(sortCriteria),
+        onNotifyPaginationHandler: this.paginationHandler.onSortCriteriaChanged,
       });
 
       this.filterCriteriaHandler = new FilterCriteriaHandler({
-        onNotifyPaginationHandler: (filterCriteria) =>
-          this.paginationHandler.onFilterCriteriaChanged(filterCriteria),
+        onNotifyPaginationHandler:
+          this.paginationHandler.onFilterCriteriaChanged,
+      });
+
+      this.taskPresentationUI = new TaskPresentationUI("taskPageIndicator");
+
+      this.pagerComponentUI = new PagerComponentUI({
+        containerId: "taskPerPageSelect",
+        onItemsPerPageChange: this.pagerData.setItemsPerPage,
+        onCurrentPageChange: this.pagerData.setCurrentPageNo,
+      });
+
+      this.sortTaskControlUI = new SortControlUI({
+        containerId: "sortTaskContainer",
+        onSortCriteriaChanged: this.sortCriteriaHandler.onSortCriteriaChanged,
+        columnList: ["title", "date"],
+      });
+      this.filterTaskControlUI = new FilterControlUI({
+        containerId: "filterTaskContainer",
+        onFilterCriteriaChanged:
+          this.filterCriteriaHandler.onFilterCriteriaChanged,
+        columnOptionList: [taskStatus, initialUserData],
+        keyValue: [
+          { key: "id", value: "status" },
+          { key: "id", value: "user" },
+        ],
       });
     }
 
@@ -882,41 +902,6 @@
     init() {
       this.pagerData.init();
     }
-  }
-
-  function renderUsers(users, containerId) {
-    const container = document.getElementById(containerId);
-    const createElementComponent = new CreateElementComponent(containerId);
-
-    container.innerHTML = "";
-
-    users.forEach((element) => {
-      const card = createElementComponent.createElement({ elementType: "div" });
-      card.className = "user-card";
-      // const checkbox = createElementComponent.createCheckbox({
-      //   value: element.id,
-      //   eventToAdd: (e) => {
-      //     eventToAdd?.(e.target.value, e.target.checked);
-      //   },
-      // });
-      // checkbox.id = element.id;
-      const nameInfo = createElementComponent.createElement({
-        elementType: "p",
-        text: `${element.name}`,
-      });
-      const emailInfo = createElementComponent.createElement({
-        elementType: "p",
-        text: `Email: ${element.email}`,
-      });
-      const departmentInfo = createElementComponent.createElement({
-        elementType: "p",
-        text: `Department: ${element.department}`,
-      });
-
-      card.append(nameInfo, emailInfo, departmentInfo);
-      container.appendChild(card);
-    });
-    return users;
   }
 
   class UserService {
@@ -952,6 +937,41 @@
     }
   }
 
+  function renderUsers(users, containerId) {
+    const container = document.getElementById(containerId);
+    const createElementComponent = new CreateElementComponent(containerId);
+
+    container.innerHTML = "";
+
+    users.forEach((element) => {
+      const card = createElementComponent.createElement({ elementType: "div" });
+      card.className = "user-card";
+      // const checkbox = createElementComponent.createCheckbox({
+      //   value: element.id,
+      //   eventToAdd: (e) => {
+      //     eventToAdd?.(e.target.value, e.target.checked);
+      //   },
+      // });
+      // checkbox.id = element.id;
+      const nameInfo = createElementComponent.createElement({
+        elementType: "p",
+        text: `${element.user}`,
+      });
+      const emailInfo = createElementComponent.createElement({
+        elementType: "p",
+        text: `Email: ${element.email}`,
+      });
+      const departmentInfo = createElementComponent.createElement({
+        elementType: "p",
+        text: `Department: ${element.department}`,
+      });
+
+      card.append(nameInfo, emailInfo, departmentInfo);
+      container.appendChild(card);
+    });
+    return users;
+  }
+
   class UserPresentationUI {
     constructor(containerId) {
       this.createElement = new CreateElementComponent(containerId);
@@ -983,7 +1003,7 @@
         containerId: "sortUserContainer",
         onSortCriteriaChanged: (column) =>
           this.sortCriteriaHandler.onSortCriteriaChanged(column),
-        columnList: ["name"],
+        columnList: ["user"],
       });
 
       this.filterUserControlUI = new FilterControlUI({
@@ -1000,13 +1020,12 @@
       });
 
       this.sortCriteriaHandler = new SortCriteriaHandler({
-        onNotifyPaginationHandler: (sortCriteria) =>
-          this.paginationHandler.onSortCriteriaChanged(sortCriteria),
+        onNotifyPaginationHandler: this.paginationHandler.onSortCriteriaChanged,
       });
 
       this.filterCriteriaHandler = new FilterCriteriaHandler({
-        onNotifyPaginationHandler: (filterCriteria) =>
-          this.paginationHandler.onFilterCriteriaChanged(filterCriteria),
+        onNotifyPaginationHandler:
+          this.paginationHandler.onFilterCriteriaChanged,
       });
 
       // this.checkboxStateMap = new Map();
@@ -1059,5 +1078,4 @@
     const userLogic = new UserLogic({ initialUserData });
     userLogic.init();
   });
-
 })();

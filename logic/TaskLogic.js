@@ -15,28 +15,6 @@ export class TaskLogic {
     this.taskService = new TaskService(initialTaskData);
     this.pagerData = new PagerData();
 
-    this.taskPresentationUI = new TaskPresentationUI("taskPageIndicator");
-    this.pagerComponentUI = new PagerComponentUI({
-      containerId: "taskPerPageSelect",
-      onItemsPerPageChange: this.pagerData.setItemsPerPage,
-      onCurrentPageChange: this.pagerData.setCurrentPageNo,
-    });
-    this.sortTaskControlUI = new SortControlUI({
-      containerId: "sortTaskContainer",
-      onSortCriteriaChanged: (column) =>
-        this.sortCriteriaHandler.onSortCriteriaChanged(column),
-      columnList: ["title", "date"],
-    });
-    this.filterTaskControlUI = new FilterControlUI({
-      containerId: "filterTaskContainer",
-      onFilterCriteriaChanged: (column, newValue) =>
-        this.filterCriteriaHandler.onFilterCriteriaChanged(column, newValue),
-      columnOptionList: [
-        transformOptionList(taskStatus, "status"),
-        transformOptionList(initialUserData, "name"),
-      ],
-    });
-
     this.paginationHandler = new PaginationHandler({
       paginationFunction: this.taskService.getTasks,
       onPaginationResponse: this.onPaginationResponse,
@@ -44,13 +22,36 @@ export class TaskLogic {
     });
 
     this.sortCriteriaHandler = new SortCriteriaHandler({
-      onNotifyPaginationHandler: (sortCriteria) =>
-        this.paginationHandler.onSortCriteriaChanged(sortCriteria),
+      onNotifyPaginationHandler: this.paginationHandler.onSortCriteriaChanged,
     });
 
     this.filterCriteriaHandler = new FilterCriteriaHandler({
-      onNotifyPaginationHandler: (filterCriteria) =>
-        this.paginationHandler.onFilterCriteriaChanged(filterCriteria),
+      onNotifyPaginationHandler: 
+        this.paginationHandler.onFilterCriteriaChanged,
+    });
+
+    this.taskPresentationUI = new TaskPresentationUI("taskPageIndicator");
+
+    this.pagerComponentUI = new PagerComponentUI({
+      containerId: "taskPerPageSelect",
+      onItemsPerPageChange: this.pagerData.setItemsPerPage,
+      onCurrentPageChange: this.pagerData.setCurrentPageNo,
+    });
+
+    this.sortTaskControlUI = new SortControlUI({
+      containerId: "sortTaskContainer",
+      onSortCriteriaChanged: this.sortCriteriaHandler.onSortCriteriaChanged,
+      columnList: ["title", "date"],
+    });
+    this.filterTaskControlUI = new FilterControlUI({
+      containerId: "filterTaskContainer",
+      onFilterCriteriaChanged:
+        this.filterCriteriaHandler.onFilterCriteriaChanged,
+      columnOptionList: [taskStatus, initialUserData],
+      keyValue: [
+        { key: "id", value: "status" },
+        { key: "id", value: "user" },
+      ],
     });
   }
 

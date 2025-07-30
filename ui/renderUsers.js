@@ -18,7 +18,7 @@ export function renderUsers(users, containerId) {
     // checkbox.id = element.id;
     const nameInfo = createElementComponent.createElement({
       elementType: "p",
-      text: `${element.name}`,
+      text: `${element.user}`,
     });
     const emailInfo = createElementComponent.createElement({
       elementType: "p",
