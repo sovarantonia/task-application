@@ -1,7 +1,7 @@
 //** this creates the sorting criteria for the property propertyType */
 export class SortCriteria {
-  constructor({ propertyType, direction = 0, onSortCriteriaCreated } = {}) {
-    this.sortOption = { property: propertyType, direction: direction };
+  constructor({ propertyType, direction = 0, priority = 0, onSortCriteriaCreated } = {}) {
+    this.sortOption = { property: propertyType, direction: direction, priority: priority };
 
     this.onSortCriteriaCreated = onSortCriteriaCreated;
   }

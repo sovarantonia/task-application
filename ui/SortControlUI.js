@@ -1,23 +1,21 @@
 import { CreateElementComponent } from "../components/CreateElementComponent";
 
 export class SortControlUI {
-  constructor({ containerId, onSortCriteriaChanged, columnList = [] }) {
+  constructor({ containerId, onSortCriteriaChanged, columnList  }) {
     this.onSortCriteriaChanged = onSortCriteriaChanged;
 
     this.createElementComponent = new CreateElementComponent(containerId);
 
-    for (let column of columnList) {
+    for (let column of columnList.keys()) {
       this.sortByColumnBtn = this.createElementComponent.createElement({
         elementType: "button",
         text: `Sort by ${column}`,
         eventToAdd: () => {
           this.onSortCriteriaChanged(column);
+          // debugger;
         },
       });
     }
-
-    // this.titleArrow = this.createElementComponent.createSpan();
-    // this.dateArrow = this.createElementComponent.createSpan();
   }
 
   // setTitleArrow(sortDirection) {
@@ -34,17 +32,4 @@ export class SortControlUI {
   //   }
   // }
 
-  // setDateArrow(sortDirection) {
-  //   switch (sortDirection) {
-  //     case 1:
-  //       this.dateArrow.textContent = "\u2191";
-  //       break;
-  //     case -1:
-  //       this.dateArrow.textContent = "\u2193";
-  //       break;
-  //     default:
-  //       this.dateArrow.textContent = "";
-  //       break;
-  //   }
-  // }
 }

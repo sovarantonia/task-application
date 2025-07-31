@@ -617,23 +617,21 @@
   }
 
   class SortControlUI {
-    constructor({ containerId, onSortCriteriaChanged, columnList = [] }) {
+    constructor({ containerId, onSortCriteriaChanged, columnList  }) {
       this.onSortCriteriaChanged = onSortCriteriaChanged;
 
       this.createElementComponent = new CreateElementComponent(containerId);
 
-      for (let column of columnList) {
+      for (let column of columnList.keys()) {
         this.sortByColumnBtn = this.createElementComponent.createElement({
           elementType: "button",
           text: `Sort by ${column}`,
           eventToAdd: () => {
             this.onSortCriteriaChanged(column);
+            // debugger;
           },
         });
       }
-
-      // this.titleArrow = this.createElementComponent.createSpan();
-      // this.dateArrow = this.createElementComponent.createSpan();
     }
 
     // setTitleArrow(sortDirection) {
@@ -650,25 +648,12 @@
     //   }
     // }
 
-    // setDateArrow(sortDirection) {
-    //   switch (sortDirection) {
-    //     case 1:
-    //       this.dateArrow.textContent = "\u2191";
-    //       break;
-    //     case -1:
-    //       this.dateArrow.textContent = "\u2193";
-    //       break;
-    //     default:
-    //       this.dateArrow.textContent = "";
-    //       break;
-    //   }
-    // }
   }
 
   //** this creates the sorting criteria for the property propertyType */
   class SortCriteria {
-    constructor({ propertyType, direction = 0, onSortCriteriaCreated } = {}) {
-      this.sortOption = { property: propertyType, direction: direction };
+    constructor({ propertyType, direction = 0, priority = 0, onSortCriteriaCreated } = {}) {
+      this.sortOption = { property: propertyType, direction: direction, priority: priority };
 
       this.onSortCriteriaCreated = onSortCriteriaCreated;
     }
@@ -682,42 +667,62 @@
   }
 
   class SortCriteriaHandler {
-    constructor({ onNotifyPaginationHandler = null } = {}) {
+    constructor({ onNotifyPaginationHandler = null, columnList = [] } = {}) {
       this.sortCriteriaList = new Map();
+      for (let column of columnList) {
+        this.sortCriteriaList.set(column,
+          new SortCriteria({
+            propertyType: column,
+            onSortCriteriaCreated: (option) => this.setSortOption(option),
+          }),
+        );
+      }
       this.onNotifyPaginationHandler = onNotifyPaginationHandler;
     }
 
     setSortOption = (option) => {
-      this.sortCriteriaList.set(option.property, option.direction);
+      this.sortCriteriaList.set(option.property, {
+        direction: option.direction,
+        priority: this.getMaxPriority() + 1,
+      });
       const sortCriteria = this.sortCriteriaList
         .entries()
         .reduce((acc, [key, value]) => {
+          // console.log(value.direction)
+
           if (value != 0) {
             acc.push({
               property: key,
-              direction: value,
+              direction: value.direction,
+              priority: value.priority,
             });
           }
           return acc;
         }, []);
+      sortCriteria.sort((a, b) => b.priority - a.priority);
+      console.log(sortCriteria);
       this.onNotifyPaginationHandler(sortCriteria); // pass this list to pagination handler
     };
 
     onSortCriteriaChanged = (column) => {
-      let sortCriteria;
-      !this.sortCriteriaList.has(column)
-        ? (sortCriteria = new SortCriteria({
-            propertyType: column,
-            onSortCriteriaCreated: (option) => this.setSortOption(option),
-          }))
-        : (sortCriteria = new SortCriteria({
-            propertyType: column,
-            direction: this.sortCriteriaList.get(column),
-            onSortCriteriaCreated: (option) => this.setSortOption(option),
-          }));
+      // debugger;
+      const sortCriteria = this.sortCriteriaList.get(column);
 
       sortCriteria.setSortCriteria();
     };
+
+    getMaxPriority() {
+      // debugger;
+      const max = this.sortCriteriaList.entries().reduce((max, [key, value]) => {
+        if (value.priority >= max) {
+          max = value;
+        }
+        return max;
+      }, 0);
+      return max;
+
+      // console.log(Math.max(this.sortCriteriaList.values().priority))
+    }
   }
 
   class FilterCriteria {
@@ -880,6 +885,7 @@
 
       this.sortCriteriaHandler = new SortCriteriaHandler({
         onNotifyPaginationHandler: this.paginationHandler.onSortCriteriaChanged,
+        columnList : ["title", "date"]
       });
 
       this.filterCriteriaHandler = new FilterCriteriaHandler({
@@ -898,7 +904,7 @@
       this.sortTaskControlUI = new SortControlUI({
         containerId: "sortTaskContainer",
         onSortCriteriaChanged: this.sortCriteriaHandler.onSortCriteriaChanged,
-        columnList: ["title", "date"],
+        columnList: this.sortCriteriaHandler.sortCriteriaList,
       });
       this.filterTaskControlUI = new FilterControlUI({
         containerId: "filterTaskContainer",

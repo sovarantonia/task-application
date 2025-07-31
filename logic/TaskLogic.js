@@ -22,6 +22,7 @@ export class TaskLogic {
 
     this.sortCriteriaHandler = new SortCriteriaHandler({
       onNotifyPaginationHandler: this.paginationHandler.onSortCriteriaChanged,
+      columnList : ["title", "date"]
     });
 
     this.filterCriteriaHandler = new FilterCriteriaHandler({
@@ -40,7 +41,7 @@ export class TaskLogic {
     this.sortTaskControlUI = new SortControlUI({
       containerId: "sortTaskContainer",
       onSortCriteriaChanged: this.sortCriteriaHandler.onSortCriteriaChanged,
-      columnList: ["title", "date"],
+      columnList: this.sortCriteriaHandler.sortCriteriaList,
     });
     this.filterTaskControlUI = new FilterControlUI({
       containerId: "filterTaskContainer",
