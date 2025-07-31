@@ -45,11 +45,11 @@ export class PagerComponentUI {
     );
   }
 
-  updateSelect(currentPageNo, totalPages) {
-    updateSelectOptions(
-      this.selectCurrentPageNo,
-      Array.from({ length: totalPages }, (_, i) => i + 1),
-      currentPageNo,
-    );
+  updateSelect({currentPageNo, totalPages}) {
+    updateSelectOptions({
+      selectComponent: this.selectCurrentPageNo,
+      options: Array.from({ length: totalPages }, (_, i) => i + 1),
+      currentPage: currentPageNo,
+    });
   }
 }

@@ -1,12 +1,12 @@
-export function multiFieldFilter(criteria) {
+export function multiFieldFilter({criteria}) {
   const filterFunctions = criteria.map(({ property, value }) => {
     return (item) => item[property] === value;
   });
 
-  return combineFilterComparisonFunctions(filterFunctions);
+  return combineFilterComparisonFunctions({functions: filterFunctions});
 }
 
-export function combineFilterComparisonFunctions(functions) {
+export function combineFilterComparisonFunctions({functions}) {
   return (item) => {
     return functions.every((f) => f(item));
   };

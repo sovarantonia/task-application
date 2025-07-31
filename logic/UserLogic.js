@@ -21,11 +21,12 @@ export class UserLogic {
     });
 
     this.userPresentationUI = new UserPresentationUI("userContainer");
+    const { setItemsPerPage, setCurrentPageNo } = this.pagerData;
 
     this.pagerComponentUI = new PagerComponentUI({
       containerId: "userPageControls",
-      onItemsPerPageChange: this.pagerData.setItemsPerPage,
-      onCurrentPageChange: this.pagerData.setCurrentPageNo,
+      onItemsPerPageChange: setItemsPerPage,
+      onCurrentPageChange: setCurrentPageNo,
     });
     this.sortUserControlUI = new SortControlUI({
       containerId: "sortUserContainer",
@@ -36,16 +37,13 @@ export class UserLogic {
     // this.checkboxStateMap = new Map();
   }
 
-  onPaginationResponse = ({ paginatedItems, totalPages }) => {
-    this.userPresentationUI.renderUsers(
-      { paginatedItems, totalPages },
-      this.pagerData.currentPageNo,
-    );
+  onPaginationResponse = ({ paginatedItems, totalPages, currentPageNo }) => {
+    this.userPresentationUI.renderUsers({ paginatedItems });
 
-    this.pagerComponentUI.updateSelect(
-      this.pagerData.currentPageNo,
+    this.pagerComponentUI.updateSelect({
+      currentPageNo,
       totalPages,
-    );
+    });
   };
 
   init() {

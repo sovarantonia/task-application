@@ -217,11 +217,11 @@
     }
   }
 
-  function updateSelectOptions(
+  function updateSelectOptions({
     selectComponent,
     options = [],
     currentPage,
-  ) {
+  }) {
     let optionNo = selectComponent.options.length - 1;
     if (optionNo > 0) {
       for (let i = optionNo; i >= 0; i--) {
@@ -284,12 +284,12 @@
       );
     }
 
-    updateSelect(currentPageNo, totalPages) {
-      updateSelectOptions(
-        this.selectCurrentPageNo,
-        Array.from({ length: totalPages }, (_, i) => i + 1),
-        currentPageNo,
-      );
+    updateSelect({currentPageNo, totalPages}) {
+      updateSelectOptions({
+        selectComponent: this.selectCurrentPageNo,
+        options: Array.from({ length: totalPages }, (_, i) => i + 1),
+        currentPage: currentPageNo,
+      });
     }
   }
 
@@ -306,8 +306,7 @@
   }
 
   function getPaginatedElements(
-    elementList,
-    { currentPageNo, itemsPerPage },
+    { elementList, currentPageNo, itemsPerPage },
   ) {
     const start = (currentPageNo - 1) * itemsPerPage;
     const end = start + itemsPerPage;
@@ -315,11 +314,11 @@
     return elementList.slice(start, end);
   }
 
-  function getTotalPages(elementList, itemsPerPage) {
+  function getTotalPages({elementList, itemsPerPage}) {
     return Math.ceil(elementList.length / itemsPerPage);
   }
 
-  function combineComparisonFunctions(compareFunctions) {
+  function combineComparisonFunctions({compareFunctions}) {
     return (a, b) => {
       for (const compareFunction of compareFunctions) {
         const result = compareFunction(a, b);
@@ -331,7 +330,7 @@
     };
   }
 
-  function multiFieldSort(criteria) {
+  function multiFieldSort({criteria}) {
     const compareFunctions = criteria.map(({ property, direction }) => {
       return (a, b) => {
         if (a[property] === b[property]) return 0;
@@ -339,18 +338,18 @@
       };
     });
 
-    return combineComparisonFunctions(compareFunctions);
+    return combineComparisonFunctions({compareFunctions});
   }
 
-  function multiFieldFilter(criteria) {
+  function multiFieldFilter({criteria}) {
     const filterFunctions = criteria.map(({ property, value }) => {
       return (item) => item[property] === value;
     });
 
-    return combineFilterComparisonFunctions(filterFunctions);
+    return combineFilterComparisonFunctions({functions: filterFunctions});
   }
 
-  function combineFilterComparisonFunctions(functions) {
+  function combineFilterComparisonFunctions({functions}) {
     return (item) => {
       return functions.every((f) => f(item));
     };
@@ -403,27 +402,28 @@
       });
     }
 
-    getPaginatedItems(
-      { currentPageNo, itemsPerPage },
+    getPaginatedItems({
+      currentPageNo,
+      itemsPerPage,
       sortCriteria = [],
       filterCriteria = [],
-    ) {
+    }) {
       return new Promise((resolve) => {
         let items = [...this.objectList];
 
         if (filterCriteria.length > 0) {
-          items = items.filter(multiFieldFilter(filterCriteria));
+          items = items.filter(multiFieldFilter({criteria: filterCriteria}));
         }
 
         if (sortCriteria.length > 0) {
-          items = items.sort(multiFieldSort(sortCriteria));
+          items = items.sort(multiFieldSort({criteria: sortCriteria}));
         }
 
-        const paginatedItems = getPaginatedElements(items, {
+        const paginatedItems = getPaginatedElements({elementList: items,
           currentPageNo,
           itemsPerPage,
         });
-        const totalPages = getTotalPages(items, itemsPerPage);
+        const totalPages = getTotalPages({elementList: items, itemsPerPage});
 
         resolve({ paginatedItems, totalPages });
       });
@@ -453,16 +453,18 @@
       return this.service.update(id, props);
     }
 
-    getTasks = (
-      { currentPageNo, itemsPerPage },
+    getTasks = ({
+      currentPageNo,
+      itemsPerPage,
       sortCriteria = [],
       filterCriteria = [],
-    ) => {
-      return this.service.getPaginatedItems(
-        { currentPageNo, itemsPerPage },
+    }) => {
+      return this.service.getPaginatedItems({
+        currentPageNo,
+        itemsPerPage,
         sortCriteria,
         filterCriteria,
-      );
+      });
     };
   }
 
@@ -492,7 +494,7 @@
       target.append(this.pageIndicator);
     }
 
-    renderTasks = ({ paginatedItems, totalPages }, currentPageNo) => {
+    renderTasks = ({ paginatedItems }) => {
       renderTasks("taskPaginationContainer", paginatedItems);
     };
   }
@@ -508,25 +510,16 @@
     setItemsPerPage = (itemsPerPageNr) => {
       this.itemsPerPage = itemsPerPageNr;
       this.currentPageNo = 1;
-      this.onPagerDataChanged({
-        currentPageNo: this.currentPageNo,
-        itemsPerPageNo: this.itemsPerPage,
-      });
+      this.onPagerDataChanged();
     };
 
     setCurrentPageNo = (newPageNo) => {
       this.currentPageNo = newPageNo;
-      this.onPagerDataChanged({
-        currentPageNo: this.currentPageNo,
-        itemsPerPageNo: this.itemsPerPage,
-      });
+      this.onPagerDataChanged();
     };
 
     init() {
-      this.onPagerDataChanged({
-        currentPageNo: this.currentPageNo,
-        itemsPerPageNo: this.itemsPerPage,
-      });
+      this.onPagerDataChanged();
     }
   }
 
@@ -542,28 +535,38 @@
       // this.pagerComponent.onPrevious = this.onPrevious;
 
       this.pagerData = pagerData;
-      this.pagerData.onPagerDataChanged = () => this.getItems(this.pagerData);
+      this.currentPageNo = this.pagerData.currentPageNo;
+      this.itemsPerPage = this.pagerData.itemsPerPage;
+      this.pagerData.onPagerDataChanged = this.getPaginatedItems;
     }
 
     //calls the pagination function and passes the result to pagination response
-    getItems = ({ currentPageNo, itemsPerPage }) => {
+    getPaginatedItems = () => {
+      const { currentPageNo, itemsPerPage } = this.pagerData;
       this.paginationFunction({
-        currentPageNo,
-        itemsPerPage,
-      }, this.sortCriteria, this.filterCriteria).then(({ paginatedItems, totalPages }) => {
-        this.onPaginationResponse({ paginatedItems, totalPages });
+        currentPageNo: currentPageNo,
+        itemsPerPage: itemsPerPage,
+        sortCriteria: this.sortCriteria,
+        filterCriteria: this.filterCriteria,
+      }).then(({ paginatedItems, totalPages }) => {
+        this.onPaginationResponse({
+          paginatedItems,
+          totalPages,
+          currentPageNo,
+          itemsPerPage,
+        });
       });
     };
 
     onSortCriteriaChanged = (sortCriteria) => {
       this.sortCriteria = sortCriteria;
-      this.getItems(this.pagerData, this.sortCriteria, this.filterCriteria);
+      this.getPaginatedItems();
     };
 
     onFilterCriteriaChanged = (filterCriteria) => {
       this.filterCriteria = filterCriteria;
-      this.getItems(this.pagerData, this.sortCriteria, this.filterCriteria);
-    }
+      this.getPaginatedItems();
+    };
 
     // onNext = () => {
     //   //have to use pager data somehow
@@ -907,15 +910,14 @@
       });
     }
 
-    onPaginationResponse = ({ paginatedItems, totalPages }) => {
-      this.pagerComponentUI.updateSelect(
-        this.pagerData.currentPageNo,
-        totalPages,
-      );
-      this.taskPresentationUI.renderTasks(
-        { paginatedItems, totalPages },
-        this.pagerData.currentPageNo,
-      );
+    onPaginationResponse = ({
+      paginatedItems,
+      totalPages,
+      currentPageNo,
+      itemsPerPage,
+    }) => {
+      this.pagerComponentUI.updateSelect({currentPageNo, totalPages});
+      this.taskPresentationUI.renderTasks({ paginatedItems });
       // this.sortTaskControlUI.setTitleArrow(
       //   this.taskSortCriteria.titleSortDirection,
       // );
@@ -962,13 +964,13 @@
     }
   }
 
-  function renderUsers(users, containerId) {
+  function renderUsers({userList, containerId}) {
     const container = document.getElementById(containerId);
     // const createElementComponent = new CreateElementComponent(containerId);
 
     container.innerHTML = "";
 
-    users.forEach((element) => {
+    userList.forEach((element) => {
       const card = createElementComponent({ elementType: "div" });
       card.className = "user-card";
       // const checkbox = createElementComponent.createCheckbox({
@@ -994,7 +996,7 @@
       card.append(nameInfo, emailInfo, departmentInfo);
       container.appendChild(card);
     });
-    return users;
+    return userList;
   }
 
   class UserPresentationUI {
@@ -1002,8 +1004,8 @@
       this.containerId = containerId;
     }
 
-    renderUsers = ({ paginatedItems, totalPages }, currentPageNo) => {
-      renderUsers(paginatedItems, this.containerId);
+    renderUsers = ({ paginatedItems }) => {
+      renderUsers({ userList: paginatedItems, containerId: this.containerId });
     };
   }
 
@@ -1023,11 +1025,12 @@
       });
 
       this.userPresentationUI = new UserPresentationUI("userContainer");
+      const { setItemsPerPage, setCurrentPageNo } = this.pagerData;
 
       this.pagerComponentUI = new PagerComponentUI({
         containerId: "userPageControls",
-        onItemsPerPageChange: this.pagerData.setItemsPerPage,
-        onCurrentPageChange: this.pagerData.setCurrentPageNo,
+        onItemsPerPageChange: setItemsPerPage,
+        onCurrentPageChange: setCurrentPageNo,
       });
       this.sortUserControlUI = new SortControlUI({
         containerId: "sortUserContainer",
@@ -1038,16 +1041,13 @@
       // this.checkboxStateMap = new Map();
     }
 
-    onPaginationResponse = ({ paginatedItems, totalPages }) => {
-      this.userPresentationUI.renderUsers(
-        { paginatedItems, totalPages },
-        this.pagerData.currentPageNo,
-      );
+    onPaginationResponse = ({ paginatedItems, totalPages, currentPageNo }) => {
+      this.userPresentationUI.renderUsers({ paginatedItems });
 
-      this.pagerComponentUI.updateSelect(
-        this.pagerData.currentPageNo,
+      this.pagerComponentUI.updateSelect({
+        currentPageNo,
         totalPages,
-      );
+      });
     };
 
     init() {

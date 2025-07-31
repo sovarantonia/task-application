@@ -5,7 +5,7 @@ export class UserPresentationUI {
     this.containerId = containerId;
   }
 
-  renderUsers = ({ paginatedItems, totalPages }, currentPageNo) => {
-    renderUsers(paginatedItems, this.containerId);
+  renderUsers = ({ paginatedItems }) => {
+    renderUsers({ userList: paginatedItems, containerId: this.containerId });
   };
 }

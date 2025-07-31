@@ -10,28 +10,38 @@ export class PaginationHandler {
     // this.pagerComponent.onPrevious = this.onPrevious;
 
     this.pagerData = pagerData;
-    this.pagerData.onPagerDataChanged = () => this.getItems(this.pagerData);
+    this.currentPageNo = this.pagerData.currentPageNo;
+    this.itemsPerPage = this.pagerData.itemsPerPage;
+    this.pagerData.onPagerDataChanged = this.getPaginatedItems;
   }
 
   //calls the pagination function and passes the result to pagination response
-  getItems = ({ currentPageNo, itemsPerPage }) => {
+  getPaginatedItems = () => {
+    const { currentPageNo, itemsPerPage } = this.pagerData;
     this.paginationFunction({
-      currentPageNo,
-      itemsPerPage,
-    }, this.sortCriteria, this.filterCriteria).then(({ paginatedItems, totalPages }) => {
-      this.onPaginationResponse({ paginatedItems, totalPages });
+      currentPageNo: currentPageNo,
+      itemsPerPage: itemsPerPage,
+      sortCriteria: this.sortCriteria,
+      filterCriteria: this.filterCriteria,
+    }).then(({ paginatedItems, totalPages }) => {
+      this.onPaginationResponse({
+        paginatedItems,
+        totalPages,
+        currentPageNo,
+        itemsPerPage,
+      });
     });
   };
 
   onSortCriteriaChanged = (sortCriteria) => {
-    this.sortCriteria = sortCriteria
-    this.getItems(this.pagerData, this.sortCriteria, this.filterCriteria);
+    this.sortCriteria = sortCriteria;
+    this.getPaginatedItems();
   };
 
   onFilterCriteriaChanged = (filterCriteria) => {
     this.filterCriteria = filterCriteria;
-    this.getItems(this.pagerData, this.sortCriteria, this.filterCriteria)
-  }
+    this.getPaginatedItems();
+  };
 
   // onNext = () => {
   //   //have to use pager data somehow

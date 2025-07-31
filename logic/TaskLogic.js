@@ -54,15 +54,14 @@ export class TaskLogic {
     });
   }
 
-  onPaginationResponse = ({ paginatedItems, totalPages }) => {
-    this.pagerComponentUI.updateSelect(
-      this.pagerData.currentPageNo,
-      totalPages,
-    );
-    this.taskPresentationUI.renderTasks(
-      { paginatedItems, totalPages },
-      this.pagerData.currentPageNo,
-    );
+  onPaginationResponse = ({
+    paginatedItems,
+    totalPages,
+    currentPageNo,
+    itemsPerPage,
+  }) => {
+    this.pagerComponentUI.updateSelect({currentPageNo, totalPages});
+    this.taskPresentationUI.renderTasks({ paginatedItems });
     // this.sortTaskControlUI.setTitleArrow(
     //   this.taskSortCriteria.titleSortDirection,
     // );

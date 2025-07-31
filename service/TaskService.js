@@ -24,15 +24,17 @@ export class TaskService {
     return this.service.update(id, props);
   }
 
-  getTasks = (
-    { currentPageNo, itemsPerPage },
+  getTasks = ({
+    currentPageNo,
+    itemsPerPage,
     sortCriteria = [],
     filterCriteria = [],
-  ) => {
-    return this.service.getPaginatedItems(
-      { currentPageNo, itemsPerPage },
+  }) => {
+    return this.service.getPaginatedItems({
+      currentPageNo,
+      itemsPerPage,
       sortCriteria,
       filterCriteria,
-    );
+    });
   };
 }

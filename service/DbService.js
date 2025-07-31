@@ -49,27 +49,28 @@ export class DbService {
     });
   }
 
-  getPaginatedItems(
-    { currentPageNo, itemsPerPage },
+  getPaginatedItems({
+    currentPageNo,
+    itemsPerPage,
     sortCriteria = [],
     filterCriteria = [],
-  ) {
+  }) {
     return new Promise((resolve) => {
       let items = [...this.objectList];
 
       if (filterCriteria.length > 0) {
-        items = items.filter(multiFieldFilter(filterCriteria));
+        items = items.filter(multiFieldFilter({criteria: filterCriteria}));
       }
 
       if (sortCriteria.length > 0) {
-        items = items.sort(multiFieldSort(sortCriteria));
+        items = items.sort(multiFieldSort({criteria: sortCriteria}));
       }
 
-      const paginatedItems = getPaginatedElements(items, {
+      const paginatedItems = getPaginatedElements({elementList: items,
         currentPageNo,
         itemsPerPage,
       });
-      const totalPages = getTotalPages(items, itemsPerPage);
+      const totalPages = getTotalPages({elementList: items, itemsPerPage});
 
       resolve({ paginatedItems, totalPages });
     });

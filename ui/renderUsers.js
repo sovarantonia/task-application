@@ -1,12 +1,12 @@
 import { createElementComponent } from "../components/createElementComponentFunction";
 
-export function renderUsers(users, containerId) {
+export function renderUsers({userList, containerId}) {
   const container = document.getElementById(containerId);
   // const createElementComponent = new CreateElementComponent(containerId);
 
   container.innerHTML = "";
 
-  users.forEach((element) => {
+  userList.forEach((element) => {
     const card = createElementComponent({ elementType: "div" });
     card.className = "user-card";
     // const checkbox = createElementComponent.createCheckbox({
@@ -32,7 +32,7 @@ export function renderUsers(users, containerId) {
     card.append(nameInfo, emailInfo, departmentInfo);
     container.appendChild(card);
   });
-  return users;
+  return userList;
 }
 
 export function getCheckboxesState(checkboxState) {
