@@ -1,6 +1,6 @@
-export function updateSelectOptions({
+export function updatePageSelectOptions({
   selectComponent,
-  options = [],
+  totalPages,
   currentPage,
 }) {
   let optionNo = selectComponent.options.length - 1;
@@ -10,6 +10,8 @@ export function updateSelectOptions({
     }
   }
 
+  const options = Array.from({ length: totalPages }, (_, i) => i + 1);
+
   options.forEach((element) => {
     const opt = document.createElement("option");
     opt.value = element;
@@ -17,7 +19,7 @@ export function updateSelectOptions({
     selectComponent.append(opt);
   });
 
-  if (currentPage > 0) {
+  if (totalPages > 0) {
     selectComponent.options[currentPage - 1].selected = true;
   }
 }

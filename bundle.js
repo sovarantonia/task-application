@@ -217,9 +217,9 @@
     }
   }
 
-  function updateSelectOptions({
+  function updatePageSelectOptions({
     selectComponent,
-    options = [],
+    totalPages,
     currentPage,
   }) {
     let optionNo = selectComponent.options.length - 1;
@@ -229,6 +229,8 @@
       }
     }
 
+    const options = Array.from({ length: totalPages }, (_, i) => i + 1);
+
     options.forEach((element) => {
       const opt = document.createElement("option");
       opt.value = element;
@@ -236,7 +238,7 @@
       selectComponent.append(opt);
     });
 
-    if (currentPage > 0) {
+    if (totalPages > 0) {
       selectComponent.options[currentPage - 1].selected = true;
     }
   }
@@ -285,9 +287,9 @@
     }
 
     updateSelect({currentPageNo, totalPages}) {
-      updateSelectOptions({
+      updatePageSelectOptions({
         selectComponent: this.selectCurrentPageNo,
-        options: Array.from({ length: totalPages }, (_, i) => i + 1),
+        totalPages: totalPages,
         currentPage: currentPageNo,
       });
     }
