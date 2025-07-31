@@ -455,7 +455,7 @@
       return this.service.update(id, props);
     }
 
-    getTasks = ({
+    getPaginatedTasks = ({
       currentPageNo,
       itemsPerPage,
       sortCriteria = [],
@@ -873,7 +873,7 @@
       this.pagerData = new PagerData();
 
       this.paginationHandler = new PaginationHandler({
-        paginationFunction: this.taskService.getTasks,
+        paginationFunction: this.taskService.getPaginatedTasks,
         onPaginationResponse: this.onPaginationResponse,
         pagerData: this.pagerData,
       });
@@ -918,7 +918,7 @@
       currentPageNo,
       itemsPerPage,
     }) => {
-      this.pagerComponentUI.updateSelect({currentPageNo, totalPages});
+      this.pagerComponentUI.updateSelect({ currentPageNo, totalPages });
       this.taskPresentationUI.renderTasks({ paginatedItems });
       // this.sortTaskControlUI.setTitleArrow(
       //   this.taskSortCriteria.titleSortDirection,
@@ -938,7 +938,7 @@
       this.service = new DbService(userData);
     }
 
-    getUsers = (
+    getPaginatedUsers = (
       { currentPageNo, itemsPerPage },
       sortCriteria = [],
       filterCriteria = [],
@@ -1017,7 +1017,7 @@
       this.pagerData = new PagerData();
 
       this.paginationHandler = new PaginationHandler({
-        paginationFunction: this.userService.getUsers,
+        paginationFunction: this.userService.getPaginatedUsers,
         onPaginationResponse: this.onPaginationResponse,
         pagerData: this.pagerData,
       });

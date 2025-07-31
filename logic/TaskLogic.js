@@ -15,7 +15,7 @@ export class TaskLogic {
     this.pagerData = new PagerData();
 
     this.paginationHandler = new PaginationHandler({
-      paginationFunction: this.taskService.getTasks,
+      paginationFunction: this.taskService.getPaginatedTasks,
       onPaginationResponse: this.onPaginationResponse,
       pagerData: this.pagerData,
     });
@@ -60,7 +60,7 @@ export class TaskLogic {
     currentPageNo,
     itemsPerPage,
   }) => {
-    this.pagerComponentUI.updateSelect({currentPageNo, totalPages});
+    this.pagerComponentUI.updateSelect({ currentPageNo, totalPages });
     this.taskPresentationUI.renderTasks({ paginatedItems });
     // this.sortTaskControlUI.setTitleArrow(
     //   this.taskSortCriteria.titleSortDirection,

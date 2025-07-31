@@ -24,7 +24,7 @@ export class TaskService {
     return this.service.update(id, props);
   }
 
-  getTasks = ({
+  getPaginatedTasks = ({
     currentPageNo,
     itemsPerPage,
     sortCriteria = [],

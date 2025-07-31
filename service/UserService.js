@@ -5,7 +5,7 @@ export class UserService {
     this.service = new DbService(userData);
   }
 
-  getUsers = (
+  getPaginatedUsers = (
     { currentPageNo, itemsPerPage },
     sortCriteria = [],
     filterCriteria = [],

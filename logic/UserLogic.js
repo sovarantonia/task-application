@@ -11,7 +11,7 @@ export class UserLogic {
     this.pagerData = new PagerData();
 
     this.paginationHandler = new PaginationHandler({
-      paginationFunction: this.userService.getUsers,
+      paginationFunction: this.userService.getPaginatedUsers,
       onPaginationResponse: this.onPaginationResponse,
       pagerData: this.pagerData,
     });
