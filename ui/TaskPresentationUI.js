@@ -9,7 +9,7 @@ export class TaskPresentationUI {
     target.append(this.pageIndicator);
   }
 
-  renderTasks = ({ paginatedItems }) => {
-    renderTasks("taskPaginationContainer", paginatedItems);
+  renderTasks = ({ paginatedItems, userMap, statusMap }) => {
+    renderTasks({containerId: "taskPaginationContainer", taskList: paginatedItems, userMap, statusMap});
   };
 }

@@ -1,59 +1,43 @@
 import { SortCriteria } from "./SortCriteria";
 export class SortCriteriaHandler {
   constructor({ onNotifyPaginationHandler = null, columnList = [] } = {}) {
-    this.sortCriteriaList = new Map();
+    this.sortCriteriaInstances = new Map();
+
     for (let column of columnList) {
-      this.sortCriteriaList.set(column,
-        new SortCriteria({
-          propertyType: column,
-          onSortCriteriaCreated: (option) => this.setSortOption(option),
-        }),
-      );
+      const sortCriteria = new SortCriteria({
+        propertyType: column,
+        direction: 0,
+        priority: 0,
+        onSortCriteriaCreated: (option) => this.setSortOption(option),
+      });
+      this.sortCriteriaInstances.set(column, sortCriteria);
     }
+
+    this.lastPriority = 0;
     this.onNotifyPaginationHandler = onNotifyPaginationHandler;
   }
 
   setSortOption = (option) => {
-    this.sortCriteriaList.set(option.property, {
-      direction: option.direction,
-      priority: this.getMaxPriority() + 1,
-    });
-    const sortCriteria = this.sortCriteriaList
+    option.priority = ++this.lastPriority;
+    const sortCriteria = this.sortCriteriaInstances
       .entries()
       .reduce((acc, [key, value]) => {
-        // console.log(value.direction)
-
-        if (value != 0) {
+        const { direction, priority } = value.sortOption;
           acc.push({
             property: key,
-            direction: value.direction,
-            priority: value.priority,
+            direction: direction,
+            priority: priority,
           });
-        }
+  
         return acc;
-      }, []);
-    sortCriteria.sort((a, b) => b.priority - a.priority);
+      }, [])
+      .sort((a, b) => a.priority - b.priority);
     console.log(sortCriteria);
     this.onNotifyPaginationHandler(sortCriteria); // pass this list to pagination handler
   };
 
   onSortCriteriaChanged = (column) => {
-    // debugger;
-    const sortCriteria = this.sortCriteriaList.get(column);
-
+    const sortCriteria = this.sortCriteriaInstances.get(column);
     sortCriteria.setSortCriteria();
   };
-
-  getMaxPriority() {
-    // debugger;
-    const max = this.sortCriteriaList.entries().reduce((max, [key, value]) => {
-      if (value.priority >= max) {
-        max = value;
-      }
-      return max;
-    }, 0);
-    return max;
-
-    // console.log(Math.max(this.sortCriteriaList.values().priority))
-  }
 }

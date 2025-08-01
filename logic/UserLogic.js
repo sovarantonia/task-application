@@ -1,9 +1,7 @@
 import { UserService } from "../service/UserService";
 import { PagerData } from "./PagerData";
 import { PagerComponentUI } from "../ui/PagerComponentUI";
-import { SortControlUI } from "../ui/SortControlUI";
 import { PaginationHandler } from "./PaginationHandler";
-import { SortCriteriaHandler } from "./SortCriteriaHandler";
 import { UserPresentationUI } from "../ui/UserPresentationUI";
 export class UserLogic {
   constructor({ initialUserData = [] }) {
@@ -16,10 +14,6 @@ export class UserLogic {
       pagerData: this.pagerData,
     });
 
-    this.sortCriteriaHandler = new SortCriteriaHandler({
-      onNotifyPaginationHandler: this.paginationHandler.onSortCriteriaChanged,
-    });
-
     this.userPresentationUI = new UserPresentationUI("userContainer");
     const { setItemsPerPage, setCurrentPageNo } = this.pagerData;
 
@@ -28,11 +22,7 @@ export class UserLogic {
       onItemsPerPageChange: setItemsPerPage,
       onCurrentPageChange: setCurrentPageNo,
     });
-    this.sortUserControlUI = new SortControlUI({
-      containerId: "sortUserContainer",
-      onSortCriteriaChanged: this.sortCriteriaHandler.onSortCriteriaChanged,
-      columnList: ["user"],
-    });
+    
 
     // this.checkboxStateMap = new Map();
   }

@@ -41,8 +41,9 @@ export class TaskLogic {
     this.sortTaskControlUI = new SortControlUI({
       containerId: "sortTaskContainer",
       onSortCriteriaChanged: this.sortCriteriaHandler.onSortCriteriaChanged,
-      columnList: this.sortCriteriaHandler.sortCriteriaList,
+      columnMap: this.sortCriteriaHandler.sortCriteriaInstances,
     });
+
     this.filterTaskControlUI = new FilterControlUI({
       containerId: "filterTaskContainer",
       onFilterCriteriaChanged:
@@ -53,6 +54,9 @@ export class TaskLogic {
         { key: "id", value: "user" },
       ],
     });
+
+    this.userMap = new Map(initialUserData.map((user) => [user.id, user.user]));
+    this.statusMap = new Map(taskStatus.map((status) => [status.id, status.status]));
   }
 
   onPaginationResponse = ({
@@ -62,7 +66,7 @@ export class TaskLogic {
     itemsPerPage,
   }) => {
     this.pagerComponentUI.updateSelect({ currentPageNo, totalPages });
-    this.taskPresentationUI.renderTasks({ paginatedItems });
+    this.taskPresentationUI.renderTasks({ paginatedItems, userMap: this.userMap, statusMap: this.statusMap });
     // this.sortTaskControlUI.setTitleArrow(
     //   this.taskSortCriteria.titleSortDirection,
     // );

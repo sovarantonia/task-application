@@ -1,18 +1,17 @@
 import { CreateElementComponent } from "../components/CreateElementComponent";
 
 export class SortControlUI {
-  constructor({ containerId, onSortCriteriaChanged, columnList  }) {
+  constructor({ containerId, onSortCriteriaChanged, columnMap  }) {
     this.onSortCriteriaChanged = onSortCriteriaChanged;
 
     this.createElementComponent = new CreateElementComponent(containerId);
 
-    for (let column of columnList.keys()) {
+    for (let column of columnMap.keys()) {
       this.sortByColumnBtn = this.createElementComponent.createElement({
         elementType: "button",
         text: `Sort by ${column}`,
         eventToAdd: () => {
           this.onSortCriteriaChanged(column);
-          // debugger;
         },
       });
     }

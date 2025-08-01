@@ -470,17 +470,19 @@
     };
   }
 
-  function renderTasks(containerId, taskList) {
+  function renderTasks({containerId, taskList, userMap, statusMap}) {
     const container = document.getElementById(containerId);
       container.innerHTML = "";
-
       taskList.forEach((element) => {
+        const user = userMap.get(element.user);
+        const status = statusMap.get(element.status);
+        
         const card = document.createElement("div");
         card.className = "task-card";
         card.innerHTML = `<h2>${element.title}</h2>
-        <p>Status: ${element.status}</p>
+        <p>Status: ${status}</p>
         <p>${element.description}</p>
-        <p>Assigned to: ${element.user}</p>
+        <p>Assigned to: ${user}</p>
         <p>Created at: ${element.date}</p>`;
         container.appendChild(card);
       });
@@ -496,8 +498,8 @@
       target.append(this.pageIndicator);
     }
 
-    renderTasks = ({ paginatedItems }) => {
-      renderTasks("taskPaginationContainer", paginatedItems);
+    renderTasks = ({ paginatedItems, userMap, statusMap }) => {
+      renderTasks({containerId: "taskPaginationContainer", taskList: paginatedItems, userMap, statusMap});
     };
   }
 
@@ -617,18 +619,17 @@
   }
 
   class SortControlUI {
-    constructor({ containerId, onSortCriteriaChanged, columnList  }) {
+    constructor({ containerId, onSortCriteriaChanged, columnMap  }) {
       this.onSortCriteriaChanged = onSortCriteriaChanged;
 
       this.createElementComponent = new CreateElementComponent(containerId);
 
-      for (let column of columnList.keys()) {
+      for (let column of columnMap.keys()) {
         this.sortByColumnBtn = this.createElementComponent.createElement({
           elementType: "button",
           text: `Sort by ${column}`,
           eventToAdd: () => {
             this.onSortCriteriaChanged(column);
-            // debugger;
           },
         });
       }
@@ -652,9 +653,13 @@
 
   //** this creates the sorting criteria for the property propertyType */
   class SortCriteria {
-    constructor({ propertyType, direction = 0, priority = 0, onSortCriteriaCreated } = {}) {
+    constructor({
+      propertyType,
+      direction = 0,
+      priority = 0,
+      onSortCriteriaCreated,
+    } = {}) {
       this.sortOption = { property: propertyType, direction: direction, priority: priority };
-
       this.onSortCriteriaCreated = onSortCriteriaCreated;
     }
 
@@ -668,61 +673,45 @@
 
   class SortCriteriaHandler {
     constructor({ onNotifyPaginationHandler = null, columnList = [] } = {}) {
-      this.sortCriteriaList = new Map();
+      this.sortCriteriaInstances = new Map();
+
       for (let column of columnList) {
-        this.sortCriteriaList.set(column,
-          new SortCriteria({
-            propertyType: column,
-            onSortCriteriaCreated: (option) => this.setSortOption(option),
-          }),
-        );
+        const sortCriteria = new SortCriteria({
+          propertyType: column,
+          direction: 0,
+          priority: 0,
+          onSortCriteriaCreated: (option) => this.setSortOption(option),
+        });
+        this.sortCriteriaInstances.set(column, sortCriteria);
       }
+
+      this.lastPriority = 0;
       this.onNotifyPaginationHandler = onNotifyPaginationHandler;
     }
 
     setSortOption = (option) => {
-      this.sortCriteriaList.set(option.property, {
-        direction: option.direction,
-        priority: this.getMaxPriority() + 1,
-      });
-      const sortCriteria = this.sortCriteriaList
+      option.priority = ++this.lastPriority;
+      const sortCriteria = this.sortCriteriaInstances
         .entries()
         .reduce((acc, [key, value]) => {
-          // console.log(value.direction)
-
-          if (value != 0) {
+          const { direction, priority } = value.sortOption;
             acc.push({
               property: key,
-              direction: value.direction,
-              priority: value.priority,
+              direction: direction,
+              priority: priority,
             });
-          }
+    
           return acc;
-        }, []);
-      sortCriteria.sort((a, b) => b.priority - a.priority);
+        }, [])
+        .sort((a, b) => a.priority - b.priority);
       console.log(sortCriteria);
       this.onNotifyPaginationHandler(sortCriteria); // pass this list to pagination handler
     };
 
     onSortCriteriaChanged = (column) => {
-      // debugger;
-      const sortCriteria = this.sortCriteriaList.get(column);
-
+      const sortCriteria = this.sortCriteriaInstances.get(column);
       sortCriteria.setSortCriteria();
     };
-
-    getMaxPriority() {
-      // debugger;
-      const max = this.sortCriteriaList.entries().reduce((max, [key, value]) => {
-        if (value.priority >= max) {
-          max = value;
-        }
-        return max;
-      }, 0);
-      return max;
-
-      // console.log(Math.max(this.sortCriteriaList.values().priority))
-    }
   }
 
   class FilterCriteria {
@@ -904,8 +893,9 @@
       this.sortTaskControlUI = new SortControlUI({
         containerId: "sortTaskContainer",
         onSortCriteriaChanged: this.sortCriteriaHandler.onSortCriteriaChanged,
-        columnList: this.sortCriteriaHandler.sortCriteriaList,
+        columnMap: this.sortCriteriaHandler.sortCriteriaInstances,
       });
+
       this.filterTaskControlUI = new FilterControlUI({
         containerId: "filterTaskContainer",
         onFilterCriteriaChanged:
@@ -916,6 +906,9 @@
           { key: "id", value: "user" },
         ],
       });
+
+      this.userMap = new Map(initialUserData.map((user) => [user.id, user.user]));
+      this.statusMap = new Map(taskStatus.map((status) => [status.id, status.status]));
     }
 
     onPaginationResponse = ({
@@ -925,7 +918,7 @@
       itemsPerPage,
     }) => {
       this.pagerComponentUI.updateSelect({ currentPageNo, totalPages });
-      this.taskPresentationUI.renderTasks({ paginatedItems });
+      this.taskPresentationUI.renderTasks({ paginatedItems, userMap: this.userMap, statusMap: this.statusMap });
       // this.sortTaskControlUI.setTitleArrow(
       //   this.taskSortCriteria.titleSortDirection,
       // );
@@ -1028,10 +1021,6 @@
         pagerData: this.pagerData,
       });
 
-      this.sortCriteriaHandler = new SortCriteriaHandler({
-        onNotifyPaginationHandler: this.paginationHandler.onSortCriteriaChanged,
-      });
-
       this.userPresentationUI = new UserPresentationUI("userContainer");
       const { setItemsPerPage, setCurrentPageNo } = this.pagerData;
 
@@ -1040,11 +1029,7 @@
         onItemsPerPageChange: setItemsPerPage,
         onCurrentPageChange: setCurrentPageNo,
       });
-      this.sortUserControlUI = new SortControlUI({
-        containerId: "sortUserContainer",
-        onSortCriteriaChanged: this.sortCriteriaHandler.onSortCriteriaChanged,
-        columnList: ["user"],
-      });
+      
 
       // this.checkboxStateMap = new Map();
     }
