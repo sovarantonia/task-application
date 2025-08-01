@@ -32,8 +32,7 @@ export class SortCriteriaHandler {
         return acc;
       }, [])
       .sort((a, b) => a.priority - b.priority);
-    console.log(sortCriteria);
-    this.onNotifyPaginationHandler(sortCriteria); // pass this list to pagination handler
+    this.onNotifyPaginationHandler(sortCriteria);
   };
 
   onSortCriteriaChanged = (column) => {

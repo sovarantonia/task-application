@@ -1,8 +1,8 @@
 export class ButtonComponent {
-  createButton({ text = "", onClick = null}) {
+  createButton({ text = "", eventToAdd = null }) {
     const element = document.createElement("button");
     element.textContent = text;
-    element.addEventListener("click", onClick);
+    element.addEventListener("click", eventToAdd);
     return element;
   }
 }

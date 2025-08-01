@@ -1,4 +1,4 @@
-import { createElementComponent } from "../components/createElementComponentFunction";
+import { createElementComponent } from "../components/createElementComponent";
 import { SelectComponent } from "../components/SelectComponent";
 
 export class FilterControlUI {

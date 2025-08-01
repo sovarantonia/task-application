@@ -286,7 +286,7 @@
       );
     }
 
-    updateSelect({currentPageNo, totalPages}) {
+    updateSelect({ currentPageNo, totalPages }) {
       updatePageSelectOptions({
         selectComponent: this.selectCurrentPageNo,
         totalPages: totalPages,
@@ -490,7 +490,7 @@
   }
 
   class TaskPresentationUI {
-    constructor(containerId) {
+    constructor({ containerId }) {
       const target = document.getElementById(containerId);
       this.pageIndicator = createElementComponent({
         elementType: "span",
@@ -499,7 +499,12 @@
     }
 
     renderTasks = ({ paginatedItems, userMap, statusMap }) => {
-      renderTasks({containerId: "taskPaginationContainer", taskList: paginatedItems, userMap, statusMap});
+      renderTasks({
+        containerId: "taskPaginationContainer",
+        taskList: paginatedItems,
+        userMap,
+        statusMap,
+      });
     };
   }
 
@@ -588,67 +593,46 @@
     // };
   }
 
-  class CreateElementComponent {
-    constructor(containerId = null) {
-      this.target = document.getElementById(containerId);
-    }
-
-    createElement({ elementType = "", text = "", eventToAdd = null } = {}) {
-      let element = document.createElement(elementType);
-      switch (elementType) {
-        case "button":
-          element.textContent = text;
-          element.addEventListener("click", eventToAdd);
-          break;
-
-        case "span":
-          element.textContent = text;
-          break;
-
-        case "div":
-          break;
-
-        case "p":
-          element.innerText = text;
-          break;
-      }
-      this.target.append(element);
-
+  class ButtonComponent {
+    createButton({ text = "", eventToAdd = null }) {
+      const element = document.createElement("button");
+      element.textContent = text;
+      element.addEventListener("click", eventToAdd);
       return element;
     }
   }
 
   class SortControlUI {
-    constructor({ containerId, onSortCriteriaChanged, columnMap  }) {
+    constructor({ containerId, onSortCriteriaChanged, columnMap }) {
       this.onSortCriteriaChanged = onSortCriteriaChanged;
-
-      this.createElementComponent = new CreateElementComponent(containerId);
+      const target = document.getElementById(containerId);
+      const button = new ButtonComponent();
 
       for (let column of columnMap.keys()) {
-        this.sortByColumnBtn = this.createElementComponent.createElement({
-          elementType: "button",
+        this.sortByColumnBtn = button.createButton({
           text: `Sort by ${column}`,
           eventToAdd: () => {
             this.onSortCriteriaChanged(column);
           },
         });
+        target.append(this.sortByColumnBtn);
+        // this.sortByColumnBtn.textContent += this.setTitleArrow(
+        //   columnMap.get(column).direction,
+        // );
+        // console.log(columnMap.get(column).sortOption);
       }
     }
 
-    // setTitleArrow(sortDirection) {
-    //   switch (sortDirection) {
-    //     case 1:
-    //       this.titleArrow.textContent = "\u2191";
-    //       break;
-    //     case -1:
-    //       this.titleArrow.textContent = "\u2193";
-    //       break;
-    //     default:
-    //       this.titleArrow.textContent = "";
-    //       break;
-    //   }
-    // }
-
+    setArrows(sortDirection) {
+      switch (sortDirection) {
+        case 1:
+          return "\u2191";
+        case -1:
+          return "\u2193";
+        default:
+          return "";
+      }
+    }
   }
 
   //** this creates the sorting criteria for the property propertyType */
@@ -704,8 +688,7 @@
           return acc;
         }, [])
         .sort((a, b) => a.priority - b.priority);
-      console.log(sortCriteria);
-      this.onNotifyPaginationHandler(sortCriteria); // pass this list to pagination handler
+      this.onNotifyPaginationHandler(sortCriteria);
     };
 
     onSortCriteriaChanged = (column) => {
@@ -881,7 +864,7 @@
         onNotifyPaginationHandler: this.paginationHandler.onFilterCriteriaChanged,
       });
 
-      this.taskPresentationUI = new TaskPresentationUI("taskPageIndicator");
+      this.taskPresentationUI = new TaskPresentationUI({containerId: "taskPageIndicator"});
 
       const { setItemsPerPage, setCurrentPageNo } = this.pagerData;
       this.pagerComponentUI = new PagerComponentUI({
@@ -949,12 +932,10 @@
       );
     };
 
-    sendEmail(userList) {
+    sendEmail({userList}) {
       return new Promise((resolve) => {
         const infoList = userList.map((element) => {
-          const msg = `Sent mail to ${element.userName} (${element.email})`;
-          console.log(msg);
-          return msg;
+          return `Sent mail to ${element}`;
         });
         resolve(infoList);
       });
@@ -965,48 +946,127 @@
     }
   }
 
-  function renderUsers({userList, containerId}) {
-    const container = document.getElementById(containerId);
-    // const createElementComponent = new CreateElementComponent(containerId);
+  class CheckboxComponent {
+    createCheckbox({ value = "", eventToAdd = null }) {
+      const element = document.createElement("input");
+      element.type = "checkbox";
+      element.value = value;
+      element.addEventListener("click", eventToAdd);
+      
+      return element;
+    }
 
+    // renderSelectedItemNr(selectedItemNr) {
+    //   this.selectedItemNrSpan.innerText = `${selectedItemNr} user(s) selected`;
+    //   this.selectedItemNrSpan.hidden = selectedItemNr <= 0;
+    //   this.sendButton.disabled = selectedItemNr <= 0;
+    // }
+
+    // addContainer(containerId) {
+    //   const target = document.getElementById(containerId);
+    //   target.appendChild(this.container);
+    // }
+  }
+
+  function renderUsers({
+    userList,
+    containerId,
+    onCheckboxChecked = null,
+  }) {
+    const container = document.getElementById(containerId);
+    const checkbox = new CheckboxComponent();
     container.innerHTML = "";
 
     userList.forEach((element) => {
       const card = createElementComponent({ elementType: "div" });
       card.className = "user-card";
-      // const checkbox = createElementComponent.createCheckbox({
-      //   value: element.id,
-      //   eventToAdd: (e) => {
-      //     eventToAdd?.(e.target.value, e.target.checked);
-      //   },
-      // });
-      // checkbox.id = element.id;
+
+      const userCheckbox = checkbox.createCheckbox({
+        value: element.id,
+        eventToAdd: (e) => onCheckboxChecked({id :e.target.value, isChecked :e.target.checked}),
+      });
+      
       const nameInfo = createElementComponent({
         elementType: "p",
         text: `${element.user}`,
       });
+
       const emailInfo = createElementComponent({
         elementType: "p",
         text: `Email: ${element.email}`,
       });
+      
       const departmentInfo = createElementComponent({
         elementType: "p",
         text: `Department: ${element.department}`,
       });
 
-      card.append(nameInfo, emailInfo, departmentInfo);
+      card.append(userCheckbox, nameInfo, emailInfo, departmentInfo);
       container.appendChild(card);
     });
     return userList;
   }
 
   class UserPresentationUI {
-    constructor(containerId) {
+    constructor({ containerId, onCheckboxChecked = null }) {
       this.containerId = containerId;
+      this.onCheckboxChecked = onCheckboxChecked;
     }
 
     renderUsers = ({ paginatedItems }) => {
-      renderUsers({ userList: paginatedItems, containerId: this.containerId });
+      renderUsers({
+        userList: paginatedItems,
+        containerId: this.containerId,
+        onCheckboxChecked: this.onCheckboxChecked,
+      });
+    };
+  }
+
+  class SendEmailComponentUI {
+    constructor({ containerId, onUserListChanged = null, onUserListReceived = null }) {
+      this.onUserListChanged = onUserListChanged;
+      const target = document.getElementById(containerId);
+      const button = new ButtonComponent();
+
+      this.sendEmailButton = button.createButton({
+        text: "Send Email",
+        eventToAdd: () => {
+          const idList = onUserListReceived();
+          this.onUserListChanged({ idList: idList });
+        },
+      });
+
+
+      target.append(this.sendEmailButton);
+    }
+  }
+
+  class CheckboxHandler {
+    constructor() {
+      this.checkboxStateMap = new Map();
+    }
+
+    onCheckboxChecked = ({ id = null, isChecked = false }) => {
+      this.checkboxStateMap.set(id, isChecked);
+    };
+
+    getCheckedKeys = () => {
+      return Array.from(this.checkboxStateMap.entries())
+        .filter(([key, value]) => value === true)
+        .map(([key]) => key);
+    };
+  }
+
+  class SendEmailHandler {
+    constructor({ sendEmailFunction = null, onSendEmailResponse = null }) {
+      this.sendEmailFunction = sendEmailFunction;
+      this.onSendEmailResponse = onSendEmailResponse;
+    }
+
+    sendEmail = ({ idList }) => {
+      this.sendEmailFunction({ userList: idList }).then((userInfoList) => {
+        this.onSendEmailResponse({ userInfoList });
+      });
     };
   }
 
@@ -1021,7 +1081,24 @@
         pagerData: this.pagerData,
       });
 
-      this.userPresentationUI = new UserPresentationUI("userContainer");
+      this.checkboxHandler = new CheckboxHandler();
+
+      this.sendEmailHandler = new SendEmailHandler({
+        sendEmailFunction: this.userService.sendEmail,
+        onSendEmailResponse: this.onSendEmailResponse,
+      });
+
+      this.userPresentationUI = new UserPresentationUI({
+        containerId: "userContainer",
+        onCheckboxChecked: this.checkboxHandler.onCheckboxChecked,
+      });
+
+      this.sendEmailComponentUI = new SendEmailComponentUI({
+        containerId: "sendEmailActionControl",
+        onUserListChanged: this.sendEmailHandler.sendEmail,
+        onUserListReceived: this.checkboxHandler.getCheckedKeys,
+      });
+
       const { setItemsPerPage, setCurrentPageNo } = this.pagerData;
 
       this.pagerComponentUI = new PagerComponentUI({
@@ -1029,9 +1106,6 @@
         onItemsPerPageChange: setItemsPerPage,
         onCurrentPageChange: setCurrentPageNo,
       });
-      
-
-      // this.checkboxStateMap = new Map();
     }
 
     onPaginationResponse = ({ paginatedItems, totalPages, currentPageNo }) => {
@@ -1040,6 +1114,12 @@
       this.pagerComponentUI.updateSelect({
         currentPageNo,
         totalPages,
+      });
+    };
+
+    onSendEmailResponse = ({ userInfoList }) => {
+      userInfoList.forEach((message) => {
+        console.log(message);
       });
     };
 

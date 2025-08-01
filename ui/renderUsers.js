@@ -1,35 +1,40 @@
-import { createElementComponent } from "../components/createElementComponentFunction";
+import { CheckboxComponent } from "../components/CheckboxComponent";
+import { createElementComponent } from "../components/createElementComponent";
 
-export function renderUsers({userList, containerId}) {
+export function renderUsers({
+  userList,
+  containerId,
+  onCheckboxChecked = null,
+}) {
   const container = document.getElementById(containerId);
-  // const createElementComponent = new CreateElementComponent(containerId);
-
+  const checkbox = new CheckboxComponent();
   container.innerHTML = "";
 
   userList.forEach((element) => {
     const card = createElementComponent({ elementType: "div" });
     card.className = "user-card";
-    // const checkbox = createElementComponent.createCheckbox({
-    //   value: element.id,
-    //   eventToAdd: (e) => {
-    //     eventToAdd?.(e.target.value, e.target.checked);
-    //   },
-    // });
-    // checkbox.id = element.id;
+
+    const userCheckbox = checkbox.createCheckbox({
+      value: element.id,
+      eventToAdd: (e) => onCheckboxChecked({id :e.target.value, isChecked :e.target.checked}),
+    });
+    
     const nameInfo = createElementComponent({
       elementType: "p",
       text: `${element.user}`,
     });
+
     const emailInfo = createElementComponent({
       elementType: "p",
       text: `Email: ${element.email}`,
     });
+    
     const departmentInfo = createElementComponent({
       elementType: "p",
       text: `Department: ${element.department}`,
     });
 
-    card.append(nameInfo, emailInfo, departmentInfo);
+    card.append(userCheckbox, nameInfo, emailInfo, departmentInfo);
     container.appendChild(card);
   });
   return userList;

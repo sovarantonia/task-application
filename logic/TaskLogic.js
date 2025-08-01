@@ -29,7 +29,7 @@ export class TaskLogic {
       onNotifyPaginationHandler: this.paginationHandler.onFilterCriteriaChanged,
     });
 
-    this.taskPresentationUI = new TaskPresentationUI("taskPageIndicator");
+    this.taskPresentationUI = new TaskPresentationUI({containerId: "taskPageIndicator"});
 
     const { setItemsPerPage, setCurrentPageNo } = this.pagerData;
     this.pagerComponentUI = new PagerComponentUI({

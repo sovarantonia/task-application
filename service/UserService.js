@@ -17,12 +17,10 @@ export class UserService {
     );
   };
 
-  sendEmail(userList) {
+  sendEmail({userList}) {
     return new Promise((resolve) => {
       const infoList = userList.map((element) => {
-        const msg = `Sent mail to ${element.userName} (${element.email})`;
-        console.log(msg);
-        return msg;
+        return `Sent mail to ${element}`;
       });
       resolve(infoList);
     });

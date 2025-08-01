@@ -3,6 +3,9 @@ import { PagerData } from "./PagerData";
 import { PagerComponentUI } from "../ui/PagerComponentUI";
 import { PaginationHandler } from "./PaginationHandler";
 import { UserPresentationUI } from "../ui/UserPresentationUI";
+import { SendEmailComponentUI } from "../ui/SendEmailComponentUI";
+import { CheckboxHandler } from "./CheckboxHandler";
+import { SendEmailHandler } from "./SendEmailHandler";
 export class UserLogic {
   constructor({ initialUserData = [] }) {
     this.userService = new UserService(initialUserData);
@@ -14,7 +17,24 @@ export class UserLogic {
       pagerData: this.pagerData,
     });
 
-    this.userPresentationUI = new UserPresentationUI("userContainer");
+    this.checkboxHandler = new CheckboxHandler();
+
+    this.sendEmailHandler = new SendEmailHandler({
+      sendEmailFunction: this.userService.sendEmail,
+      onSendEmailResponse: this.onSendEmailResponse,
+    });
+
+    this.userPresentationUI = new UserPresentationUI({
+      containerId: "userContainer",
+      onCheckboxChecked: this.checkboxHandler.onCheckboxChecked,
+    });
+
+    this.sendEmailComponentUI = new SendEmailComponentUI({
+      containerId: "sendEmailActionControl",
+      onUserListChanged: this.sendEmailHandler.sendEmail,
+      onUserListReceived: this.checkboxHandler.getCheckedKeys,
+    });
+
     const { setItemsPerPage, setCurrentPageNo } = this.pagerData;
 
     this.pagerComponentUI = new PagerComponentUI({
@@ -22,9 +42,6 @@ export class UserLogic {
       onItemsPerPageChange: setItemsPerPage,
       onCurrentPageChange: setCurrentPageNo,
     });
-    
-
-    // this.checkboxStateMap = new Map();
   }
 
   onPaginationResponse = ({ paginatedItems, totalPages, currentPageNo }) => {
@@ -33,6 +50,12 @@ export class UserLogic {
     this.pagerComponentUI.updateSelect({
       currentPageNo,
       totalPages,
+    });
+  };
+
+  onSendEmailResponse = ({ userInfoList }) => {
+    userInfoList.forEach((message) => {
+      console.log(message);
     });
   };
 

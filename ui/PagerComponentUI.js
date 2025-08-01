@@ -1,4 +1,4 @@
-import { createElementComponent } from "../components/createElementComponentFunction";
+import { createElementComponent } from "../components/createElementComponent";
 import { SelectComponent } from "../components/SelectComponent";
 import { updatePageSelectOptions } from "../logic/updatePageSelect";
 
@@ -45,7 +45,7 @@ export class PagerComponentUI {
     );
   }
 
-  updateSelect({currentPageNo, totalPages}) {
+  updateSelect({ currentPageNo, totalPages }) {
     updatePageSelectOptions({
       selectComponent: this.selectCurrentPageNo,
       totalPages: totalPages,
