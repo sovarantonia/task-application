@@ -1,12 +1,14 @@
 export class CheckboxHandler {
-  constructor({ objectList = [] }) {
+  constructor({ objectList = [], onCheckboxChanged }) {
     this.checkboxStateMap = new Map();
     for (const obj of objectList) {
-      this.checkboxStateMap.set(
-        { id: obj.id, name: obj.user, email: obj.email },
-        false,
-      );
+      this.checkboxStateMap.set(obj.id, {
+        name: obj.user,
+        email: obj.email,
+        isChecked: false,
+      });
     }
+    this.onCheckboxChanged = onCheckboxChanged;
   }
 
   onCheckboxChecked = ({
@@ -15,12 +17,13 @@ export class CheckboxHandler {
     email = "",
     isChecked = false,
   }) => {
-    this.checkboxStateMap.set({ id, name, email }, isChecked);
+    this.checkboxStateMap.set(id, { name, email, isChecked });
+    this.onCheckboxChanged(this.checkboxStateMap);
   };
 
   getCheckedKeys = () => {
     return Array.from(this.checkboxStateMap.entries())
-      .filter(([key, value]) => value === true)
-      .map(([key]) => key);
+      .filter(([key, value]) => value.isChecked === true)
+      .map((value) => value[1]);
   };
 }

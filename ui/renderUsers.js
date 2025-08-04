@@ -13,7 +13,7 @@ export function renderUsers({
     const card = createElementComponent({ elementType: "div" });
     card.className = "user-card";
 
-   const userCheckbox = createCheckbox({
+    const userCheckbox = createCheckbox({
       id: element.id,
       value: element.id,
       onChange: (e) =>
@@ -44,14 +44,4 @@ export function renderUsers({
     container.appendChild(card);
   });
   return userList;
-}
-
-export function getCheckboxesState  (checkboxState) {
-  for (const user of checkboxState.keys()) {
-    const id = user.id;
-    const checkbox = document.getElementById(id);
-    if (checkbox) {
-      checkbox.checked = checkboxState.get(id);
-    }
-  }
 }

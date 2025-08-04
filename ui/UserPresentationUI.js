@@ -13,4 +13,14 @@ export class UserPresentationUI {
       onCheckboxChecked: this.onCheckboxChecked,
     });
   };
+
+  renderCheckedCheckboxes = ({ checkboxState }) => {
+    for (const user of checkboxState.keys()) {
+      const id = user.id;
+      const checkbox = document.getElementById(id);
+      if (checkbox) {
+        checkbox.checked = checkboxState.get(id).isChecked;
+      }
+    }
+  };
 }

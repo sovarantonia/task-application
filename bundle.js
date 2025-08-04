@@ -540,12 +540,8 @@
     } = {}) {
       this.paginationFunction = paginationFunction;
       this.onPaginationResponse = onPaginationResponse;
-      // this.pagerComponent.onNext = this.onNext;
-      // this.pagerComponent.onPrevious = this.onPrevious;
 
       this.pagerData = pagerData;
-      this.currentPageNo = this.pagerData.currentPageNo;
-      this.itemsPerPage = this.pagerData.itemsPerPage;
       this.pagerData.onPagerDataChanged = this.getPaginatedItems;
     }
 
@@ -576,21 +572,6 @@
       this.filterCriteria = filterCriteria;
       this.getPaginatedItems();
     };
-
-    // onNext = () => {
-    //   //have to use pager data somehow
-    //   if (this.pagerData.currentPageNo < this.totalPages) {
-    //     this.pagerData.currentPageNo++;
-    //   }
-    //   this.getItems();
-    // };
-
-    // onPrevious = () => {
-    //   if (this.pagerData.currentPageNo > 1) {
-    //     this.pagerData.currentPageNo--;
-    //   }
-    //   this.getItems();
-    // };
   }
 
   function createButton({ text = "", onClick = null }) {
@@ -854,14 +835,16 @@
 
       this.sortCriteriaHandler = new SortCriteriaHandler({
         onNotifyPaginationHandler: this.paginationHandler.onSortCriteriaChanged,
-        columnList : ["title", "date"]
+        columnList: ["title", "date"],
       });
 
       this.filterCriteriaHandler = new FilterCriteriaHandler({
         onNotifyPaginationHandler: this.paginationHandler.onFilterCriteriaChanged,
       });
 
-      this.taskPresentationUI = new TaskPresentationUI({containerId: "taskPageIndicator"});
+      this.taskPresentationUI = new TaskPresentationUI({
+        containerId: "taskPageIndicator",
+      });
 
       const { setItemsPerPage, setCurrentPageNo } = this.pagerData;
       this.pagerComponentUI = new PagerComponentUI({
@@ -888,7 +871,9 @@
       });
 
       this.userMap = new Map(initialUserData.map((user) => [user.id, user.user]));
-      this.statusMap = new Map(taskStatus.map((status) => [status.id, status.status]));
+      this.statusMap = new Map(
+        taskStatus.map((status) => [status.id, status.status]),
+      );
     }
 
     onPaginationResponse = ({
@@ -898,7 +883,11 @@
       itemsPerPage,
     }) => {
       this.pagerComponentUI.updateSelect({ currentPageNo, totalPages });
-      this.taskPresentationUI.renderTasks({ paginatedItems, userMap: this.userMap, statusMap: this.statusMap });
+      this.taskPresentationUI.renderTasks({
+        paginatedItems,
+        userMap: this.userMap,
+        statusMap: this.statusMap,
+      });
       // this.sortTaskControlUI.setTitleArrow(
       //   this.taskSortCriteria.titleSortDirection,
       // );
@@ -943,7 +932,7 @@
     }
   }
 
-  function createCheckbox({ id = null, value = "", onChange = null }) {
+  function createCheckbox({ id = null, value = "", onChange = null}) {
     const element = document.createElement("input");
     element.type = "checkbox";
     element.value = value;
@@ -965,7 +954,7 @@
       const card = createElementComponent({ elementType: "div" });
       card.className = "user-card";
 
-     const userCheckbox = createCheckbox({
+      const userCheckbox = createCheckbox({
         id: element.id,
         value: element.id,
         onChange: (e) =>
@@ -1011,6 +1000,16 @@
         onCheckboxChecked: this.onCheckboxChecked,
       });
     };
+
+    renderCheckedCheckboxes = ({ checkboxState }) => {
+      for (const user of checkboxState.keys()) {
+        const id = user.id;
+        const checkbox = document.getElementById(id);
+        if (checkbox) {
+          checkbox.checked = checkboxState.get(id).isChecked;
+        }
+      }
+    };
   }
 
   class SendEmailComponentUI {
@@ -1044,14 +1043,16 @@
   }
 
   class CheckboxHandler {
-    constructor({ objectList = [] }) {
+    constructor({ objectList = [], onCheckboxChanged }) {
       this.checkboxStateMap = new Map();
       for (const obj of objectList) {
-        this.checkboxStateMap.set(
-          { id: obj.id, name: obj.user, email: obj.email },
-          false,
-        );
+        this.checkboxStateMap.set(obj.id, {
+          name: obj.user,
+          email: obj.email,
+          isChecked: false,
+        });
       }
+      this.onCheckboxChanged = onCheckboxChanged;
     }
 
     onCheckboxChecked = ({
@@ -1060,13 +1061,14 @@
       email = "",
       isChecked = false,
     }) => {
-      this.checkboxStateMap.set({ id, name, email }, isChecked);
+      this.checkboxStateMap.set(id, { name, email, isChecked });
+      this.onCheckboxChanged(this.checkboxStateMap);
     };
 
     getCheckedKeys = () => {
       return Array.from(this.checkboxStateMap.entries())
-        .filter(([key, value]) => value === true)
-        .map(([key]) => key);
+        .filter(([key, value]) => value.isChecked === true)
+        .map((value) => value[1]);
     };
   }
 
@@ -1083,6 +1085,18 @@
     };
   }
 
+  class CheckboxCheckUI {
+    renderCheckboxChecks = (checkboxStateMap) => {
+      for (const id of checkboxStateMap.keys()) {
+        const checkbox = document.getElementById(id);
+        if (checkbox) {
+          const details = checkboxStateMap.get(id);
+          checkbox.checked = details.isChecked;
+        }
+      }
+    };
+  }
+
   class UserLogic {
     constructor({ initialUserData = [] }) {
       this.userService = new UserService(initialUserData);
@@ -1094,11 +1108,16 @@
         pagerData: this.pagerData,
       });
 
-      this.checkboxHandler = new CheckboxHandler({objectList: initialUserData});
-
       this.sendEmailHandler = new SendEmailHandler({
         sendEmailFunction: this.userService.sendEmail,
         onSendEmailResponse: this.onSendEmailResponse,
+      });
+
+      this.checkboxCheckUI = new CheckboxCheckUI();
+
+      this.checkboxHandler = new CheckboxHandler({
+        objectList: initialUserData,
+        onCheckboxChanged: this.checkboxCheckUI.renderCheckboxChecks
       });
 
       this.userPresentationUI = new UserPresentationUI({
@@ -1128,7 +1147,13 @@
         currentPageNo,
         totalPages,
       });
-      // getCheckboxesState(this.checkboxHandler.checkboxStateMap)
+
+      this.userPresentationUI.renderCheckedCheckboxes({
+        checkboxState: this.checkboxHandler.checkboxStateMap,
+      });
+
+      this.checkboxCheckUI.renderCheckboxChecks(this.checkboxHandler.checkboxStateMap);
+
     };
 
     onSendEmailResponse = ({ userInfoList }) => {

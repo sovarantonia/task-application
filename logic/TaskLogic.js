@@ -1,11 +1,11 @@
 import { PagerComponentUI } from "../ui/PagerComponentUI";
 import { TaskService } from "../service/TaskService";
 import { TaskPresentationUI } from "../ui/TaskPresentationUI";
-import { PagerData } from "./PagerData";
-import { PaginationHandler } from "./PaginationHandler";
+import { PagerData } from "./pager/PagerData";
+import { PaginationHandler } from "./pager/PaginationHandler";
 import { SortControlUI } from "../ui/SortControlUI";
-import { SortCriteriaHandler } from "./SortCriteriaHandler";
-import { FilterCriteriaHandler } from "./FilterCriteriaHandler";
+import { SortCriteriaHandler } from "../logic/sort/SortCriteriaHandler";
+import { FilterCriteriaHandler } from "../logic/filter/FilterCriteriaHandler";
 import { FilterControlUI } from "../ui/FilterControlUI";
 import { taskStatus } from "../data/taskStatus";
 import { initialUserData } from "../data/initialUserData";
@@ -22,14 +22,16 @@ export class TaskLogic {
 
     this.sortCriteriaHandler = new SortCriteriaHandler({
       onNotifyPaginationHandler: this.paginationHandler.onSortCriteriaChanged,
-      columnList : ["title", "date"]
+      columnList: ["title", "date"],
     });
 
     this.filterCriteriaHandler = new FilterCriteriaHandler({
       onNotifyPaginationHandler: this.paginationHandler.onFilterCriteriaChanged,
     });
 
-    this.taskPresentationUI = new TaskPresentationUI({containerId: "taskPageIndicator"});
+    this.taskPresentationUI = new TaskPresentationUI({
+      containerId: "taskPageIndicator",
+    });
 
     const { setItemsPerPage, setCurrentPageNo } = this.pagerData;
     this.pagerComponentUI = new PagerComponentUI({
@@ -56,7 +58,9 @@ export class TaskLogic {
     });
 
     this.userMap = new Map(initialUserData.map((user) => [user.id, user.user]));
-    this.statusMap = new Map(taskStatus.map((status) => [status.id, status.status]));
+    this.statusMap = new Map(
+      taskStatus.map((status) => [status.id, status.status]),
+    );
   }
 
   onPaginationResponse = ({
@@ -66,7 +70,11 @@ export class TaskLogic {
     itemsPerPage,
   }) => {
     this.pagerComponentUI.updateSelect({ currentPageNo, totalPages });
-    this.taskPresentationUI.renderTasks({ paginatedItems, userMap: this.userMap, statusMap: this.statusMap });
+    this.taskPresentationUI.renderTasks({
+      paginatedItems,
+      userMap: this.userMap,
+      statusMap: this.statusMap,
+    });
     // this.sortTaskControlUI.setTitleArrow(
     //   this.taskSortCriteria.titleSortDirection,
     // );

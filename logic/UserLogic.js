@@ -7,6 +7,7 @@ import { SendEmailComponentUI } from "../ui/SendEmailComponentUI";
 import { CheckboxHandler } from "./CheckboxHandler";
 import { SendEmailHandler } from "./SendEmailHandler";
 import { getCheckboxesState } from "../ui/renderUsers";
+import { CheckboxCheckUI } from "../ui/CheckboxCheckUI";
 export class UserLogic {
   constructor({ initialUserData = [] }) {
     this.userService = new UserService(initialUserData);
@@ -18,11 +19,16 @@ export class UserLogic {
       pagerData: this.pagerData,
     });
 
-    this.checkboxHandler = new CheckboxHandler({ objectList: initialUserData });
-
     this.sendEmailHandler = new SendEmailHandler({
       sendEmailFunction: this.userService.sendEmail,
       onSendEmailResponse: this.onSendEmailResponse,
+    });
+
+    this.checkboxCheckUI = new CheckboxCheckUI();
+
+    this.checkboxHandler = new CheckboxHandler({
+      objectList: initialUserData,
+      onCheckboxChanged: this.checkboxCheckUI.renderCheckboxChecks
     });
 
     this.userPresentationUI = new UserPresentationUI({
@@ -52,7 +58,13 @@ export class UserLogic {
       currentPageNo,
       totalPages,
     });
-    getCheckboxesState(this.checkboxHandler.checkboxStateMap);
+
+    this.userPresentationUI.renderCheckedCheckboxes({
+      checkboxState: this.checkboxHandler.checkboxStateMap,
+    });
+
+    this.checkboxCheckUI.renderCheckboxChecks(this.checkboxHandler.checkboxStateMap)
+
   };
 
   onSendEmailResponse = ({ userInfoList }) => {
