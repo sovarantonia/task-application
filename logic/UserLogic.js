@@ -1,11 +1,12 @@
 import { UserService } from "../service/UserService";
-import { PagerData } from "./PagerData";
+import { PagerData } from "../logic/pager/PagerData";
+import { PaginationHandler } from "../logic/pager/PaginationHandler";
 import { PagerComponentUI } from "../ui/PagerComponentUI";
-import { PaginationHandler } from "./PaginationHandler";
 import { UserPresentationUI } from "../ui/UserPresentationUI";
 import { SendEmailComponentUI } from "../ui/SendEmailComponentUI";
 import { CheckboxHandler } from "./CheckboxHandler";
 import { SendEmailHandler } from "./SendEmailHandler";
+import { getCheckboxesState } from "../ui/renderUsers";
 export class UserLogic {
   constructor({ initialUserData = [] }) {
     this.userService = new UserService(initialUserData);
@@ -17,7 +18,7 @@ export class UserLogic {
       pagerData: this.pagerData,
     });
 
-    this.checkboxHandler = new CheckboxHandler();
+    this.checkboxHandler = new CheckboxHandler({ objectList: initialUserData });
 
     this.sendEmailHandler = new SendEmailHandler({
       sendEmailFunction: this.userService.sendEmail,
@@ -51,6 +52,7 @@ export class UserLogic {
       currentPageNo,
       totalPages,
     });
+    getCheckboxesState(this.checkboxHandler.checkboxStateMap);
   };
 
   onSendEmailResponse = ({ userInfoList }) => {
@@ -62,28 +64,4 @@ export class UserLogic {
   init() {
     this.pagerData.init();
   }
-
-  // onSelect = (userId, isChecked) => {
-  //   isChecked
-  //     ? this.checkboxStateMap.set(userId, isChecked)
-  //     : this.checkboxStateMap.delete(userId);
-  //   this.checkboxSelectComponent.renderSelectedItemNr(
-  //     this.checkboxStateMap.size,
-  //   );
-  // };
-
-  // onClick = () => {
-  //   const promises = [];
-  //   for (const id of this.checkboxStateMap.keys()) {
-  //     promises.push(this.userService.getById(id));
-  //   }
-
-  //   Promise.all(promises)
-  //     .then((userInfoList) => {
-  //       return this.userService.sendEmail(userInfoList);
-  //     })
-  //     .then((messages) => {
-  //       messages;
-  //     });
-  // };
 }

@@ -593,25 +593,22 @@
     // };
   }
 
-  class ButtonComponent {
-    createButton({ text = "", eventToAdd = null }) {
-      const element = document.createElement("button");
-      element.textContent = text;
-      element.addEventListener("click", eventToAdd);
-      return element;
-    }
+  function createButton({ text = "", onClick = null }) {
+    const element = document.createElement("button");
+    element.textContent = text;
+    element.addEventListener("click", onClick);
+    return element;
   }
 
   class SortControlUI {
     constructor({ containerId, onSortCriteriaChanged, columnMap }) {
       this.onSortCriteriaChanged = onSortCriteriaChanged;
       const target = document.getElementById(containerId);
-      const button = new ButtonComponent();
 
       for (let column of columnMap.keys()) {
-        this.sortByColumnBtn = button.createButton({
+        this.sortByColumnBtn = createButton({
           text: `Sort by ${column}`,
-          eventToAdd: () => {
+          onClick: () => {
             this.onSortCriteriaChanged(column);
           },
         });
@@ -935,7 +932,7 @@
     sendEmail({userList}) {
       return new Promise((resolve) => {
         const infoList = userList.map((element) => {
-          return `Sent mail to ${element}`;
+          return `Sent mail to ${element.name} (${element.email})`;
         });
         resolve(infoList);
       });
@@ -946,26 +943,14 @@
     }
   }
 
-  class CheckboxComponent {
-    createCheckbox({ value = "", eventToAdd = null }) {
-      const element = document.createElement("input");
-      element.type = "checkbox";
-      element.value = value;
-      element.addEventListener("click", eventToAdd);
-      
-      return element;
-    }
+  function createCheckbox({ id = null, value = "", onChange = null }) {
+    const element = document.createElement("input");
+    element.type = "checkbox";
+    element.value = value;
+    element.id = id;
+    element.addEventListener("change", onChange);
 
-    // renderSelectedItemNr(selectedItemNr) {
-    //   this.selectedItemNrSpan.innerText = `${selectedItemNr} user(s) selected`;
-    //   this.selectedItemNrSpan.hidden = selectedItemNr <= 0;
-    //   this.sendButton.disabled = selectedItemNr <= 0;
-    // }
-
-    // addContainer(containerId) {
-    //   const target = document.getElementById(containerId);
-    //   target.appendChild(this.container);
-    // }
+    return element;
   }
 
   function renderUsers({
@@ -974,18 +959,24 @@
     onCheckboxChecked = null,
   }) {
     const container = document.getElementById(containerId);
-    const checkbox = new CheckboxComponent();
     container.innerHTML = "";
 
     userList.forEach((element) => {
       const card = createElementComponent({ elementType: "div" });
       card.className = "user-card";
 
-      const userCheckbox = checkbox.createCheckbox({
+     const userCheckbox = createCheckbox({
+        id: element.id,
         value: element.id,
-        eventToAdd: (e) => onCheckboxChecked({id :e.target.value, isChecked :e.target.checked}),
+        onChange: (e) =>
+          onCheckboxChecked({
+            id: e.target.value,
+            name: element.user,
+            email: element.email,
+            isChecked: e.target.checked,
+          }),
       });
-      
+
       const nameInfo = createElementComponent({
         elementType: "p",
         text: `${element.user}`,
@@ -995,7 +986,7 @@
         elementType: "p",
         text: `Email: ${element.email}`,
       });
-      
+
       const departmentInfo = createElementComponent({
         elementType: "p",
         text: `Department: ${element.department}`,
@@ -1023,31 +1014,53 @@
   }
 
   class SendEmailComponentUI {
-    constructor({ containerId, onUserListChanged = null, onUserListReceived = null }) {
+    constructor({
+      containerId,
+      onUserListChanged = null,
+      onUserListReceived = null,
+    }) {
       this.onUserListChanged = onUserListChanged;
       const target = document.getElementById(containerId);
-      const button = new ButtonComponent();
+      this.onUserListReceived = onUserListReceived;
 
-      this.sendEmailButton = button.createButton({
+      this.sendEmailButton = createButton({
         text: "Send Email",
-        eventToAdd: () => {
-          const idList = onUserListReceived();
+        onClick: () => {
+          const idList = this.onUserListReceived();
           this.onUserListChanged({ idList: idList });
         },
       });
 
-
       target.append(this.sendEmailButton);
     }
+
+    // renderSelectedCheckboxes = () => {
+    //   const idList = this.onUserListReceived();
+    //   for (let id of idList) {
+    //     const checkbox = document.getElementById(id);
+    //     checkbox.checked = true;
+    //   }
+    // };
   }
 
   class CheckboxHandler {
-    constructor() {
+    constructor({ objectList = [] }) {
       this.checkboxStateMap = new Map();
+      for (const obj of objectList) {
+        this.checkboxStateMap.set(
+          { id: obj.id, name: obj.user, email: obj.email },
+          false,
+        );
+      }
     }
 
-    onCheckboxChecked = ({ id = null, isChecked = false }) => {
-      this.checkboxStateMap.set(id, isChecked);
+    onCheckboxChecked = ({
+      id = null,
+      name = "",
+      email = "",
+      isChecked = false,
+    }) => {
+      this.checkboxStateMap.set({ id, name, email }, isChecked);
     };
 
     getCheckedKeys = () => {
@@ -1081,7 +1094,7 @@
         pagerData: this.pagerData,
       });
 
-      this.checkboxHandler = new CheckboxHandler();
+      this.checkboxHandler = new CheckboxHandler({objectList: initialUserData});
 
       this.sendEmailHandler = new SendEmailHandler({
         sendEmailFunction: this.userService.sendEmail,
@@ -1115,6 +1128,7 @@
         currentPageNo,
         totalPages,
       });
+      // getCheckboxesState(this.checkboxHandler.checkboxStateMap)
     };
 
     onSendEmailResponse = ({ userInfoList }) => {
@@ -1126,30 +1140,6 @@
     init() {
       this.pagerData.init();
     }
-
-    // onSelect = (userId, isChecked) => {
-    //   isChecked
-    //     ? this.checkboxStateMap.set(userId, isChecked)
-    //     : this.checkboxStateMap.delete(userId);
-    //   this.checkboxSelectComponent.renderSelectedItemNr(
-    //     this.checkboxStateMap.size,
-    //   );
-    // };
-
-    // onClick = () => {
-    //   const promises = [];
-    //   for (const id of this.checkboxStateMap.keys()) {
-    //     promises.push(this.userService.getById(id));
-    //   }
-
-    //   Promise.all(promises)
-    //     .then((userInfoList) => {
-    //       return this.userService.sendEmail(userInfoList);
-    //     })
-    //     .then((messages) => {
-    //       messages;
-    //     });
-    // };
   }
 
   document.addEventListener("DOMContentLoaded", () => {

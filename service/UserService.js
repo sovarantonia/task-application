@@ -20,7 +20,7 @@ export class UserService {
   sendEmail({userList}) {
     return new Promise((resolve) => {
       const infoList = userList.map((element) => {
-        return `Sent mail to ${element}`;
+        return `Sent mail to ${element.name} (${element.email})`;
       });
       resolve(infoList);
     });

@@ -1,8 +1,10 @@
 {
   "name": "task-application",
   "version": "1.0.0",
+  "type": "module",
   "scripts": {
-    "start": "concurrently \"npx live-server\" \"npx rollup Main.js --file bundle.js --format iife --watch\""
+    "start": "concurrently \"npx live-server\" \"npx rollup Main.js --file bundle.js --format iife --watch\"",
+    "test": "jasmine"
   },
   "dependencies": {
     "eslint": "^8.57.1",
@@ -10,6 +12,7 @@
     "prettier-eslint": "^16.4.2"
   },
   "devDependencies": {
-    "concurrently": "^9.2.0"
+    "concurrently": "^9.2.0",
+    "jasmine": "^5.9.0"
   }
 }

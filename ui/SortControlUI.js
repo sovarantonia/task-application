@@ -1,14 +1,13 @@
-import { ButtonComponent } from "../components/ButtonComponent";
+import { createButton } from "../components/ButtonComponent";
 export class SortControlUI {
   constructor({ containerId, onSortCriteriaChanged, columnMap }) {
     this.onSortCriteriaChanged = onSortCriteriaChanged;
     const target = document.getElementById(containerId);
-    const button = new ButtonComponent();
 
     for (let column of columnMap.keys()) {
-      this.sortByColumnBtn = button.createButton({
+      this.sortByColumnBtn = createButton({
         text: `Sort by ${column}`,
-        eventToAdd: () => {
+        onClick: () => {
           this.onSortCriteriaChanged(column);
         },
       });

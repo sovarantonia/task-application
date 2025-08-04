@@ -1,21 +1,31 @@
-import { ButtonComponent } from "../components/ButtonComponent";
-import { createElementComponent } from "../components/createElementComponent";
+import { createButton } from "../components/ButtonComponent";
 
 export class SendEmailComponentUI {
-  constructor({ containerId, onUserListChanged = null, onUserListReceived = null }) {
+  constructor({
+    containerId,
+    onUserListChanged = null,
+    onUserListReceived = null,
+  }) {
     this.onUserListChanged = onUserListChanged;
     const target = document.getElementById(containerId);
-    const button = new ButtonComponent();
+    this.onUserListReceived = onUserListReceived;
 
-    this.sendEmailButton = button.createButton({
+    this.sendEmailButton = createButton({
       text: "Send Email",
-      eventToAdd: () => {
-        const idList = onUserListReceived();
+      onClick: () => {
+        const idList = this.onUserListReceived();
         this.onUserListChanged({ idList: idList });
       },
     });
 
-
     target.append(this.sendEmailButton);
   }
+
+  // renderSelectedCheckboxes = () => {
+  //   const idList = this.onUserListReceived();
+  //   for (let id of idList) {
+  //     const checkbox = document.getElementById(id);
+  //     checkbox.checked = true;
+  //   }
+  // };
 }
