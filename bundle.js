@@ -899,8 +899,9 @@
   }
 
   class FormHandler {
-    constructor({ sendTheDataFunction = null }) {
+    constructor({ sendTheDataFunction = null, onDataSent = null }) {
       this.sendTheDataFunction = sendTheDataFunction;
+      this.onDataSent = onDataSent;
     }
 
     handleFormData = ({ formData }) => {
@@ -910,7 +911,9 @@
         obj[key] = value;
       }
 
-      this.sendTheDataFunction(obj).then((result) => console.log(result));
+      this.sendTheDataFunction(obj).then(() => {
+        this.onDataSent();
+      });
     };
   }
 
@@ -936,6 +939,7 @@
 
       this.formHandler = new FormHandler({
         sendTheDataFunction: (obj) => this.taskService.saveTask({newTask: obj}),
+        onDataSent: this.paginationHandler.getPaginatedItems
       });
 
       this.taskPresentationUI = new TaskPresentationUI({

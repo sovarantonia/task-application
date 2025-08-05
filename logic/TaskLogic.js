@@ -33,6 +33,7 @@ export class TaskLogic {
 
     this.formHandler = new FormHandler({
       sendTheDataFunction: (obj) => this.taskService.saveTask({newTask: obj}),
+      onDataSent: this.paginationHandler.getPaginatedItems
     });
 
     this.taskPresentationUI = new TaskPresentationUI({

@@ -1,6 +1,7 @@
 export class FormHandler {
-  constructor({ sendTheDataFunction = null }) {
+  constructor({ sendTheDataFunction = null, onDataSent = null }) {
     this.sendTheDataFunction = sendTheDataFunction;
+    this.onDataSent = onDataSent;
   }
 
   handleFormData = ({ formData }) => {
@@ -10,6 +11,8 @@ export class FormHandler {
       obj[key] = value;
     }
 
-    this.sendTheDataFunction(obj).then((result) => console.log(result));
+    this.sendTheDataFunction(obj).then(() => {
+      this.onDataSent();
+    });
   };
 }
