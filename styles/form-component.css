@@ -19,6 +19,16 @@
   transform: translate(-50%, -50%);
 }
 
+form button {
+  top: 50%;
+  gap: 0.4rem;
+  margin: 30px 20px;
+}
+
+form label {
+  padding-right: 10px;
+}
+
 .modal input {
   padding: 0.4rem 1rem;
   border: 1px solid #ddd;
