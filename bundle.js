@@ -867,24 +867,28 @@
 
       const target = document.getElementById(containerId);
       this.openModalBtn = createButton({
-        text: "Create a task",
+        text: "Create task",
         onClick: this.openModal,
       });
 
       this.formContainer = createElementComponent({ elementType: "div" });
-      this.formContainer.classList.add("hidden");
+      this.formContainer.classList.add("hidden", "modal");
 
       this.form = createForm({
         onSubmit: onSubmit,
         props: [{ id: "title", inputType: "text", name: "Title" }],
-        onClose: this.closeModal
+        onClose: this.closeModal,
       });
 
-      this.formContainer.append(
-       this.form,
-      );
+      this.formContainer.append(this.form);
 
       target.append(this.openModalBtn, this.formContainer);
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          this.closeModal();
+        }
+      });
     }
 
     //probably these should be handled somewhere else
@@ -908,11 +912,15 @@
       const formDataEntries = new FormData(formData);
       const obj = {};
       for (const [key, value] of formDataEntries.entries()) {
+        if (value === "") {
+          return;
+        }
         obj[key] = value;
       }
 
       this.sendTheDataFunction(obj).then(() => {
         this.onDataSent();
+        formData.reset();
       });
     };
   }
@@ -938,8 +946,11 @@
       });
 
       this.formHandler = new FormHandler({
-        sendTheDataFunction: (obj) => this.taskService.saveTask({newTask: obj}),
-        onDataSent: this.paginationHandler.getPaginatedItems
+        sendTheDataFunction: (obj) => this.taskService.saveTask({ newTask: obj }),
+        onDataSent: () => {
+          this.paginationHandler.getPaginatedItems();
+          this.createTaskModalUI.closeModal();
+        },
       });
 
       this.taskPresentationUI = new TaskPresentationUI({
@@ -972,7 +983,7 @@
 
       this.createTaskModalUI = new CreateTaskModalUI({
         containerId: "createTaskContainer",
-        onSubmit: this.formHandler.handleFormData
+        onSubmit: this.formHandler.handleFormData,
       });
 
       this.userMap = new Map(initialUserData.map((user) => [user.id, user.user]));
@@ -993,12 +1004,6 @@
         userMap: this.userMap,
         statusMap: this.statusMap,
       });
-      // this.sortTaskControlUI.setTitleArrow(
-      //   this.taskSortCriteria.titleSortDirection,
-      // );
-      // this.sortTaskControlUI.setDateArrow(
-      //   this.taskSortCriteria.dateSortDirection,
-      // );
     };
 
     init() {

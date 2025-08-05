@@ -8,24 +8,28 @@ export class CreateTaskModalUI {
 
     const target = document.getElementById(containerId);
     this.openModalBtn = createButton({
-      text: "Create a task",
+      text: "Create task",
       onClick: this.openModal,
     });
 
     this.formContainer = createElementComponent({ elementType: "div" });
-    this.formContainer.classList.add("hidden");
+    this.formContainer.classList.add("hidden", "modal");
 
     this.form = createForm({
       onSubmit: onSubmit,
       props: [{ id: "title", inputType: "text", name: "Title" }],
-      onClose: this.closeModal
+      onClose: this.closeModal,
     });
 
-    this.formContainer.append(
-     this.form,
-    );
+    this.formContainer.append(this.form);
 
     target.append(this.openModalBtn, this.formContainer);
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        this.closeModal();
+      }
+    });
   }
 
   //probably these should be handled somewhere else

@@ -32,8 +32,11 @@ export class TaskLogic {
     });
 
     this.formHandler = new FormHandler({
-      sendTheDataFunction: (obj) => this.taskService.saveTask({newTask: obj}),
-      onDataSent: this.paginationHandler.getPaginatedItems
+      sendTheDataFunction: (obj) => this.taskService.saveTask({ newTask: obj }),
+      onDataSent: () => {
+        this.paginationHandler.getPaginatedItems();
+        this.createTaskModalUI.closeModal();
+      },
     });
 
     this.taskPresentationUI = new TaskPresentationUI({
@@ -66,7 +69,7 @@ export class TaskLogic {
 
     this.createTaskModalUI = new CreateTaskModalUI({
       containerId: "createTaskContainer",
-      onSubmit: this.formHandler.handleFormData
+      onSubmit: this.formHandler.handleFormData,
     });
 
     this.userMap = new Map(initialUserData.map((user) => [user.id, user.user]));
@@ -87,12 +90,6 @@ export class TaskLogic {
       userMap: this.userMap,
       statusMap: this.statusMap,
     });
-    // this.sortTaskControlUI.setTitleArrow(
-    //   this.taskSortCriteria.titleSortDirection,
-    // );
-    // this.sortTaskControlUI.setDateArrow(
-    //   this.taskSortCriteria.dateSortDirection,
-    // );
   };
 
   init() {
