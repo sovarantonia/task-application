@@ -55,7 +55,7 @@ describe("Testing helpers", () => {
         { property: "title", direction: 1 },
         { property: "description", direction: 1 },
       ];
-      list.sort(multiFieldSort({criteria}))
+      list.sort(multiFieldSort({ criteria }));
       expect(list.at(0).title).toBe("Another title");
       expect(list.at(1).title).toBe("New title");
       expect(list.at(2).title).toBe("Random");
@@ -65,6 +65,23 @@ describe("Testing helpers", () => {
 
       expect(list.at(3).description).toBe("First description");
       expect(list.at(4).description).toBe("Other description");
+    });
+
+    it("This should sort my list in asceding order by title and descending order by description using 2 criteria", () => {
+      const criteria = [
+        { property: "title", direction: 1 },
+        { property: "description", direction: -1 },
+      ];
+      list.sort(multiFieldSort({ criteria }));
+      expect(list.at(0).title).toBe("Another title");
+      expect(list.at(1).title).toBe("New title");
+      expect(list.at(2).title).toBe("Random");
+      expect(list.at(3).title).toBe("Task title");
+      expect(list.at(4).title).toBe("Task title");
+      expect(list.at(5).title).toBe("Title");
+
+      expect(list.at(3).description).toBe("Other description");
+      expect(list.at(4).description).toBe("First description");
     });
   });
 });

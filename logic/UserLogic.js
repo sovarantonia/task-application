@@ -6,7 +6,6 @@ import { UserPresentationUI } from "../ui/UserPresentationUI";
 import { SendEmailComponentUI } from "../ui/SendEmailComponentUI";
 import { CheckboxHandler } from "./CheckboxHandler";
 import { SendEmailHandler } from "./SendEmailHandler";
-import { getCheckboxesState } from "../ui/renderUsers";
 import { CheckboxCheckUI } from "../ui/CheckboxCheckUI";
 export class UserLogic {
   constructor({ initialUserData = [] }) {
