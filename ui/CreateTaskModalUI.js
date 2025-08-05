@@ -17,7 +17,7 @@ export class CreateTaskModalUI {
 
     this.form = createForm({
       onSubmit: onSubmit,
-      props: [{ id: "title", inputType: "text", name: "Title" }],
+      props: [{ id: "title", inputType: "text", name: "Title", isRequired: true }],
       onClose: this.closeModal,
     });
 

@@ -8,9 +8,6 @@ export class FormHandler {
     const formDataEntries = new FormData(formData);
     const obj = {};
     for (const [key, value] of formDataEntries.entries()) {
-      if (value === "") {
-        return;
-      }
       obj[key] = value;
     }
 

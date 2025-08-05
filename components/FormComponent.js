@@ -12,6 +12,7 @@ export function createForm({ onSubmit = null, onClose = null, props = [] }) {
     propInput.type = prop.inputType;
     propInput.id = prop.id;
     propInput.name = prop.id;
+    propInput.required = prop.isRequired;
 
     form.append(propLabel, propInput);
   }
@@ -25,13 +26,14 @@ export function createForm({ onSubmit = null, onClose = null, props = [] }) {
   });
   const submitBtn = createButton({
     text: "Submit",
-    onClick: (e) => {
-      e.preventDefault();
-      onSubmit({ formData: form });
-    },
     type: "submit",
   });
   form.append(submitBtn, closeBtn);
+
+  form.addEventListener("submit", (e) => {
+    e.preventDefault();
+    onSubmit({ formData: form });
+  });
 
   return form;
 }

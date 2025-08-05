@@ -837,6 +837,7 @@
       propInput.type = prop.inputType;
       propInput.id = prop.id;
       propInput.name = prop.id;
+      propInput.required = prop.isRequired;
 
       form.append(propLabel, propInput);
     }
@@ -850,13 +851,14 @@
     });
     const submitBtn = createButton({
       text: "Submit",
-      onClick: (e) => {
-        e.preventDefault();
-        onSubmit({ formData: form });
-      },
       type: "submit",
     });
     form.append(submitBtn, closeBtn);
+
+    form.addEventListener("submit", (e) => {
+      e.preventDefault();
+      onSubmit({ formData: form });
+    });
 
     return form;
   }
@@ -876,7 +878,7 @@
 
       this.form = createForm({
         onSubmit: onSubmit,
-        props: [{ id: "title", inputType: "text", name: "Title" }],
+        props: [{ id: "title", inputType: "text", name: "Title", isRequired: true }],
         onClose: this.closeModal,
       });
 
@@ -912,9 +914,6 @@
       const formDataEntries = new FormData(formData);
       const obj = {};
       for (const [key, value] of formDataEntries.entries()) {
-        if (value === "") {
-          return;
-        }
         obj[key] = value;
       }
 
