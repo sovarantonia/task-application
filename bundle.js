@@ -362,7 +362,7 @@
       this.objectList = initialData;
     }
 
-    save(objToSave) {
+    save({objToSave}) {
       return new Promise((resolve) => {
         this.objectList.push(objToSave);
         resolve(objToSave);
@@ -440,10 +440,10 @@
       this.service = new DbService(taskData);
     }
 
-    saveTask(newTask) {
+    saveTask({newTask}) {
       const id = generateGUID();
       newTask.id = id;
-      return this.service.save(newTask);
+      return this.service.save({objToSave: newTask});
     }
 
     getTaskById(id) {
@@ -574,9 +574,12 @@
     };
   }
 
-  function createButton({ text = "", onClick = null }) {
+  function createButton({ text = "", onClick = null, type = null }) {
     const element = document.createElement("button");
     element.textContent = text;
+    if (type) {
+      element.type = type;
+    }
     element.addEventListener("click", onClick);
     return element;
   }
@@ -822,6 +825,95 @@
     },
   ];
 
+  function createForm({ onSubmit = null, onClose = null, props = [] }) {
+    const form = document.createElement("form");
+
+    for (let prop of props) {
+      const propLabel = document.createElement("label");
+      propLabel.textContent = prop.name;
+      propLabel.htmlFor = prop.id;
+
+      const propInput = document.createElement("input");
+      propInput.type = prop.inputType;
+      propInput.id = prop.id;
+      propInput.name = prop.id;
+
+      form.append(propLabel, propInput);
+    }
+
+    const closeBtn = createButton({
+      text: "Close",
+      onClick: (e) => {
+        e.preventDefault();
+        onClose();
+      },
+    });
+    const submitBtn = createButton({
+      text: "Submit",
+      onClick: (e) => {
+        e.preventDefault();
+        onSubmit({ formData: form });
+      },
+      type: "submit",
+    });
+    form.append(submitBtn, closeBtn);
+
+    return form;
+  }
+
+  class CreateTaskModalUI {
+    constructor({ containerId, onSubmit = null }) {
+      this.onSubmit = onSubmit;
+
+      const target = document.getElementById(containerId);
+      this.openModalBtn = createButton({
+        text: "Create a task",
+        onClick: this.openModal,
+      });
+
+      this.formContainer = createElementComponent({ elementType: "div" });
+      this.formContainer.classList.add("hidden");
+
+      this.form = createForm({
+        onSubmit: onSubmit,
+        props: [{ id: "title", inputType: "text", name: "Title" }],
+        onClose: this.closeModal
+      });
+
+      this.formContainer.append(
+       this.form,
+      );
+
+      target.append(this.openModalBtn, this.formContainer);
+    }
+
+    //probably these should be handled somewhere else
+
+    openModal = () => {
+      this.formContainer.classList.remove("hidden");
+    };
+
+    closeModal = () => {
+      this.formContainer.classList.add("hidden");
+    };
+  }
+
+  class FormHandler {
+    constructor({ sendTheDataFunction = null }) {
+      this.sendTheDataFunction = sendTheDataFunction;
+    }
+
+    handleFormData = ({ formData }) => {
+      const formDataEntries = new FormData(formData);
+      const obj = {};
+      for (const [key, value] of formDataEntries.entries()) {
+        obj[key] = value;
+      }
+
+      this.sendTheDataFunction(obj).then((result) => console.log(result));
+    };
+  }
+
   class TaskLogic {
     constructor({ initialTaskData = [] } = {}) {
       this.taskService = new TaskService(initialTaskData);
@@ -840,6 +932,10 @@
 
       this.filterCriteriaHandler = new FilterCriteriaHandler({
         onNotifyPaginationHandler: this.paginationHandler.onFilterCriteriaChanged,
+      });
+
+      this.formHandler = new FormHandler({
+        sendTheDataFunction: (obj) => this.taskService.saveTask({newTask: obj}),
       });
 
       this.taskPresentationUI = new TaskPresentationUI({
@@ -868,6 +964,11 @@
           { key: "id", value: "status" },
           { key: "id", value: "user" },
         ],
+      });
+
+      this.createTaskModalUI = new CreateTaskModalUI({
+        containerId: "createTaskContainer",
+        onSubmit: this.formHandler.handleFormData
       });
 
       this.userMap = new Map(initialUserData.map((user) => [user.id, user.user]));

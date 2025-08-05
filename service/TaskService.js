@@ -9,10 +9,10 @@ export class TaskService {
     this.service = new DbService(taskData);
   }
 
-  saveTask(newTask) {
+  saveTask({newTask}) {
     const id = generateGUID();
     newTask.id = id;
-    return this.service.save(newTask);
+    return this.service.save({objToSave: newTask});
   }
 
   getTaskById(id) {

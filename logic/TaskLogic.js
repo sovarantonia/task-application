@@ -9,6 +9,8 @@ import { FilterCriteriaHandler } from "../logic/filter/FilterCriteriaHandler";
 import { FilterControlUI } from "../ui/FilterControlUI";
 import { taskStatus } from "../data/taskStatus";
 import { initialUserData } from "../data/initialUserData";
+import { CreateTaskModalUI } from "../ui/CreateTaskModalUI.js";
+import { FormHandler } from "./FormHandler.js";
 export class TaskLogic {
   constructor({ initialTaskData = [] } = {}) {
     this.taskService = new TaskService(initialTaskData);
@@ -27,6 +29,10 @@ export class TaskLogic {
 
     this.filterCriteriaHandler = new FilterCriteriaHandler({
       onNotifyPaginationHandler: this.paginationHandler.onFilterCriteriaChanged,
+    });
+
+    this.formHandler = new FormHandler({
+      sendTheDataFunction: (obj) => this.taskService.saveTask({newTask: obj}),
     });
 
     this.taskPresentationUI = new TaskPresentationUI({
@@ -55,6 +61,11 @@ export class TaskLogic {
         { key: "id", value: "status" },
         { key: "id", value: "user" },
       ],
+    });
+
+    this.createTaskModalUI = new CreateTaskModalUI({
+      containerId: "createTaskContainer",
+      onSubmit: this.formHandler.handleFormData
     });
 
     this.userMap = new Map(initialUserData.map((user) => [user.id, user.user]));

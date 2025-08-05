@@ -7,7 +7,7 @@ export class DbService {
     this.objectList = initialData;
   }
 
-  save(objToSave) {
+  save({objToSave}) {
     return new Promise((resolve) => {
       this.objectList.push(objToSave);
       resolve(objToSave);
