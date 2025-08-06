@@ -456,7 +456,7 @@
         });
         const totalPages = getTotalPages({elementList: items, itemsPerPage});
 
-        resolve({ paginatedItems, totalPages });
+        setTimeout(() => resolve({ paginatedItems, totalPages }), 2000);
       });
     }
   }
@@ -561,6 +561,20 @@
     }
   }
 
+  function hideLoader() {
+    const loader = document.getElementById("loading");
+    const overlay = document.getElementById("overlay");
+    loader.style.display = "none";
+    overlay.classList.add("hidden");
+  }
+
+  function addLoader() {
+    const loader = document.getElementById("loading");
+    const overlay = document.getElementById("overlay");
+    loader.style.display = "block";
+    overlay.classList.remove("hidden");
+  }
+
   class PaginationHandler {
     constructor({
       paginationFunction = null,
@@ -576,6 +590,8 @@
 
     //calls the pagination function and passes the result to pagination response
     getPaginatedItems = () => {
+      addLoader();
+
       const { currentPageNo, itemsPerPage } = this.pagerData;
       this.paginationFunction({
         currentPageNo: currentPageNo,
@@ -583,6 +599,8 @@
         sortCriteria: this.sortCriteria,
         filterCriteria: this.filterCriteria,
       }).then(({ paginatedItems, totalPages }) => {
+        hideLoader();
+
         this.onPaginationResponse({
           paginatedItems,
           totalPages,
@@ -963,13 +981,23 @@
         ],
       });
 
-      const title = createElementComponent({elementType: "h1", text: "Create task"});
+      const title = createElementComponent({
+        elementType: "h1",
+        text: "Create task",
+      });
 
-      const modal = new Modal({openModalBtnText: "Create task", headerContent: [title], bodyContent: [this.form] });
+      this.modal = new Modal({
+        openModalBtnText: "Create task",
+        headerContent: [title],
+        bodyContent: [this.form],
+      });
 
-      target.append(modal.modalContainer);
+      target.append(this.modal.modalContainer);
     }
 
+    closeModal = () => {
+      this.modal.closeModal();
+    }
   }
 
   class FormHandler {
@@ -1016,7 +1044,7 @@
         sendTheDataFunction: (obj) => this.taskService.saveTask({ newTask: obj }),
         onDataSent: () => {
           this.paginationHandler.getPaginatedItems();
-          // this.createTaskModalUI.closeModal();
+          this.createTaskModalUI.closeModal();
         },
       });
 

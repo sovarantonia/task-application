@@ -15,11 +15,21 @@ export class CreateTaskModalUI {
       ],
     });
 
-    const title = createElementComponent({elementType: "h1", text: "Create task"})
+    const title = createElementComponent({
+      elementType: "h1",
+      text: "Create task",
+    });
 
-    const modal = new Modal({openModalBtnText: "Create task", headerContent: [title], bodyContent: [this.form] });
+    this.modal = new Modal({
+      openModalBtnText: "Create task",
+      headerContent: [title],
+      bodyContent: [this.form],
+    });
 
-    target.append(modal.modalContainer);
+    target.append(this.modal.modalContainer);
   }
 
+  closeModal = () => {
+    this.modal.closeModal();
+  }
 }

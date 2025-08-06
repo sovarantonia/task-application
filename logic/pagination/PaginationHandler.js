@@ -1,3 +1,5 @@
+import { addLoader, hideLoader } from "../../ui/loader.js";
+
 export class PaginationHandler {
   constructor({
     paginationFunction = null,
@@ -13,6 +15,8 @@ export class PaginationHandler {
 
   //calls the pagination function and passes the result to pagination response
   getPaginatedItems = () => {
+    addLoader();
+
     const { currentPageNo, itemsPerPage } = this.pagerData;
     this.paginationFunction({
       currentPageNo: currentPageNo,
@@ -20,6 +24,8 @@ export class PaginationHandler {
       sortCriteria: this.sortCriteria,
       filterCriteria: this.filterCriteria,
     }).then(({ paginatedItems, totalPages }) => {
+      hideLoader();
+
       this.onPaginationResponse({
         paginatedItems,
         totalPages,

@@ -1,8 +1,8 @@
 import { PagerComponentUI } from "../ui/PagerComponentUI";
 import { TaskService } from "../service/TaskService";
 import { TaskPresentationUI } from "../ui/TaskPresentationUI";
-import { PagerData } from "./pager/PagerData";
-import { PaginationHandler } from "./pager/PaginationHandler";
+import { PagerData } from "./pagination/PagerData.js";
+import { PaginationHandler } from "./pagination/PaginationHandler.js";
 import { SortControlUI } from "../ui/SortControlUI";
 import { SortCriteriaHandler } from "../logic/sort/SortCriteriaHandler";
 import { FilterCriteriaHandler } from "../logic/filter/FilterCriteriaHandler";
@@ -35,7 +35,7 @@ export class TaskLogic {
       sendTheDataFunction: (obj) => this.taskService.saveTask({ newTask: obj }),
       onDataSent: () => {
         this.paginationHandler.getPaginatedItems();
-        // this.createTaskModalUI.closeModal();
+        this.createTaskModalUI.closeModal();
       },
     });
 

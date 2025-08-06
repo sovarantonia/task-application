@@ -72,7 +72,7 @@ export class DbService {
       });
       const totalPages = getTotalPages({elementList: items, itemsPerPage});
 
-      resolve({ paginatedItems, totalPages });
+      setTimeout(() => resolve({ paginatedItems, totalPages }), 2000);
     });
   }
 }

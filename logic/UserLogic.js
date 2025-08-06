@@ -1,6 +1,6 @@
 import { UserService } from "../service/UserService";
-import { PagerData } from "../logic/pager/PagerData";
-import { PaginationHandler } from "../logic/pager/PaginationHandler";
+import { PagerData } from "../logic/pagination/PagerData";
+import { PaginationHandler } from "../logic/pagination/PaginationHandler";
 import { PagerComponentUI } from "../ui/PagerComponentUI";
 import { UserPresentationUI } from "../ui/UserPresentationUI";
 import { SendEmailComponentUI } from "../ui/SendEmailComponentUI";
