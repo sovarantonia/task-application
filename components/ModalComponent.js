@@ -42,7 +42,7 @@ export class Modal {
 
     header.append(this.closeBtn);
 
-    this.modal.append(header, body, footer, this.closeBtn);
+    this.modal.append(header, body, footer);
     this.modalContainer.append(this.openModalBtn, this.modal);
 
     document.addEventListener("keydown", (e) => {
@@ -50,13 +50,18 @@ export class Modal {
         this.closeModal();
       }
     });
+
+    this.overlay = document.getElementById("overlay")
+    this.overlay.classList.add("overlay", "hidden");
   }
 
   closeModal = () => {
     this.modal.classList.add("hidden");
+    this.overlay.classList.add("hidden");
   };
 
   openModal = () => {
     this.modal.classList.remove("hidden");
+    this.overlay.classList.remove("hidden");
   };
 }
