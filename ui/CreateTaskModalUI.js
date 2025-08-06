@@ -1,5 +1,5 @@
-import { createButton } from "../components/ButtonComponent.js";
 import { createElementComponent } from "../components/createElementComponent.js";
+import { Modal } from "../components/ModalComponent.js";
 import { createForm } from "../components/FormComponent.js";
 
 export class CreateTaskModalUI {
@@ -7,38 +7,19 @@ export class CreateTaskModalUI {
     this.onSubmit = onSubmit;
 
     const target = document.getElementById(containerId);
-    this.openModalBtn = createButton({
-      text: "Create task",
-      onClick: this.openModal,
-    });
-
-    this.formContainer = createElementComponent({ elementType: "div" });
-    this.formContainer.classList.add("hidden", "modal");
 
     this.form = createForm({
       onSubmit: onSubmit,
-      props: [{ id: "title", inputType: "text", name: "Title", isRequired: true }],
-      onClose: this.closeModal,
+      props: [
+        { id: "title", inputType: "text", name: "Title", isRequired: true },
+      ],
     });
 
-    this.formContainer.append(this.form);
+    const title = createElementComponent({elementType: "h1", text: "Create task"})
 
-    target.append(this.openModalBtn, this.formContainer);
+    const modal = new Modal({openModalBtnText: "Create task", headerContent: [title], bodyContent: [this.form] });
 
-    document.addEventListener("keydown", (e) => {
-      if (e.key === "Escape") {
-        this.closeModal();
-      }
-    });
+    target.append(modal.modalContainer);
   }
 
-  //probably these should be handled somewhere else
-
-  openModal = () => {
-    this.formContainer.classList.remove("hidden");
-  };
-
-  closeModal = () => {
-    this.formContainer.classList.add("hidden");
-  };
 }

@@ -1,6 +1,6 @@
 import { createButton } from "./ButtonComponent.js";
 
-export function createForm({ onSubmit = null, onClose = null, props = [] }) {
+export function createForm({ onSubmit = null, props = [] }) {
   const form = document.createElement("form");
 
   for (let prop of props) {
@@ -17,18 +17,11 @@ export function createForm({ onSubmit = null, onClose = null, props = [] }) {
     form.append(propLabel, propInput);
   }
 
-  const closeBtn = createButton({
-    text: "Close",
-    onClick: (e) => {
-      e.preventDefault();
-      onClose();
-    },
-  });
   const submitBtn = createButton({
     text: "Submit",
     type: "submit",
   });
-  form.append(submitBtn, closeBtn);
+  form.append(submitBtn);
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();

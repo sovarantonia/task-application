@@ -35,7 +35,7 @@ export class TaskLogic {
       sendTheDataFunction: (obj) => this.taskService.saveTask({ newTask: obj }),
       onDataSent: () => {
         this.paginationHandler.getPaginatedItems();
-        this.createTaskModalUI.closeModal();
+        // this.createTaskModalUI.closeModal();
       },
     });
 

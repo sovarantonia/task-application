@@ -167,18 +167,47 @@
     },
   ];
 
-  function createElementComponent({ elementType = "", text = "" }) {
+  function createElementComponent({
+    elementType = "",
+    text = "",
+    elementId = null,
+  }) {
     let element = document.createElement(elementType);
+    if (elementId) {
+      element.id = elementId;
+    }
+
     switch (elementType) {
       case "span":
         element.textContent = text;
         break;
 
-      case "div":
-        break;
-
       case "p":
         element.innerText = text;
+        break;
+
+      case "h1":
+        element.textContent = text;
+        break;
+
+      case "h2":
+        element.textContent = text;
+        break;
+
+      case "h3":
+        element.textContent = text;
+        break;
+
+      case "h4":
+        element.textContent = text;
+        break;
+
+      case "h5":
+        element.textContent = text;
+        break;
+
+      case "h6":
+        element.textContent = text;
         break;
     }
 
@@ -825,7 +854,67 @@
     },
   ];
 
-  function createForm({ onSubmit = null, onClose = null, props = [] }) {
+  class Modal {
+    constructor({
+      openModalBtnText = "",
+      headerContent = [],
+      bodyContent = [],
+      footerContent = [],
+    }) {
+      this.modalContainer = createElementComponent({ elementType: "div" });
+
+      this.openModalBtn = createButton({
+        text: openModalBtnText,
+        onClick: this.openModal,
+      });
+
+      this.modal = createElementComponent({ elementType: "div" });
+
+      this.modal.classList.add("hidden", "modal");
+
+      this.closeBtn = createButton({ text: "Close", onClick: this.closeModal });
+
+      const header = createElementComponent({
+        elementType: "div",
+        elementId: "header",
+      });
+
+      const body = createElementComponent({
+        elementType: "div",
+        elementId: "body",
+      });
+
+      const footer = createElementComponent({
+        elementType: "div",
+        elementId: "footer",
+      });
+
+      headerContent.forEach((element) => header.append(element));
+      bodyContent.forEach((element) => body.append(element));
+      footerContent.forEach((element) => footer.append(element));
+
+      header.append(this.closeBtn);
+
+      this.modal.append(header, body, footer, this.closeBtn);
+      this.modalContainer.append(this.openModalBtn, this.modal);
+
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
+          this.closeModal();
+        }
+      });
+    }
+
+    closeModal = () => {
+      this.modal.classList.add("hidden");
+    };
+
+    openModal = () => {
+      this.modal.classList.remove("hidden");
+    };
+  }
+
+  function createForm({ onSubmit = null, props = [] }) {
     const form = document.createElement("form");
 
     for (let prop of props) {
@@ -842,18 +931,11 @@
       form.append(propLabel, propInput);
     }
 
-    const closeBtn = createButton({
-      text: "Close",
-      onClick: (e) => {
-        e.preventDefault();
-        onClose();
-      },
-    });
     const submitBtn = createButton({
       text: "Submit",
       type: "submit",
     });
-    form.append(submitBtn, closeBtn);
+    form.append(submitBtn);
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -868,40 +950,21 @@
       this.onSubmit = onSubmit;
 
       const target = document.getElementById(containerId);
-      this.openModalBtn = createButton({
-        text: "Create task",
-        onClick: this.openModal,
-      });
-
-      this.formContainer = createElementComponent({ elementType: "div" });
-      this.formContainer.classList.add("hidden", "modal");
 
       this.form = createForm({
         onSubmit: onSubmit,
-        props: [{ id: "title", inputType: "text", name: "Title", isRequired: true }],
-        onClose: this.closeModal,
+        props: [
+          { id: "title", inputType: "text", name: "Title", isRequired: true },
+        ],
       });
 
-      this.formContainer.append(this.form);
+      const title = createElementComponent({elementType: "h1", text: "Create task"});
 
-      target.append(this.openModalBtn, this.formContainer);
+      const modal = new Modal({openModalBtnText: "Create task", headerContent: [title], bodyContent: [this.form] });
 
-      document.addEventListener("keydown", (e) => {
-        if (e.key === "Escape") {
-          this.closeModal();
-        }
-      });
+      target.append(modal.modalContainer);
     }
 
-    //probably these should be handled somewhere else
-
-    openModal = () => {
-      this.formContainer.classList.remove("hidden");
-    };
-
-    closeModal = () => {
-      this.formContainer.classList.add("hidden");
-    };
   }
 
   class FormHandler {
@@ -948,7 +1011,7 @@
         sendTheDataFunction: (obj) => this.taskService.saveTask({ newTask: obj }),
         onDataSent: () => {
           this.paginationHandler.getPaginatedItems();
-          this.createTaskModalUI.closeModal();
+          // this.createTaskModalUI.closeModal();
         },
       });
 
