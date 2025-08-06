@@ -1,13 +1,13 @@
 export function hideLoader() {
   const loader = document.getElementById("loading");
   const overlay = document.getElementById("overlay");
-  loader.style.display = "none";
+  loader.classList.add("hidden");
   overlay.classList.add("hidden");
 }
 
 export function addLoader() {
   const loader = document.getElementById("loading");
   const overlay = document.getElementById("overlay");
-  loader.style.display = "block";
+  loader.classList.remove("hidden");
   overlay.classList.remove("hidden");
 }

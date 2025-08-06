@@ -1,20 +1,17 @@
 import { renderTasks } from "../ui/taskListRenderer";
-import { createElementComponent } from "../components/createElementComponent";
 export class TaskPresentationUI {
-  constructor({ containerId }) {
-    const target = document.getElementById(containerId);
-    this.pageIndicator = createElementComponent({
-      elementType: "span",
-    });
-    target.append(this.pageIndicator);
+  constructor({ containerId, onViewClick }) {
+    this.containerId = containerId
+    this.onViewClick = onViewClick;
   }
 
   renderTasks = ({ paginatedItems, userMap, statusMap }) => {
     renderTasks({
-      containerId: "taskPaginationContainer",
+      containerId: this.containerId,
       taskList: paginatedItems,
       userMap,
       statusMap,
+      onClick: (item) => this.onViewClick({item: item})
     });
   };
 }

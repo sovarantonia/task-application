@@ -499,40 +499,77 @@
     };
   }
 
-  function renderTasks({containerId, taskList, userMap, statusMap}) {
+  function createButton({ text = "", onClick = null, type = null }) {
+    const element = document.createElement("button");
+    element.textContent = text;
+    if (type) {
+      element.type = type;
+    }
+    element.addEventListener("click", onClick);
+    return element;
+  }
+
+  function renderTasks({
+    containerId,
+    taskList,
+    userMap,
+    statusMap,
+    onClick = null,
+  }) {
     const container = document.getElementById(containerId);
-      container.innerHTML = "";
-      taskList.forEach((element) => {
-        const user = userMap.get(element.user);
-        const status = statusMap.get(element.status);
-        
-        const card = document.createElement("div");
-        card.className = "task-card";
-        card.innerHTML = `<h2>${element.title}</h2>
-        <p>Status: ${status}</p>
-        <p>${element.description}</p>
-        <p>Assigned to: ${user}</p>
-        <p>Created at: ${element.date}</p>`;
-        container.appendChild(card);
+    container.innerHTML = "";
+    taskList.forEach((element) => {
+      const user = userMap.get(element.user);
+      const status = statusMap.get(element.status);
+
+      const card = createElementComponent({ elementType: "div" });
+      card.className = "task-card";
+      const viewButton = createButton({
+        text: "View task",
+        onClick: () => onClick({item: element}),
       });
-      return taskList;
+
+      const title = createElementComponent({
+        elementType: "h2",
+        text: element.title,
+      });
+      const statusP = createElementComponent({
+        elementType: "p",
+        text: `Status: ${status}`,
+      });
+      const description = createElementComponent({
+        elementType: "p",
+        text: element.description,
+      });
+      const assignedTo = createElementComponent({
+        elementType: "p",
+        text: `Assigned to: ${user}`,
+      });
+      const createdAt = createElementComponent({
+        elementType: "p",
+        text: `Created at: ${element.date}`,
+      });
+
+      card.append(title, statusP, description, assignedTo, createdAt, viewButton);
+      container.appendChild(card);
+    });
+
+    return taskList;
   }
 
   class TaskPresentationUI {
-    constructor({ containerId }) {
-      const target = document.getElementById(containerId);
-      this.pageIndicator = createElementComponent({
-        elementType: "span",
-      });
-      target.append(this.pageIndicator);
+    constructor({ containerId, onViewClick }) {
+      this.containerId = containerId;
+      this.onViewClick = onViewClick;
     }
 
     renderTasks = ({ paginatedItems, userMap, statusMap }) => {
       renderTasks({
-        containerId: "taskPaginationContainer",
+        containerId: this.containerId,
         taskList: paginatedItems,
         userMap,
         statusMap,
+        onClick: (item) => this.onViewClick({item: item})
       });
     };
   }
@@ -564,14 +601,14 @@
   function hideLoader() {
     const loader = document.getElementById("loading");
     const overlay = document.getElementById("overlay");
-    loader.style.display = "none";
+    loader.classList.add("hidden");
     overlay.classList.add("hidden");
   }
 
   function addLoader() {
     const loader = document.getElementById("loading");
     const overlay = document.getElementById("overlay");
-    loader.style.display = "block";
+    loader.classList.remove("hidden");
     overlay.classList.remove("hidden");
   }
 
@@ -619,16 +656,6 @@
       this.filterCriteria = filterCriteria;
       this.getPaginatedItems();
     };
-  }
-
-  function createButton({ text = "", onClick = null, type = null }) {
-    const element = document.createElement("button");
-    element.textContent = text;
-    if (type) {
-      element.type = type;
-    }
-    element.addEventListener("click", onClick);
-    return element;
   }
 
   class SortControlUI {
@@ -875,16 +902,21 @@
   class Modal {
     constructor({
       openModalBtnText = "",
+      openModalBtn = null,
       headerContent = [],
       bodyContent = [],
       footerContent = [],
     }) {
       this.modalContainer = createElementComponent({ elementType: "div" });
 
-      this.openModalBtn = createButton({
-        text: openModalBtnText,
-        onClick: this.openModal,
-      });
+      if (openModalBtn == null) {
+        this.openModalBtn = createButton({
+          text: openModalBtnText,
+          onClick: this.openModal,
+        });
+      } else {
+        this.openModalBtn = openModalBtn;
+      }
 
       this.modal = createElementComponent({ elementType: "div" });
 
@@ -1020,6 +1052,25 @@
     };
   }
 
+  class ViewTaskUI {
+    constructor({containerId, onSubmit = null }) {
+      this.onSubmit = onSubmit;
+
+      document.getElementById(containerId);
+
+      const title = createElementComponent({
+        elementType: "h1",
+        text: "Edit task",
+      });
+
+      this.modal = new Modal({ openModalBtnText: "View task", headerContent : [title], });
+    }
+
+    onViewItem = ({item}) => {
+      console.log(item);
+    }
+  }
+
   class TaskLogic {
     constructor({ initialTaskData = [] } = {}) {
       this.taskService = new TaskService(initialTaskData);
@@ -1049,7 +1100,8 @@
       });
 
       this.taskPresentationUI = new TaskPresentationUI({
-        containerId: "taskPageIndicator",
+        containerId: "taskPaginationContainer",
+        onViewClick: (item) => this.viewTaskUI.onViewItem(item)
       });
 
       const { setItemsPerPage, setCurrentPageNo } = this.pagerData;
@@ -1080,6 +1132,8 @@
         containerId: "createTaskContainer",
         onSubmit: this.formHandler.handleFormData,
       });
+
+      this.viewTaskUI = new ViewTaskUI({ containerId: "viewTask" });
 
       this.userMap = new Map(initialUserData.map((user) => [user.id, user.user]));
       this.statusMap = new Map(

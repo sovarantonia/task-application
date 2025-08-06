@@ -4,16 +4,21 @@ import { createElementComponent } from "./createElementComponent.js";
 export class Modal {
   constructor({
     openModalBtnText = "",
+    openModalBtn = null,
     headerContent = [],
     bodyContent = [],
     footerContent = [],
   }) {
     this.modalContainer = createElementComponent({ elementType: "div" });
 
-    this.openModalBtn = createButton({
-      text: openModalBtnText,
-      onClick: this.openModal,
-    });
+    if (openModalBtn == null) {
+      this.openModalBtn = createButton({
+        text: openModalBtnText,
+        onClick: this.openModal,
+      });
+    } else {
+      this.openModalBtn = openModalBtn;
+    }
 
     this.modal = createElementComponent({ elementType: "div" });
 
@@ -51,7 +56,7 @@ export class Modal {
       }
     });
 
-    this.overlay = document.getElementById("overlay")
+    this.overlay = document.getElementById("overlay");
     this.overlay.classList.add("overlay", "hidden");
   }
 

@@ -11,6 +11,7 @@ import { taskStatus } from "../data/taskStatus";
 import { initialUserData } from "../data/initialUserData";
 import { CreateTaskModalUI } from "../ui/CreateTaskModalUI.js";
 import { FormHandler } from "./FormHandler.js";
+import { ViewTaskUI } from "../ui/ViewTaskUI.js";
 export class TaskLogic {
   constructor({ initialTaskData = [] } = {}) {
     this.taskService = new TaskService(initialTaskData);
@@ -40,7 +41,8 @@ export class TaskLogic {
     });
 
     this.taskPresentationUI = new TaskPresentationUI({
-      containerId: "taskPageIndicator",
+      containerId: "taskPaginationContainer",
+      onViewClick: (item) => this.viewTaskUI.onViewItem(item)
     });
 
     const { setItemsPerPage, setCurrentPageNo } = this.pagerData;
@@ -71,6 +73,8 @@ export class TaskLogic {
       containerId: "createTaskContainer",
       onSubmit: this.formHandler.handleFormData,
     });
+
+    this.viewTaskUI = new ViewTaskUI({ containerId: "viewTask" });
 
     this.userMap = new Map(initialUserData.map((user) => [user.id, user.user]));
     this.statusMap = new Map(
