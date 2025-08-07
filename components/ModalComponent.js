@@ -3,22 +3,11 @@ import { createElementComponent } from "./createElementComponent.js";
 
 export class Modal {
   constructor({
-    openModalBtnText = "",
-    openModalBtn = null,
     headerContent = [],
     bodyContent = [],
     footerContent = [],
   }) {
     this.modalContainer = createElementComponent({ elementType: "div" });
-
-    if (openModalBtn == null) {
-      this.openModalBtn = createButton({
-        text: openModalBtnText,
-        onClick: this.openModal,
-      });
-    } else {
-      this.openModalBtn = openModalBtn;
-    }
 
     this.modal = createElementComponent({ elementType: "div" });
 

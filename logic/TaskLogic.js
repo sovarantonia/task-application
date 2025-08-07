@@ -10,7 +10,7 @@ import { FilterControlUI } from "../ui/FilterControlUI";
 import { taskStatus } from "../data/taskStatus";
 import { initialUserData } from "../data/initialUserData";
 import { CreateTaskModalUI } from "../ui/CreateTaskModalUI.js";
-import { FormHandler } from "./FormHandler.js";
+import { handleFormData } from "./FormHandler.js";
 import { ViewTaskUI } from "../ui/ViewTaskUI.js";
 export class TaskLogic {
   constructor({ initialTaskData = [] } = {}) {
@@ -30,14 +30,6 @@ export class TaskLogic {
 
     this.filterCriteriaHandler = new FilterCriteriaHandler({
       onNotifyPaginationHandler: this.paginationHandler.onFilterCriteriaChanged,
-    });
-
-    this.formHandler = new FormHandler({
-      sendTheDataFunction: (obj) => this.taskService.saveTask({ newTask: obj }),
-      onDataSent: () => {
-        this.paginationHandler.getPaginatedItems();
-        this.createTaskModalUI.closeModal();
-      },
     });
 
     this.taskPresentationUI = new TaskPresentationUI({
@@ -71,22 +63,33 @@ export class TaskLogic {
 
     this.createTaskModalUI = new CreateTaskModalUI({
       containerId: "createTaskContainer",
-      onSubmit: this.formHandler.handleFormData,
-    });
-
-    this.editFormHandler = new FormHandler({
-      sendTheDataFunction: (item) =>
-        this.taskService.updateTask({ task: item }), 
-      onDataSent: () => {
-        this.paginationHandler.getPaginatedItems();
-        this.viewTaskUI.closeView();
+      onSubmit: ({ formData }) => {
+        handleFormData({
+          sendTheDataFunction: (item) =>
+            this.taskService.saveTask({ newTask: item }),
+          onDataSent: () => {
+            this.createTaskModalUI.closeModal();
+            this.paginationHandler.getPaginatedItems();
+          },
+          formData,
+        });
       },
     });
 
     this.viewTaskUI = new ViewTaskUI({
       containerId: "viewTask",
-      onSubmit: ({formData, item}) =>
-        this.editFormHandler.handleFormData({ formData: formData, item: item }),
+      onSubmit: ({ formData, item }) => {
+        handleFormData({
+          sendTheDataFunction: (item) =>
+            this.taskService.updateTask({ task: item }),
+          onDataSent: () => {
+            this.viewTaskUI.closeView();
+            this.paginationHandler.getPaginatedItems();
+          },
+          formData,
+          item,
+        });
+      },
     });
 
     this.userMap = new Map(initialUserData.map((user) => [user.id, user.user]));

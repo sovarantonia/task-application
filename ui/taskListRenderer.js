@@ -17,7 +17,7 @@ export function renderTasks({
     const card = createElementComponent({ elementType: "div" });
     card.className = "task-card";
     const viewButton = createButton({
-      text: "View task",
+      text: "Edit task",
       onClick: () => onClick(element),
     });
 

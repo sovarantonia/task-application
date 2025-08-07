@@ -5,7 +5,6 @@ export function createForm({
   props = [],
   formId = null,
   selectList = [],
-  item = null,
 }) {
   const form = document.createElement("form");
 

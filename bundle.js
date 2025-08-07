@@ -532,7 +532,7 @@
       const card = createElementComponent({ elementType: "div" });
       card.className = "task-card";
       const viewButton = createButton({
-        text: "View task",
+        text: "Edit task",
         onClick: () => onClick(element),
       });
 
@@ -908,22 +908,11 @@
 
   class Modal {
     constructor({
-      openModalBtnText = "",
-      openModalBtn = null,
       headerContent = [],
       bodyContent = [],
       footerContent = [],
     }) {
       this.modalContainer = createElementComponent({ elementType: "div" });
-
-      if (openModalBtn == null) {
-        this.openModalBtn = createButton({
-          text: openModalBtnText,
-          onClick: this.openModal,
-        });
-      } else {
-        this.openModalBtn = openModalBtn;
-      }
 
       this.modal = createElementComponent({ elementType: "div" });
 
@@ -981,7 +970,6 @@
     props = [],
     formId = null,
     selectList = [],
-    item = null,
   }) {
     const form = document.createElement("form");
 
@@ -1062,25 +1050,24 @@
     };
   }
 
-  class FormHandler {
-    constructor({ sendTheDataFunction = null, onDataSent = null }) {
-      this.sendTheDataFunction = sendTheDataFunction;
-      this.onDataSent = onDataSent;
+  /** Handles the form, item is for pre-exsting data (eg. update) */
+  function handleFormData({
+    sendTheDataFunction = null,
+    onDataSent = null,
+    formData,
+    item,
+  }) {
+    const formDataEntries = new FormData(formData);
+    let obj = {};
+    for (const [key, value] of formDataEntries.entries()) {
+      obj[key] = value;
     }
+    const toSend = item ? { ...item, ...obj } : obj;
 
-    handleFormData = ({ formData, item = null }) => {
-      const formDataEntries = new FormData(formData);
-      let obj = {};
-      for (const [key, value] of formDataEntries.entries()) {
-        obj[key] = value;
-      }
-      const toSend = item ? { ...item, ...obj } : obj;
-      
-      this.sendTheDataFunction(toSend).then(() => {
-        this.onDataSent();
-        formData.reset();
-      });
-    };
+    sendTheDataFunction(toSend).then(() => {
+      onDataSent();
+      formData.reset();
+    });
   }
 
   class ViewTaskUI {
@@ -1155,14 +1142,6 @@
         onNotifyPaginationHandler: this.paginationHandler.onFilterCriteriaChanged,
       });
 
-      this.formHandler = new FormHandler({
-        sendTheDataFunction: (obj) => this.taskService.saveTask({ newTask: obj }),
-        onDataSent: () => {
-          this.paginationHandler.getPaginatedItems();
-          this.createTaskModalUI.closeModal();
-        },
-      });
-
       this.taskPresentationUI = new TaskPresentationUI({
         containerId: "taskPaginationContainer",
         onViewClick: (item) => this.viewTaskUI.onViewItem(item),
@@ -1194,22 +1173,33 @@
 
       this.createTaskModalUI = new CreateTaskModalUI({
         containerId: "createTaskContainer",
-        onSubmit: this.formHandler.handleFormData,
-      });
-
-      this.editFormHandler = new FormHandler({
-        sendTheDataFunction: (item) =>
-          this.taskService.updateTask({ task: item }), 
-        onDataSent: () => {
-          this.paginationHandler.getPaginatedItems();
-          this.viewTaskUI.closeView();
+        onSubmit: ({ formData }) => {
+          handleFormData({
+            sendTheDataFunction: (item) =>
+              this.taskService.saveTask({ newTask: item }),
+            onDataSent: () => {
+              this.createTaskModalUI.closeModal();
+              this.paginationHandler.getPaginatedItems();
+            },
+            formData,
+          });
         },
       });
 
       this.viewTaskUI = new ViewTaskUI({
         containerId: "viewTask",
-        onSubmit: ({formData, item}) =>
-          this.editFormHandler.handleFormData({ formData: formData, item: item }),
+        onSubmit: ({ formData, item }) => {
+          handleFormData({
+            sendTheDataFunction: (item) =>
+              this.taskService.updateTask({ task: item }),
+            onDataSent: () => {
+              this.viewTaskUI.closeView();
+              this.paginationHandler.getPaginatedItems();
+            },
+            formData,
+            item,
+          });
+        },
       });
 
       this.userMap = new Map(initialUserData.map((user) => [user.id, user.user]));
