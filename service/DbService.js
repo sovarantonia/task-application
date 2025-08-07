@@ -14,7 +14,7 @@ export class DbService {
     });
   }
 
-  update(id, props) {
+  update({id, props}) {
     return new Promise((resolve, reject) => {
       const objToFind = this.objectList.find((obj) => obj.id === id);
       if (!objToFind) {

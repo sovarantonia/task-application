@@ -20,12 +20,4 @@ export class SendEmailComponentUI {
 
     target.append(this.sendEmailButton);
   }
-
-  // renderSelectedCheckboxes = () => {
-  //   const idList = this.onUserListReceived();
-  //   for (let id of idList) {
-  //     const checkbox = document.getElementById(id);
-  //     checkbox.checked = true;
-  //   }
-  // };
 }

@@ -11,7 +11,7 @@ export class TaskPresentationUI {
       taskList: paginatedItems,
       userMap,
       statusMap,
-      onClick: (item) => this.onViewClick({item: item})
+      onClick: (item) => this.onViewClick(item)
     });
   };
 }

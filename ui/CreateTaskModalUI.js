@@ -1,6 +1,7 @@
 import { createElementComponent } from "../components/createElementComponent.js";
 import { Modal } from "../components/ModalComponent.js";
 import { createForm } from "../components/FormComponent.js";
+import { createButton } from "../components/ButtonComponent.js";
 
 export class CreateTaskModalUI {
   constructor({ containerId, onSubmit = null }) {
@@ -26,10 +27,14 @@ export class CreateTaskModalUI {
       bodyContent: [this.form],
     });
 
+    const createBtn = createButton({ text: "Create task" , onClick: this.modal.openModal});
+
+    this.modal.modalContainer.append(createBtn);
+
     target.append(this.modal.modalContainer);
   }
 
   closeModal = () => {
     this.modal.closeModal();
-  }
+  };
 }

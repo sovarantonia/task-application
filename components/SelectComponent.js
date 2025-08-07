@@ -5,8 +5,15 @@ export class SelectComponent {
     key = null,
     value = null,
     defaultOptionLabel = "",
+    selectId = null,
   }) {
     const select = document.createElement("select");
+
+    if (selectId) {
+      select.id = selectId;
+      select.name = selectId;
+    }
+    
     if (defaultOptionLabel) {
       select.append(this.getOption(defaultOptionLabel));
     }

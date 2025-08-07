@@ -58,12 +58,7 @@ export class UserLogic {
       totalPages,
     });
 
-    this.userPresentationUI.renderCheckedCheckboxes({
-      checkboxState: this.checkboxHandler.checkboxStateMap,
-    });
-
-    this.checkboxCheckUI.renderCheckboxChecks(this.checkboxHandler.checkboxStateMap)
-
+    this.checkboxCheckUI.renderCheckboxChecks(this.checkboxHandler.checkboxStateMap);
   };
 
   onSendEmailResponse = ({ userInfoList }) => {

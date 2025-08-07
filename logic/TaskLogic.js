@@ -42,7 +42,7 @@ export class TaskLogic {
 
     this.taskPresentationUI = new TaskPresentationUI({
       containerId: "taskPaginationContainer",
-      onViewClick: (item) => this.viewTaskUI.onViewItem(item)
+      onViewClick: (item) => this.viewTaskUI.onViewItem(item),
     });
 
     const { setItemsPerPage, setCurrentPageNo } = this.pagerData;
@@ -74,7 +74,20 @@ export class TaskLogic {
       onSubmit: this.formHandler.handleFormData,
     });
 
-    this.viewTaskUI = new ViewTaskUI({ containerId: "viewTask" });
+    this.editFormHandler = new FormHandler({
+      sendTheDataFunction: (item) =>
+        this.taskService.updateTask({ task: item }), 
+      onDataSent: () => {
+        this.paginationHandler.getPaginatedItems();
+        this.viewTaskUI.closeView();
+      },
+    });
+
+    this.viewTaskUI = new ViewTaskUI({
+      containerId: "viewTask",
+      onSubmit: ({formData, item}) =>
+        this.editFormHandler.handleFormData({ formData: formData, item: item }),
+    });
 
     this.userMap = new Map(initialUserData.map((user) => [user.id, user.user]));
     this.statusMap = new Map(

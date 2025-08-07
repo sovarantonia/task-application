@@ -4,14 +4,15 @@ export class FormHandler {
     this.onDataSent = onDataSent;
   }
 
-  handleFormData = ({ formData }) => {
+  handleFormData = ({ formData, item = null }) => {
     const formDataEntries = new FormData(formData);
-    const obj = {};
+    let obj = {};
     for (const [key, value] of formDataEntries.entries()) {
       obj[key] = value;
     }
-
-    this.sendTheDataFunction(obj).then(() => {
+    const toSend = item ? { ...item, ...obj } : obj;
+    
+    this.sendTheDataFunction(toSend).then(() => {
       this.onDataSent();
       formData.reset();
     });

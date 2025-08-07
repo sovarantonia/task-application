@@ -48,7 +48,7 @@ export class Modal {
     header.append(this.closeBtn);
 
     this.modal.append(header, body, footer);
-    this.modalContainer.append(this.openModalBtn, this.modal);
+    this.modalContainer.append(this.modal);
 
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape") {

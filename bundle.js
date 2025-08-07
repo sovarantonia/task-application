@@ -221,8 +221,15 @@
       key = null,
       value = null,
       defaultOptionLabel = "",
+      selectId = null,
     }) {
       const select = document.createElement("select");
+
+      if (selectId) {
+        select.id = selectId;
+        select.name = selectId;
+      }
+      
       if (defaultOptionLabel) {
         select.append(this.getOption(defaultOptionLabel));
       }
@@ -398,7 +405,7 @@
       });
     }
 
-    update(id, props) {
+    update({id, props}) {
       return new Promise((resolve, reject) => {
         const objToFind = this.objectList.find((obj) => obj.id === id);
         if (!objToFind) {
@@ -479,9 +486,9 @@
       return this.service.findById(id);
     }
 
-    updateTask(task) {
+    updateTask({task}) {
       const { id, ...props } = task;
-      return this.service.update(id, props);
+      return this.service.update({id: id, props: props});
     }
 
     getPaginatedTasks = ({
@@ -526,7 +533,7 @@
       card.className = "task-card";
       const viewButton = createButton({
         text: "View task",
-        onClick: () => onClick({item: element}),
+        onClick: () => onClick(element),
       });
 
       const title = createElementComponent({
@@ -569,7 +576,7 @@
         taskList: paginatedItems,
         userMap,
         statusMap,
-        onClick: (item) => this.onViewClick({item: item})
+        onClick: (item) => this.onViewClick(item)
       });
     };
   }
@@ -946,7 +953,7 @@
       header.append(this.closeBtn);
 
       this.modal.append(header, body, footer);
-      this.modalContainer.append(this.openModalBtn, this.modal);
+      this.modalContainer.append(this.modal);
 
       document.addEventListener("keydown", (e) => {
         if (e.key === "Escape") {
@@ -969,10 +976,29 @@
     };
   }
 
-  function createForm({ onSubmit = null, props = [] }) {
+  function createForm({
+    onSubmit = null,
+    props = [],
+    formId = null,
+    selectList = [],
+    item = null,
+  }) {
     const form = document.createElement("form");
 
-    for (let prop of props) {
+    if (formId) {
+      form.id = formId;
+    }
+
+    if (selectList.length > 0) {
+      selectList.forEach((element) => {
+        const selectLabel = document.createElement("label");
+        selectLabel.textContent = element.labelName;
+        selectLabel.htmlFor = element.select.id;
+        form.append(selectLabel, element.select);
+      });
+    }
+
+    props.forEach((prop) => {
       const propLabel = document.createElement("label");
       propLabel.textContent = prop.name;
       propLabel.htmlFor = prop.id;
@@ -984,7 +1010,7 @@
       propInput.required = prop.isRequired;
 
       form.append(propLabel, propInput);
-    }
+    });
 
     const submitBtn = createButton({
       text: "Submit",
@@ -1024,12 +1050,16 @@
         bodyContent: [this.form],
       });
 
+      const createBtn = createButton({ text: "Create task" , onClick: this.modal.openModal});
+
+      this.modal.modalContainer.append(createBtn);
+
       target.append(this.modal.modalContainer);
     }
 
     closeModal = () => {
       this.modal.closeModal();
-    }
+    };
   }
 
   class FormHandler {
@@ -1038,14 +1068,15 @@
       this.onDataSent = onDataSent;
     }
 
-    handleFormData = ({ formData }) => {
+    handleFormData = ({ formData, item = null }) => {
       const formDataEntries = new FormData(formData);
-      const obj = {};
+      let obj = {};
       for (const [key, value] of formDataEntries.entries()) {
         obj[key] = value;
       }
-
-      this.sendTheDataFunction(obj).then(() => {
+      const toSend = item ? { ...item, ...obj } : obj;
+      
+      this.sendTheDataFunction(toSend).then(() => {
         this.onDataSent();
         formData.reset();
       });
@@ -1053,22 +1084,55 @@
   }
 
   class ViewTaskUI {
-    constructor({containerId, onSubmit = null }) {
+    constructor({ containerId, onSubmit = null }) {
       this.onSubmit = onSubmit;
 
-      document.getElementById(containerId);
+      const target = document.getElementById(containerId);
 
       const title = createElementComponent({
         elementType: "h1",
         text: "Edit task",
       });
 
-      this.modal = new Modal({ openModalBtnText: "View task", headerContent : [title], });
+      const select = new SelectComponent();
+
+      this.selectUser = select.createSelect({
+        list: initialUserData,
+        key: "id",
+        value: "user",
+        defaultOptionLabel: "Select a user",
+        selectId: "user",
+      });
+
+      this.form = createForm({
+        formId: "viewTaskForm",
+        selectList: [
+          {
+            labelName: "Assign user",
+            select: this.selectUser,
+          },
+        ],
+        onSubmit: ({ formData }) => {
+          this.onSubmit({ formData: formData, item: this.currentItem });
+        },
+      });
+
+      this.modal = new Modal({
+        headerContent: [title],
+        bodyContent: [this.form],
+      });
+
+      target.append(this.modal.modalContainer);
     }
 
-    onViewItem = ({item}) => {
-      console.log(item);
-    }
+    onViewItem = (item) => {
+      this.modal.openModal();
+      this.currentItem = item;
+    };
+
+    closeView = () => {
+      this.modal.closeModal();
+    };
   }
 
   class TaskLogic {
@@ -1101,7 +1165,7 @@
 
       this.taskPresentationUI = new TaskPresentationUI({
         containerId: "taskPaginationContainer",
-        onViewClick: (item) => this.viewTaskUI.onViewItem(item)
+        onViewClick: (item) => this.viewTaskUI.onViewItem(item),
       });
 
       const { setItemsPerPage, setCurrentPageNo } = this.pagerData;
@@ -1133,7 +1197,20 @@
         onSubmit: this.formHandler.handleFormData,
       });
 
-      this.viewTaskUI = new ViewTaskUI({ containerId: "viewTask" });
+      this.editFormHandler = new FormHandler({
+        sendTheDataFunction: (item) =>
+          this.taskService.updateTask({ task: item }), 
+        onDataSent: () => {
+          this.paginationHandler.getPaginatedItems();
+          this.viewTaskUI.closeView();
+        },
+      });
+
+      this.viewTaskUI = new ViewTaskUI({
+        containerId: "viewTask",
+        onSubmit: ({formData, item}) =>
+          this.editFormHandler.handleFormData({ formData: formData, item: item }),
+      });
 
       this.userMap = new Map(initialUserData.map((user) => [user.id, user.user]));
       this.statusMap = new Map(
@@ -1291,14 +1368,6 @@
 
       target.append(this.sendEmailButton);
     }
-
-    // renderSelectedCheckboxes = () => {
-    //   const idList = this.onUserListReceived();
-    //   for (let id of idList) {
-    //     const checkbox = document.getElementById(id);
-    //     checkbox.checked = true;
-    //   }
-    // };
   }
 
   class CheckboxHandler {
@@ -1407,12 +1476,7 @@
         totalPages,
       });
 
-      this.userPresentationUI.renderCheckedCheckboxes({
-        checkboxState: this.checkboxHandler.checkboxStateMap,
-      });
-
       this.checkboxCheckUI.renderCheckboxChecks(this.checkboxHandler.checkboxStateMap);
-
     };
 
     onSendEmailResponse = ({ userInfoList }) => {

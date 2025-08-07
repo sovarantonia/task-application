@@ -19,9 +19,9 @@ export class TaskService {
     return this.service.findById(id);
   }
 
-  updateTask(task) {
+  updateTask({task}) {
     const { id, ...props } = task;
-    return this.service.update(id, props);
+    return this.service.update({id: id, props: props});
   }
 
   getPaginatedTasks = ({

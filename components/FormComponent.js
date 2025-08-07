@@ -1,9 +1,28 @@
 import { createButton } from "./ButtonComponent.js";
 
-export function createForm({ onSubmit = null, props = [] }) {
+export function createForm({
+  onSubmit = null,
+  props = [],
+  formId = null,
+  selectList = [],
+  item = null,
+}) {
   const form = document.createElement("form");
 
-  for (let prop of props) {
+  if (formId) {
+    form.id = formId;
+  }
+
+  if (selectList.length > 0) {
+    selectList.forEach((element) => {
+      const selectLabel = document.createElement("label");
+      selectLabel.textContent = element.labelName;
+      selectLabel.htmlFor = element.select.id;
+      form.append(selectLabel, element.select);
+    });
+  }
+
+  props.forEach((prop) => {
     const propLabel = document.createElement("label");
     propLabel.textContent = prop.name;
     propLabel.htmlFor = prop.id;
@@ -15,7 +34,7 @@ export function createForm({ onSubmit = null, props = [] }) {
     propInput.required = prop.isRequired;
 
     form.append(propLabel, propInput);
-  }
+  });
 
   const submitBtn = createButton({
     text: "Submit",
