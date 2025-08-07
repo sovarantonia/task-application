@@ -1,8 +1,15 @@
+import { generateGUID } from "../helpers/guidHelper.js";
 import { DbService } from "./DbService";
 
 export class UserService {
   constructor(userData) {
     this.service = new DbService(userData);
+  }
+
+  saveUser({user}) {
+    const id = generateGUID();
+    user.id = id;
+    return this.service.save({objToSave: user});
   }
 
   getPaginatedUsers = (

@@ -1,24 +1,30 @@
-import { createElementComponent } from "../components/createElementComponent.js";
-import { Modal } from "../components/ModalComponent.js";
-import { createForm } from "../components/FormComponent.js";
 import { createButton } from "../components/ButtonComponent.js";
+import { createElementComponent } from "../components/createElementComponent.js";
+import { createForm } from "../components/FormComponent.js";
+import { Modal } from "../components/ModalComponent.js";
 
-export class CreateTaskModalUI {
-  constructor({ containerId, onSubmit = null }) {
-    this.onSubmit = onSubmit;
-
+export class AddUserModalUI {
+  constructor({ containerId, onSubmit }) {
     const target = document.getElementById(containerId);
+
+    const form = createForm({ onSubmit: onSubmit });
 
     this.form = createForm({
       onSubmit: onSubmit,
       props: [
-        { id: "title", inputType: "text", name: "Title", isRequired: true },
+        { id: "user", inputType: "text", name: "Name", isRequired: true },
+        {
+          id: "department",
+          inputType: "text",
+          name: "Department",
+          isRequired: false,
+        },
       ],
     });
 
     const title = createElementComponent({
       elementType: "h1",
-      text: "Create task",
+      text: "Add  user",
     });
 
     this.modal = new Modal({
@@ -26,7 +32,10 @@ export class CreateTaskModalUI {
       bodyContent: [this.form],
     });
 
-    const createBtn = createButton({ text: "Create task" , onClick: this.modal.openModal});
+    const createBtn = createButton({
+      text: "Add new user",
+      onClick: this.modal.openModal,
+    });
 
     this.modal.modalContainer.append(createBtn);
 

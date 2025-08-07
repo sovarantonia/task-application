@@ -1033,7 +1033,6 @@
       });
 
       this.modal = new Modal({
-        openModalBtnText: "Create task",
         headerContent: [title],
         bodyContent: [this.form],
       });
@@ -1232,6 +1231,12 @@
       this.service = new DbService(userData);
     }
 
+    saveUser({user}) {
+      const id = generateGUID();
+      user.id = id;
+      return this.service.save({objToSave: user});
+    }
+
     getPaginatedUsers = (
       { currentPageNo, itemsPerPage },
       sortCriteria = [],
@@ -1415,6 +1420,50 @@
     };
   }
 
+  class AddUserModalUI {
+    constructor({ containerId, onSubmit }) {
+      const target = document.getElementById(containerId);
+
+      createForm({ onSubmit: onSubmit });
+
+      this.form = createForm({
+        onSubmit: onSubmit,
+        props: [
+          { id: "user", inputType: "text", name: "Name", isRequired: true },
+          {
+            id: "department",
+            inputType: "text",
+            name: "Department",
+            isRequired: false,
+          },
+        ],
+      });
+
+      const title = createElementComponent({
+        elementType: "h1",
+        text: "Add  user",
+      });
+
+      this.modal = new Modal({
+        headerContent: [title],
+        bodyContent: [this.form],
+      });
+
+      const createBtn = createButton({
+        text: "Add new user",
+        onClick: this.modal.openModal,
+      });
+
+      this.modal.modalContainer.append(createBtn);
+
+      target.append(this.modal.modalContainer);
+    }
+
+    closeModal = () => {
+      this.modal.closeModal();
+    };
+  }
+
   class UserLogic {
     constructor({ initialUserData = [] }) {
       this.userService = new UserService(initialUserData);
@@ -1435,7 +1484,7 @@
 
       this.checkboxHandler = new CheckboxHandler({
         objectList: initialUserData,
-        onCheckboxChanged: this.checkboxCheckUI.renderCheckboxChecks
+        onCheckboxChanged: this.checkboxCheckUI.renderCheckboxChecks,
       });
 
       this.userPresentationUI = new UserPresentationUI({
@@ -1456,6 +1505,21 @@
         onItemsPerPageChange: setItemsPerPage,
         onCurrentPageChange: setCurrentPageNo,
       });
+
+      this.addUserModalUI = new AddUserModalUI({
+        containerId: "addUserContainer",
+        onSubmit: ({ formData }) => {
+          handleFormData({
+            sendTheDataFunction: (item) =>
+              this.userService.saveUser({ user: item }),
+            onDataSent: () => {
+              this.addUserModalUI.closeModal();
+              this.paginationHandler.getPaginatedItems();
+            },
+            formData,
+          });
+        },
+      });
     }
 
     onPaginationResponse = ({ paginatedItems, totalPages, currentPageNo }) => {
@@ -1466,7 +1530,9 @@
         totalPages,
       });
 
-      this.checkboxCheckUI.renderCheckboxChecks(this.checkboxHandler.checkboxStateMap);
+      this.checkboxCheckUI.renderCheckboxChecks(
+        this.checkboxHandler.checkboxStateMap,
+      );
     };
 
     onSendEmailResponse = ({ userInfoList }) => {

@@ -7,6 +7,8 @@ import { SendEmailComponentUI } from "../ui/SendEmailComponentUI";
 import { CheckboxHandler } from "./CheckboxHandler";
 import { SendEmailHandler } from "./SendEmailHandler";
 import { CheckboxCheckUI } from "../ui/CheckboxCheckUI";
+import { AddUserModalUI } from "../ui/AddUserModalUI.js";
+import { handleFormData } from "./FormHandler.js";
 export class UserLogic {
   constructor({ initialUserData = [] }) {
     this.userService = new UserService(initialUserData);
@@ -27,7 +29,7 @@ export class UserLogic {
 
     this.checkboxHandler = new CheckboxHandler({
       objectList: initialUserData,
-      onCheckboxChanged: this.checkboxCheckUI.renderCheckboxChecks
+      onCheckboxChanged: this.checkboxCheckUI.renderCheckboxChecks,
     });
 
     this.userPresentationUI = new UserPresentationUI({
@@ -48,6 +50,21 @@ export class UserLogic {
       onItemsPerPageChange: setItemsPerPage,
       onCurrentPageChange: setCurrentPageNo,
     });
+
+    this.addUserModalUI = new AddUserModalUI({
+      containerId: "addUserContainer",
+      onSubmit: ({ formData }) => {
+        handleFormData({
+          sendTheDataFunction: (item) =>
+            this.userService.saveUser({ user: item }),
+          onDataSent: () => {
+            this.addUserModalUI.closeModal();
+            this.paginationHandler.getPaginatedItems();
+          },
+          formData,
+        });
+      },
+    });
   }
 
   onPaginationResponse = ({ paginatedItems, totalPages, currentPageNo }) => {
@@ -58,7 +75,9 @@ export class UserLogic {
       totalPages,
     });
 
-    this.checkboxCheckUI.renderCheckboxChecks(this.checkboxHandler.checkboxStateMap);
+    this.checkboxCheckUI.renderCheckboxChecks(
+      this.checkboxHandler.checkboxStateMap,
+    );
   };
 
   onSendEmailResponse = ({ userInfoList }) => {
