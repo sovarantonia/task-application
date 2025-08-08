@@ -39,7 +39,6 @@ export class FilterControlUI {
 
   onFilterOptionsChanged = ({ columnOptionList, keyValue }) => {
     for (let i = 0; i < columnOptionList.length; i++) {
-      console.log(this.selectList[i])
       this.selectList[i] = this.select.updateSelect({
         select: this.selectList[i],
         options: columnOptionList[i],
