@@ -78,6 +78,7 @@ export class TaskLogic {
 
     this.viewTaskUI = new ViewTaskUI({
       containerId: "viewTask",
+      userAssignList: this.userList, // should have an event to notify
       onSubmit: ({ formData, item }) => {
         handleFormData({
           sendTheDataFunction: (item) =>
@@ -110,6 +111,13 @@ export class TaskLogic {
       userMap: this.userMap,
       statusMap: this.statusMap,
     });
+  };
+
+  onUserListChanged = ({ userList }) => {
+    this.userList = userList; 
+    this.userMap = new Map(this.userList.map((user) => [user.id, user.user]));
+    
+    this.viewTaskUI.onAssignUserListChanged({ assignUserList: this.userList });
   };
 
   init() {

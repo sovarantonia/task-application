@@ -6,6 +6,9 @@ import { initialUserData } from "./data/initialUserData.js";
 document.addEventListener("DOMContentLoaded", () => {
   const taskLogic = new TaskLogic({ initialTaskData });
   taskLogic.init();
-  const userLogic = new UserLogic({ initialUserData });
+  const userLogic = new UserLogic({
+    initialUserData,
+    onUserListChanged: taskLogic.onUserListChanged,
+  });
   userLogic.init();
 });

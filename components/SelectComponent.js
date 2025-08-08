@@ -7,22 +7,22 @@ export class SelectComponent {
     defaultOptionLabel = "",
     selectId = null,
   }) {
-    const select = document.createElement("select");
+    this.select = document.createElement("select");
 
     if (selectId) {
-      select.id = selectId;
-      select.name = selectId;
+      this.select.id = selectId;
+      this.select.name = selectId;
     }
-    
+
     if (defaultOptionLabel) {
-      select.append(this.getOption(defaultOptionLabel));
+      this.select.append(this.getOption(defaultOptionLabel));
     }
     list.forEach((element) => {
-      select.append(this.getOption(element, key, value));
+      this.select.append(this.getOption(element, key, value));
     });
 
-    select.addEventListener("change", onSelectionChanged);
-    return select;
+    this.select.addEventListener("change", onSelectionChanged);
+    return this.select;
   }
 
   getOption(element, key = null, value = null) {
@@ -34,5 +34,30 @@ export class SelectComponent {
       opt.textContent = element[value];
     }
     return opt;
+  }
+
+  updateSelect({
+    select,
+    options = [],
+    key = null,
+    value = null,
+    defaultOptionLabel = "",
+  }) {
+    let optionNo = select.options.length - 1;
+    if (optionNo > 0) {
+      for (let i = optionNo; i >= 0; i--) {
+        select.remove(i);
+      }
+    }
+
+    // if (defaultOptionLabel) {
+    //   this.select.append(this.getOption(defaultOptionLabel));
+    // }
+
+    options.forEach((element) => {
+      select.append(this.getOption(element, key, value));
+    });
+
+    return select;
   }
 }

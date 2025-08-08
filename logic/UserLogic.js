@@ -10,7 +10,9 @@ import { CheckboxCheckUI } from "../ui/CheckboxCheckUI";
 import { AddUserModalUI } from "../ui/AddUserModalUI.js";
 import { handleFormData } from "./FormHandler.js";
 export class UserLogic {
-  constructor({ initialUserData = [] }) {
+  constructor({ initialUserData = [], onUserListChanged = null }) {
+    this.onUserListChanged = onUserListChanged;
+
     this.userService = new UserService(initialUserData);
     this.pagerData = new PagerData();
 
@@ -78,6 +80,7 @@ export class UserLogic {
     this.checkboxCheckUI.renderCheckboxChecks(
       this.checkboxHandler.checkboxStateMap,
     );
+    this.onUserListChanged({ userList: this.userService.service.objectList });
   };
 
   onSendEmailResponse = ({ userInfoList }) => {

@@ -223,22 +223,22 @@
       defaultOptionLabel = "",
       selectId = null,
     }) {
-      const select = document.createElement("select");
+      this.select = document.createElement("select");
 
       if (selectId) {
-        select.id = selectId;
-        select.name = selectId;
+        this.select.id = selectId;
+        this.select.name = selectId;
       }
-      
+
       if (defaultOptionLabel) {
-        select.append(this.getOption(defaultOptionLabel));
+        this.select.append(this.getOption(defaultOptionLabel));
       }
       list.forEach((element) => {
-        select.append(this.getOption(element, key, value));
+        this.select.append(this.getOption(element, key, value));
       });
 
-      select.addEventListener("change", onSelectionChanged);
-      return select;
+      this.select.addEventListener("change", onSelectionChanged);
+      return this.select;
     }
 
     getOption(element, key = null, value = null) {
@@ -250,6 +250,31 @@
         opt.textContent = element[value];
       }
       return opt;
+    }
+
+    updateSelect({
+      select,
+      options = [],
+      key = null,
+      value = null,
+      defaultOptionLabel = "",
+    }) {
+      let optionNo = select.options.length - 1;
+      if (optionNo > 0) {
+        for (let i = optionNo; i >= 0; i--) {
+          select.remove(i);
+        }
+      }
+
+      // if (defaultOptionLabel) {
+      //   this.select.append(this.getOption(defaultOptionLabel));
+      // }
+
+      options.forEach((element) => {
+        select.append(this.getOption(element, key, value));
+      });
+
+      return select;
     }
   }
 
@@ -532,7 +557,7 @@
       const card = createElementComponent({ elementType: "div" });
       card.className = "task-card";
       const viewButton = createButton({
-        text: "Edit task",
+        text: "Assign task",
         onClick: () => onClick(element),
       });
 
@@ -1070,8 +1095,9 @@
   }
 
   class ViewTaskUI {
-    constructor({ containerId, onSubmit = null }) {
+    constructor({ containerId, onSubmit = null, userAssignList = [] }) {
       this.onSubmit = onSubmit;
+      this.userAssignList = userAssignList;
 
       const target = document.getElementById(containerId);
 
@@ -1080,10 +1106,10 @@
         text: "Edit task",
       });
 
-      const select = new SelectComponent();
+      this.select = new SelectComponent();
 
-      this.selectUser = select.createSelect({
-        list: initialUserData,
+      this.selectUser = this.select.createSelect({
+        list: this.userAssignList,
         key: "id",
         value: "user",
         defaultOptionLabel: "Select a user",
@@ -1118,6 +1144,16 @@
 
     closeView = () => {
       this.modal.closeModal();
+    };
+
+    onAssignUserListChanged = ({ assignUserList }) => {
+      this.selectUser = this.select.updateSelect({
+        select: this.selectUser,
+        options: assignUserList,
+        key: "id",
+        value: "user",
+        defaultOptionLabel: "Select a user",
+      });
     };
   }
 
@@ -1187,6 +1223,7 @@
 
       this.viewTaskUI = new ViewTaskUI({
         containerId: "viewTask",
+        userAssignList: this.userList, // should have an event to notify
         onSubmit: ({ formData, item }) => {
           handleFormData({
             sendTheDataFunction: (item) =>
@@ -1219,6 +1256,13 @@
         userMap: this.userMap,
         statusMap: this.statusMap,
       });
+    };
+
+    onUserListChanged = ({ userList }) => {
+      this.userList = userList; 
+      this.userMap = new Map(this.userList.map((user) => [user.id, user.user]));
+      
+      this.viewTaskUI.onAssignUserListChanged({ assignUserList: this.userList });
     };
 
     init() {
@@ -1424,18 +1468,18 @@
     constructor({ containerId, onSubmit }) {
       const target = document.getElementById(containerId);
 
-      createForm({ onSubmit: onSubmit });
-
       this.form = createForm({
         onSubmit: onSubmit,
         props: [
           { id: "user", inputType: "text", name: "Name", isRequired: true },
+          { id: "email", inputType: "text", name: "Email", isRequired: true },
           {
             id: "department",
             inputType: "text",
             name: "Department",
             isRequired: false,
           },
+          ,
         ],
       });
 
@@ -1465,7 +1509,9 @@
   }
 
   class UserLogic {
-    constructor({ initialUserData = [] }) {
+    constructor({ initialUserData = [], onUserListChanged = null }) {
+      this.onUserListChanged = onUserListChanged;
+
       this.userService = new UserService(initialUserData);
       this.pagerData = new PagerData();
 
@@ -1533,6 +1579,7 @@
       this.checkboxCheckUI.renderCheckboxChecks(
         this.checkboxHandler.checkboxStateMap,
       );
+      this.onUserListChanged({ userList: this.userService.service.objectList });
     };
 
     onSendEmailResponse = ({ userInfoList }) => {
@@ -1549,7 +1596,10 @@
   document.addEventListener("DOMContentLoaded", () => {
     const taskLogic = new TaskLogic({ initialTaskData });
     taskLogic.init();
-    const userLogic = new UserLogic({ initialUserData });
+    const userLogic = new UserLogic({
+      initialUserData,
+      onUserListChanged: taskLogic.onUserListChanged,
+    });
     userLogic.init();
   });
 

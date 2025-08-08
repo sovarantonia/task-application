@@ -7,18 +7,18 @@ export class AddUserModalUI {
   constructor({ containerId, onSubmit }) {
     const target = document.getElementById(containerId);
 
-    const form = createForm({ onSubmit: onSubmit });
-
     this.form = createForm({
       onSubmit: onSubmit,
       props: [
         { id: "user", inputType: "text", name: "Name", isRequired: true },
+        { id: "email", inputType: "text", name: "Email", isRequired: true },
         {
           id: "department",
           inputType: "text",
           name: "Department",
           isRequired: false,
         },
+        ,
       ],
     });
 

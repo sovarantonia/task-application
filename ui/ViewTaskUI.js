@@ -4,8 +4,9 @@ import { Modal } from "../components/ModalComponent.js";
 import { SelectComponent } from "../components/SelectComponent.js";
 import { initialUserData } from "../data/initialUserData.js";
 export class ViewTaskUI {
-  constructor({ containerId, onSubmit = null }) {
+  constructor({ containerId, onSubmit = null, userAssignList = [] }) {
     this.onSubmit = onSubmit;
+    this.userAssignList = userAssignList;
 
     const target = document.getElementById(containerId);
 
@@ -14,10 +15,10 @@ export class ViewTaskUI {
       text: "Edit task",
     });
 
-    const select = new SelectComponent();
+    this.select = new SelectComponent();
 
-    this.selectUser = select.createSelect({
-      list: initialUserData,
+    this.selectUser = this.select.createSelect({
+      list: this.userAssignList,
       key: "id",
       value: "user",
       defaultOptionLabel: "Select a user",
@@ -52,5 +53,15 @@ export class ViewTaskUI {
 
   closeView = () => {
     this.modal.closeModal();
+  };
+
+  onAssignUserListChanged = ({ assignUserList }) => {
+    this.selectUser = this.select.updateSelect({
+      select: this.selectUser,
+      options: assignUserList,
+      key: "id",
+      value: "user",
+      defaultOptionLabel: "Select a user",
+    });
   };
 }
