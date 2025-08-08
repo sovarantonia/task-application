@@ -15,7 +15,7 @@ export function renderTasks({
     const status = statusMap.get(element.status);
 
     const card = createElementComponent({ elementType: "div" });
-    card.className = "task-card";
+    card.className = "card";
     const viewButton = createButton({
       text: "Assign task",
       onClick: () => onClick(element),

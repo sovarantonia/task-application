@@ -2,7 +2,6 @@ import { createElementComponent } from "../components/createElementComponent.js"
 import { createForm } from "../components/FormComponent.js";
 import { Modal } from "../components/ModalComponent.js";
 import { SelectComponent } from "../components/SelectComponent.js";
-import { initialUserData } from "../data/initialUserData.js";
 export class ViewTaskUI {
   constructor({ containerId, onSubmit = null, userAssignList = [] }) {
     this.onSubmit = onSubmit;
@@ -12,16 +11,12 @@ export class ViewTaskUI {
 
     const title = createElementComponent({
       elementType: "h1",
-      text: "Edit task",
+      text: "Assign user",
     });
 
     this.select = new SelectComponent();
 
     this.selectUser = this.select.createSelect({
-      list: this.userAssignList,
-      key: "id",
-      value: "user",
-      defaultOptionLabel: "Select a user",
       selectId: "user",
     });
 

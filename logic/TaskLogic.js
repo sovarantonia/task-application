@@ -78,7 +78,6 @@ export class TaskLogic {
 
     this.viewTaskUI = new ViewTaskUI({
       containerId: "viewTask",
-      userAssignList: this.userList,
       onSubmit: ({ formData, item }) => {
         handleFormData({
           sendTheDataFunction: (item) =>

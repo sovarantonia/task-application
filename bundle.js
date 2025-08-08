@@ -555,7 +555,7 @@
       const status = statusMap.get(element.status);
 
       const card = createElementComponent({ elementType: "div" });
-      card.className = "task-card";
+      card.className = "card";
       const viewButton = createButton({
         text: "Assign task",
         onClick: () => onClick(element),
@@ -961,6 +961,7 @@
       this.modal.classList.add("hidden", "modal");
 
       this.closeBtn = createButton({ text: "Close", onClick: this.closeModal });
+      this.closeBtn.className = "closeBtn";
 
       const header = createElementComponent({
         elementType: "div",
@@ -1079,7 +1080,10 @@
         bodyContent: [this.form],
       });
 
-      const createBtn = createButton({ text: "Create task" , onClick: this.modal.openModal});
+      const createBtn = createButton({
+        text: "Create task",
+        onClick: this.modal.openModal,
+      });
 
       this.modal.modalContainer.append(createBtn);
 
@@ -1120,16 +1124,12 @@
 
       const title = createElementComponent({
         elementType: "h1",
-        text: "Edit task",
+        text: "Assign user",
       });
 
       this.select = new SelectComponent();
 
       this.selectUser = this.select.createSelect({
-        list: this.userAssignList,
-        key: "id",
-        value: "user",
-        defaultOptionLabel: "Select a user",
         selectId: "user",
       });
 
@@ -1240,7 +1240,6 @@
 
       this.viewTaskUI = new ViewTaskUI({
         containerId: "viewTask",
-        userAssignList: this.userList,
         onSubmit: ({ formData, item }) => {
           handleFormData({
             sendTheDataFunction: (item) =>
@@ -1347,7 +1346,7 @@
 
     userList.forEach((element) => {
       const card = createElementComponent({ elementType: "div" });
-      card.className = "user-card";
+      card.className = "card";
 
       const userCheckbox = createCheckbox({
         id: element.id,
@@ -1362,7 +1361,7 @@
       });
 
       const nameInfo = createElementComponent({
-        elementType: "p",
+        elementType: "h3",
         text: `${element.user}`,
       });
 

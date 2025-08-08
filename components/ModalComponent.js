@@ -14,6 +14,7 @@ export class Modal {
     this.modal.classList.add("hidden", "modal");
 
     this.closeBtn = createButton({ text: "Close", onClick: this.closeModal });
+    this.closeBtn.className = "closeBtn";
 
     const header = createElementComponent({
       elementType: "div",

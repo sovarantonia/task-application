@@ -26,7 +26,10 @@ export class CreateTaskModalUI {
       bodyContent: [this.form],
     });
 
-    const createBtn = createButton({ text: "Create task" , onClick: this.modal.openModal});
+    const createBtn = createButton({
+      text: "Create task",
+      onClick: this.modal.openModal,
+    });
 
     this.modal.modalContainer.append(createBtn);
 

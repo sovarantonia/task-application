@@ -1,19 +1,25 @@
-.task-card {
-    background-color: #fff;
-    border-radius: 8px;
-    padding: 16px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    transition: transform 0.2s ease;
+.card {
+  background-color: #fff;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+  display: grid;
+  width: 400px;
+  /* justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0; */
 }
 
-.task-card:hover {
-    transform: translateY(-5px);
+.card:hover {
+  transform: translateY(-5px);
 }
 
-#paginationContainer {
+/* #paginationContainer {
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 12px;
   margin: 20px 0;
-}
+} */

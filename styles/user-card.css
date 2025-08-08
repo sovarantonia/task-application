@@ -1,11 +1,18 @@
-.user-card {
-  background-color: #fff;
-  border-radius: 8px;
-  padding: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  transition: transform 0.2s ease;
+select {
+  border-radius: 5px;
 }
 
-.user-card :hover {
-  transform: translateY(-5px);
+div {
+  margin-top: 1px;
+  margin-bottom: 5px;
+}
+
+button {
+  border-radius: 5px;
+  border-width: 1px;
+  width: 100px;
+}
+
+h2{
+  text-align: center;
 }
