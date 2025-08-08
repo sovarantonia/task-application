@@ -50,9 +50,9 @@ export class SelectComponent {
       }
     }
 
-    // if (defaultOptionLabel) {
-    //   this.select.append(this.getOption(defaultOptionLabel));
-    // }
+    if (defaultOptionLabel) {
+      select.append(this.getOption(defaultOptionLabel));
+    }
 
     options.forEach((element) => {
       select.append(this.getOption(element, key, value));

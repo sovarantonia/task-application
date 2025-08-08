@@ -266,9 +266,9 @@
         }
       }
 
-      // if (defaultOptionLabel) {
-      //   this.select.append(this.getOption(defaultOptionLabel));
-      // }
+      if (defaultOptionLabel) {
+        select.append(this.getOption(defaultOptionLabel));
+      }
 
       options.forEach((element) => {
         select.append(this.getOption(element, key, value));
@@ -840,10 +840,12 @@
 
       const target = document.getElementById(containerId);
 
-      const select = new SelectComponent();
+      this.selectList = [];
+
+      this.select = new SelectComponent();
 
       for (let i = 0; i < columnOptionList.length; i++) {
-        this.createSelectComponent = select.createSelect({
+        this.createSelectComponent = this.select.createSelect({
           list: columnOptionList[i],
           onSelectionChanged: (e) =>
             this.onFilterCriteriaChanged(keyValue[i].value, e.target.value),
@@ -851,14 +853,30 @@
           value: keyValue[i].value,
           defaultOptionLabel: "All",
         });
+
         this.filterBySpan = createElementComponent({
           elementType: "span",
           text: `Filter by ${keyValue[i].value}: `,
         });
 
-        target.append(this.filterBySpan, this.createSelectComponent);
+        this.selectList.push(this.createSelectComponent);
+
+        target.append(this.filterBySpan, this.selectList[i]);
       }
     }
+
+    onFilterOptionsChanged = ({ columnOptionList, keyValue }) => {
+      for (let i = 0; i < columnOptionList.length; i++) {
+        console.log(this.selectList[i]);
+        this.selectList[i] = this.select.updateSelect({
+          select: this.selectList[i],
+          options: columnOptionList[i],
+          key: keyValue[i].key,
+          value: keyValue[i].value,
+          defaultOptionLabel: "All"
+        }); 
+      }
+    };
   }
 
   const taskStatus = [
@@ -1223,7 +1241,7 @@
 
       this.viewTaskUI = new ViewTaskUI({
         containerId: "viewTask",
-        userAssignList: this.userList, // should have an event to notify
+        userAssignList: this.userList,
         onSubmit: ({ formData, item }) => {
           handleFormData({
             sendTheDataFunction: (item) =>
@@ -1244,12 +1262,7 @@
       );
     }
 
-    onPaginationResponse = ({
-      paginatedItems,
-      totalPages,
-      currentPageNo,
-      itemsPerPage,
-    }) => {
+    onPaginationResponse = ({ paginatedItems, totalPages, currentPageNo }) => {
       this.pagerComponentUI.updateSelect({ currentPageNo, totalPages });
       this.taskPresentationUI.renderTasks({
         paginatedItems,
@@ -1259,10 +1272,18 @@
     };
 
     onUserListChanged = ({ userList }) => {
-      this.userList = userList; 
+      this.userList = userList;
       this.userMap = new Map(this.userList.map((user) => [user.id, user.user]));
-      
+
       this.viewTaskUI.onAssignUserListChanged({ assignUserList: this.userList });
+
+      this.filterTaskControlUI.onFilterOptionsChanged({
+        columnOptionList: [taskStatus, this.userList],
+        keyValue: [
+          { key: "id", value: "status" },
+          { key: "id", value: "user" },
+        ],
+      });
     };
 
     init() {

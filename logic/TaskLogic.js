@@ -78,7 +78,7 @@ export class TaskLogic {
 
     this.viewTaskUI = new ViewTaskUI({
       containerId: "viewTask",
-      userAssignList: this.userList, // should have an event to notify
+      userAssignList: this.userList,
       onSubmit: ({ formData, item }) => {
         handleFormData({
           sendTheDataFunction: (item) =>
@@ -99,12 +99,7 @@ export class TaskLogic {
     );
   }
 
-  onPaginationResponse = ({
-    paginatedItems,
-    totalPages,
-    currentPageNo,
-    itemsPerPage,
-  }) => {
+  onPaginationResponse = ({ paginatedItems, totalPages, currentPageNo }) => {
     this.pagerComponentUI.updateSelect({ currentPageNo, totalPages });
     this.taskPresentationUI.renderTasks({
       paginatedItems,
@@ -114,10 +109,18 @@ export class TaskLogic {
   };
 
   onUserListChanged = ({ userList }) => {
-    this.userList = userList; 
+    this.userList = userList;
     this.userMap = new Map(this.userList.map((user) => [user.id, user.user]));
-    
+
     this.viewTaskUI.onAssignUserListChanged({ assignUserList: this.userList });
+
+    this.filterTaskControlUI.onFilterOptionsChanged({
+      columnOptionList: [taskStatus, this.userList],
+      keyValue: [
+        { key: "id", value: "status" },
+        { key: "id", value: "user" },
+      ],
+    });
   };
 
   init() {

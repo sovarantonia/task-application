@@ -12,10 +12,12 @@ export class FilterControlUI {
 
     const target = document.getElementById(containerId);
 
-    const select = new SelectComponent();
+    this.selectList = [];
+
+    this.select = new SelectComponent();
 
     for (let i = 0; i < columnOptionList.length; i++) {
-      this.createSelectComponent = select.createSelect({
+      this.createSelectComponent = this.select.createSelect({
         list: columnOptionList[i],
         onSelectionChanged: (e) =>
           this.onFilterCriteriaChanged(keyValue[i].value, e.target.value),
@@ -23,12 +25,28 @@ export class FilterControlUI {
         value: keyValue[i].value,
         defaultOptionLabel: "All",
       });
+
       this.filterBySpan = createElementComponent({
         elementType: "span",
         text: `Filter by ${keyValue[i].value}: `,
       });
 
-      target.append(this.filterBySpan, this.createSelectComponent);
+      this.selectList.push(this.createSelectComponent);
+
+      target.append(this.filterBySpan, this.selectList[i]);
     }
   }
+
+  onFilterOptionsChanged = ({ columnOptionList, keyValue }) => {
+    for (let i = 0; i < columnOptionList.length; i++) {
+      console.log(this.selectList[i])
+      this.selectList[i] = this.select.updateSelect({
+        select: this.selectList[i],
+        options: columnOptionList[i],
+        key: keyValue[i].key,
+        value: keyValue[i].value,
+        defaultOptionLabel: "All"
+      }); 
+    }
+  };
 }
