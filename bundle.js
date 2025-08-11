@@ -534,6 +534,7 @@
   function createButton({ text = "", onClick = null, type = null }) {
     const element = document.createElement("button");
     element.textContent = text;
+    element.innerHTML = text;
     if (type) {
       element.type = type;
     }
@@ -949,19 +950,15 @@
   ];
 
   class Modal {
-    constructor({
-      headerContent = [],
-      bodyContent = [],
-      footerContent = [],
-    }) {
+    constructor({ headerContent = [], bodyContent = [], footerContent = [] }) {
       this.modalContainer = createElementComponent({ elementType: "div" });
 
       this.modal = createElementComponent({ elementType: "div" });
 
       this.modal.classList.add("hidden", "modal");
 
-      this.closeBtn = createButton({ text: "Close", onClick: this.closeModal });
-      this.closeBtn.className = "closeBtn";
+      this.closeBtn = createButton({ text: "\u2716", onClick: this.closeModal });
+      this.closeBtn.classList.add("closeModalBtn");
 
       const header = createElementComponent({
         elementType: "div",
@@ -1022,14 +1019,21 @@
 
     if (selectList.length > 0) {
       selectList.forEach((element) => {
+        const div = createElementComponent({ elementType: "div" });
+        div.classList.add("formFields");
+
         const selectLabel = document.createElement("label");
         selectLabel.textContent = element.labelName;
         selectLabel.htmlFor = element.select.id;
-        form.append(selectLabel, element.select);
+        div.append(selectLabel, element.select);
+        form.append(div);
       });
     }
 
     props.forEach((prop) => {
+      const div = createElementComponent({ elementType: "div" });
+      div.classList.add("formFields");
+
       const propLabel = document.createElement("label");
       propLabel.textContent = prop.name;
       propLabel.htmlFor = prop.id;
@@ -1040,14 +1044,19 @@
       propInput.name = prop.id;
       propInput.required = prop.isRequired;
 
-      form.append(propLabel, propInput);
+      div.append(propLabel, propInput);
+      form.append(div);
     });
+
+    const formFooter = createElementComponent({ elementType: "div" });
 
     const submitBtn = createButton({
       text: "Submit",
       type: "submit",
     });
-    form.append(submitBtn);
+
+    formFooter.append(submitBtn);
+    form.append(formFooter);
 
     form.addEventListener("submit", (e) => {
       e.preventDefault();
@@ -1346,7 +1355,7 @@
 
     userList.forEach((element) => {
       const card = createElementComponent({ elementType: "div" });
-      card.className = "card";
+      card.classList.add("card", "user");
 
       const userCheckbox = createCheckbox({
         id: element.id,

@@ -2,19 +2,15 @@ import { createButton } from "./ButtonComponent.js";
 import { createElementComponent } from "./createElementComponent.js";
 
 export class Modal {
-  constructor({
-    headerContent = [],
-    bodyContent = [],
-    footerContent = [],
-  }) {
+  constructor({ headerContent = [], bodyContent = [], footerContent = [] }) {
     this.modalContainer = createElementComponent({ elementType: "div" });
 
     this.modal = createElementComponent({ elementType: "div" });
 
     this.modal.classList.add("hidden", "modal");
 
-    this.closeBtn = createButton({ text: "Close", onClick: this.closeModal });
-    this.closeBtn.className = "closeBtn";
+    this.closeBtn = createButton({ text: "\u2716", onClick: this.closeModal });
+    this.closeBtn.classList.add("closeModalBtn");
 
     const header = createElementComponent({
       elementType: "div",

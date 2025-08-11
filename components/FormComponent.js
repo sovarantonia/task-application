@@ -1,4 +1,5 @@
 import { createButton } from "./ButtonComponent.js";
+import { createElementComponent } from "./createElementComponent.js";
 
 export function createForm({
   onSubmit = null,
@@ -14,14 +15,21 @@ export function createForm({
 
   if (selectList.length > 0) {
     selectList.forEach((element) => {
+      const div = createElementComponent({ elementType: "div" });
+      div.classList.add("formFields");
+
       const selectLabel = document.createElement("label");
       selectLabel.textContent = element.labelName;
       selectLabel.htmlFor = element.select.id;
-      form.append(selectLabel, element.select);
+      div.append(selectLabel, element.select);
+      form.append(div);
     });
   }
 
   props.forEach((prop) => {
+    const div = createElementComponent({ elementType: "div" });
+    div.classList.add("formFields");
+
     const propLabel = document.createElement("label");
     propLabel.textContent = prop.name;
     propLabel.htmlFor = prop.id;
@@ -32,14 +40,19 @@ export function createForm({
     propInput.name = prop.id;
     propInput.required = prop.isRequired;
 
-    form.append(propLabel, propInput);
+    div.append(propLabel, propInput);
+    form.append(div);
   });
+
+  const formFooter = createElementComponent({ elementType: "div" });
 
   const submitBtn = createButton({
     text: "Submit",
     type: "submit",
   });
-  form.append(submitBtn);
+
+  formFooter.append(submitBtn);
+  form.append(formFooter);
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();

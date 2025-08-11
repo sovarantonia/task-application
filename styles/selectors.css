@@ -1,0 +1,70 @@
+select {
+  appearance: base-select;
+  border-radius: 2px;
+  font-family: "Open Sans", sans-serif;
+}
+
+select::picker-icon {
+  color: #eee7e7;
+  transition: 0.4s rotate;
+}
+
+select:open::picker-icon {
+  rotate: 180deg;
+}
+
+option {
+  display: flex;
+  justify-content: flex-start;
+  gap: 20px;
+
+  border: 2px solid #ddd;
+  background: #eee;
+  padding: 10px;
+  transition: 0.4s;
+  font-family: "Open Sans", sans-serif;
+}
+
+option:nth-of-type(even) {
+  background: #e69177;
+}
+
+option:nth-of-type(odd) {
+  background: white;
+}
+
+div {
+  padding-bottom: 5px;
+}
+
+button {
+  border-radius: 4px;
+  border-width: 1px;
+  border: 1px solid #ca7960;
+  width: 110px;
+  transition-duration: 0.3s;
+  background-color: #ee987e;
+  font-family: " Open Sans ", sans-serif;
+  padding: 5px 5px 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #c56d52;
+  box-shadow: 5px 5px 5px gray;
+}
+
+h2 {
+  text-align: center;
+}
+
+p,
+label,
+h3,
+span,
+h1,
+input,
+h2 {
+  font-family: "Open Sans", sans-serif;
+  overflow: auto;
+}

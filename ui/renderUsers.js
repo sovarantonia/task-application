@@ -11,7 +11,7 @@ export function renderUsers({
 
   userList.forEach((element) => {
     const card = createElementComponent({ elementType: "div" });
-    card.className = "card";
+    card.classList.add("card", "user")
 
     const userCheckbox = createCheckbox({
       id: element.id,

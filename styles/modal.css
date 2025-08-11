@@ -5,11 +5,12 @@
 .modal {
   flex-direction: column;
   justify-content: center;
+  flex-wrap: wrap;
   gap: 0.4rem;
   width: 450px;
   padding: 1.3rem;
   min-height: 450px;
-  position: absolute;
+  position: fixed;
   z-index: 2;
   background-color: white;
   border: 1px solid #ddd;
@@ -33,6 +34,20 @@
   z-index: 1;
 }
 
-/* #closeBtn {
+#header {
+  display: flex;
+  justify-content: space-between;
+}
 
-} */
+.closeModalBtn {
+  font-size: 30px;
+  border: none;
+  background-color: transparent;
+  color: rgb(170, 54, 54);
+  transition-duration: 0.2s;
+}
+
+.closeModalBtn:hover {
+  color: rgb(202, 32, 32);
+  background-color: transparent;
+}
