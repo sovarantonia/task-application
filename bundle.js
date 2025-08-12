@@ -1621,7 +1621,36 @@
     }
   }
 
+  class LighDarkControlUI {
+    constructor({ containerId = null, onClick }) {
+      const target = document.getElementById(containerId);
+      const controlBtn = createButton({text: "Change theme", onClick: onClick});
+
+      target.append(controlBtn);
+    }
+  }
+
+  function setTheme({theme}) {
+    let themeValue = localStorage.getItem(theme);
+    localStorage.setItem(theme, "0");
+    if (themeValue) {
+      themeValue = toString((parseInt(theme) + 1) % 2);
+      localStorage.setItem(theme, themeValue); 
+    }
+
+    const root = document.documentElement;
+    if (themeValue == "0") {
+      root.className = "light";
+    } else {
+      root.className = "dark";
+    }
+  }
+
   document.addEventListener("DOMContentLoaded", () => {
+    new LighDarkControlUI({
+      containerId: "lightDarkControl",
+      onClick: () => setTheme({theme: "isDark"})
+    });
     const taskLogic = new TaskLogic({ initialTaskData });
     taskLogic.init();
     const userLogic = new UserLogic({

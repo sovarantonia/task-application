@@ -1,3 +1,19 @@
+:root {
+  color-scheme: light dark;
+}
+
+.light {
+  color-scheme: light;
+}
+
+.dark {
+  color-scheme: dark;
+}
+
+body {
+  color: light-dark(black, white);
+  background-color: light-dark(#eee, rgb(97, 88, 88));
+}
 select {
   appearance: base-select;
   border-radius: 2px;
@@ -5,7 +21,7 @@ select {
 }
 
 select::picker-icon {
-  color: #eee7e7;
+  color: light-dark(#e69177, #8b4d3a);
   transition: 0.4s rotate;
 }
 
@@ -22,11 +38,11 @@ option {
 }
 
 option:nth-of-type(even) {
-  background: #e69177;
+  background: light-dark(#e69177, #8b4d3a);
 }
 
 option:nth-of-type(odd) {
-  background: white;
+  background: light-dark(white, #5c5654);
 }
 
 button {
@@ -35,14 +51,14 @@ button {
   border: 1px solid #ca7960;
   width: 110px;
   transition-duration: 0.3s;
-  background-color: #ee987e;
+  background-color: light-dark(#ee987e, #8b4d3a);
   font-family: " Open Sans ", sans-serif;
   padding: 5px 5px 5px;
   cursor: pointer;
 }
 
 button:hover {
-  background-color: #c56d52;
+  background-color: light-dark(#c56d52, #57423c);
   box-shadow: 5px 5px 5px gray;
 }
 
