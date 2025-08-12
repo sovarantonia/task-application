@@ -62,6 +62,9 @@ export class UserLogic {
           onDataSent: () => {
             this.addUserModalUI.closeModal();
             this.paginationHandler.getPaginatedItems();
+            this.onUserListChanged({
+              userList: this.userService.service.objectList,
+            });
           },
           formData,
         });
@@ -80,7 +83,6 @@ export class UserLogic {
     this.checkboxCheckUI.renderCheckboxChecks(
       this.checkboxHandler.checkboxStateMap,
     );
-    this.onUserListChanged({ userList: this.userService.service.objectList });
   };
 
   onSendEmailResponse = ({ userInfoList }) => {
@@ -91,5 +93,6 @@ export class UserLogic {
 
   init() {
     this.pagerData.init();
+    this.onUserListChanged({ userList: this.userService.service.objectList });
   }
 }

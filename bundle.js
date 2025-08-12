@@ -1586,6 +1586,9 @@
             onDataSent: () => {
               this.addUserModalUI.closeModal();
               this.paginationHandler.getPaginatedItems();
+              this.onUserListChanged({
+                userList: this.userService.service.objectList,
+              });
             },
             formData,
           });
@@ -1604,7 +1607,6 @@
       this.checkboxCheckUI.renderCheckboxChecks(
         this.checkboxHandler.checkboxStateMap,
       );
-      this.onUserListChanged({ userList: this.userService.service.objectList });
     };
 
     onSendEmailResponse = ({ userInfoList }) => {
@@ -1615,6 +1617,7 @@
 
     init() {
       this.pagerData.init();
+      this.onUserListChanged({ userList: this.userService.service.objectList });
     }
   }
 

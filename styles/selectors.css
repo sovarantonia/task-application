@@ -14,10 +14,6 @@ select:open::picker-icon {
 }
 
 option {
-  display: flex;
-  justify-content: flex-start;
-  gap: 20px;
-
   border: 2px solid #ddd;
   background: #eee;
   padding: 10px;
