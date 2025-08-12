@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="./styles/form-component.css" />
     <link rel="stylesheet" href="./styles/loading.css" />
     <link rel="stylesheet" href="./styles/modal.css" />
-    <link rel="stylesheet" href="./styles/content.css" />
+    <link rel="stylesheet" href="./styles/page-content.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -22,11 +22,14 @@
 
     <div id="content">
       <div id="leftSide">
-        <div id="createTaskContainer"></div>
+        
+        <div id="taskCommands">
+          <div id="createTaskContainer"></div>
 
-        <div id="sortTaskContainer"></div>
+          <div id="sortTaskContainer"></div>
 
-        <div id="filterTaskContainer"></div>
+          <div id="filterTaskContainer"></div>
+        </div>
 
         <div id="taskPaginationContainer"></div>
 
@@ -36,17 +39,16 @@
       </div>
 
       <div id="rightSide">
-        <div id="addUserContainer"></div>
 
-        <div id="sortUserContainer"></div>
+        <div id="userCommands">
+          <div id="addUserContainer"></div>
 
-        <div id="filterUserContainer"></div>
+          <div id="sendEmailActionControl"></div>
+        </div>
 
         <div id="userContainer"></div>
 
         <div id="userPageControls"></div>
-
-        <div id="sendEmailActionControl"></div>
       </div>
     </div>
   </body>

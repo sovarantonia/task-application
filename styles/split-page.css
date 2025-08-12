@@ -1,13 +1,15 @@
+* {
+  box-sizing: border-box;
+}
+
 #content {
-  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  align-items: start;
 }
 
-#leftSide {
-  float: left;
-  width: 50%; 
-}
-
-#rightSide {
-  float: right;
-  width: 50%;
+#leftSide, #rightSide {
+  display: grid;
+  gap: 15px;
 }

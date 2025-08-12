@@ -44,15 +44,12 @@ export function createForm({
     form.append(div);
   });
 
-  const formFooter = createElementComponent({ elementType: "div" });
-
   const submitBtn = createButton({
     text: "Submit",
     type: "submit",
   });
 
-  formFooter.append(submitBtn);
-  form.append(formFooter);
+  form.append(submitBtn);
 
   form.addEventListener("submit", (e) => {
     e.preventDefault();

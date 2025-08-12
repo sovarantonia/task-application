@@ -1,0 +1,20 @@
+#taskPaginationContainer,
+#userContainer {
+  display: grid;
+  gap: 15px;
+}
+
+#sortTaskContainer,
+#filterTaskContainer {
+  display: flex;
+  gap: 15px;
+}
+
+#taskCommands,
+#userCommands,
+#taskPerPageSelect,
+#userPageControls {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
