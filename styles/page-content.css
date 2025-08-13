@@ -4,6 +4,16 @@
   gap: 15px;
 }
 
+#userContainer {
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 650px) {
+  #userContainer {
+    grid-template-columns: 1fr;
+  }
+}
+
 #sortTaskContainer,
 #filterTaskContainer {
   display: flex;

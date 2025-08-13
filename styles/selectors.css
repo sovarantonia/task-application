@@ -11,9 +11,12 @@
 }
 
 body {
+  display: grid;
+  gap: 15px;
   color: light-dark(black, white);
   background-color: light-dark(#eee, rgb(97, 88, 88));
 }
+
 select {
   appearance: base-select;
   border-radius: 2px;
@@ -21,7 +24,7 @@ select {
 }
 
 select::picker-icon {
-  color: light-dark(#e69177, #8b4d3a);
+  color: #e69177;
   transition: 0.4s rotate;
 }
 

@@ -1621,28 +1621,41 @@
     }
   }
 
-  class LighDarkControlUI {
-    constructor({ containerId = null, onClick }) {
-      const target = document.getElementById(containerId);
-      const controlBtn = createButton({text: "Change theme", onClick: onClick});
+  function setTheme({ theme }) {
+    let themeValue = localStorage.getItem(theme);
+    if (!themeValue) {
+      themeValue = "0";
+    }
 
-      target.append(controlBtn);
+    themeValue = ((parseInt(themeValue) + 1) % 2).toString();
+
+    localStorage.setItem(theme, themeValue);
+
+    getTheme({ theme });
+  }
+
+  function getTheme({ theme }) {
+    const root = document.documentElement;
+    let themeValue = localStorage.getItem(theme);
+    switch (themeValue) {
+      case "1":
+        root.className = "dark";
+        break;
+
+      default:
+        root.className = "light";
+        break;
     }
   }
 
-  function setTheme({theme}) {
-    let themeValue = localStorage.getItem(theme);
-    localStorage.setItem(theme, "0");
-    if (themeValue) {
-      themeValue = toString((parseInt(theme) + 1) % 2);
-      localStorage.setItem(theme, themeValue); 
-    }
+  class LighDarkControlUI {
+    constructor({ containerId = null, onClick }) {
+      const target = document.getElementById(containerId);
+      const controlBtn = createButton({ text: "Change theme", onClick: onClick });
 
-    const root = document.documentElement;
-    if (themeValue == "0") {
-      root.className = "light";
-    } else {
-      root.className = "dark";
+      getTheme({ theme: "isDark" });
+
+      target.append(controlBtn);
     }
   }
 
