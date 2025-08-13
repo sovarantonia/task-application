@@ -631,19 +631,20 @@
     }
   }
 
-  function hideLoader() {
-    const loader = document.getElementById("loading");
-    const overlay = document.getElementById("overlay");
-    loader.classList.add("hidden");
-    overlay.classList.add("hidden");
-  }
-
-  function addLoader() {
-    const loader = document.getElementById("loading");
-    const overlay = document.getElementById("overlay");
-    loader.classList.remove("hidden");
-    overlay.classList.remove("hidden");
-  }
+  const loaderUtils = {
+    addLoader: () => {
+      const loader = document.getElementById("loading");
+      const overlay = document.getElementById("overlay");
+      loader.classList.remove("hidden");
+      overlay.classList.remove("hidden");
+    },
+    hideLoader: () => {
+      const loader = document.getElementById("loading");
+      const overlay = document.getElementById("overlay");
+      loader.classList.add("hidden");
+      overlay.classList.add("hidden");
+    },
+  };
 
   class PaginationHandler {
     constructor({
@@ -660,7 +661,7 @@
 
     //calls the pagination function and passes the result to pagination response
     getPaginatedItems = () => {
-      addLoader();
+      loaderUtils.addLoader();
 
       const { currentPageNo, itemsPerPage } = this.pagerData;
       this.paginationFunction({
@@ -669,7 +670,7 @@
         sortCriteria: this.sortCriteria,
         filterCriteria: this.filterCriteria,
       }).then(({ paginatedItems, totalPages }) => {
-        hideLoader();
+        loaderUtils.hideLoader();
 
         this.onPaginationResponse({
           paginatedItems,
