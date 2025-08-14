@@ -1,9 +1,9 @@
 import {
   getPaginatedElements,
   getTotalPages,
-} from "../logic/pagination/Pagination";
-import { multiFieldSort } from "../helpers/sortHelper";
-import { multiFieldFilter } from "../helpers/filterHelper";
+} from "../logic/pagination/Pagination.js";
+import { multiFieldSort } from "../helpers/sortHelper.js";
+import { multiFieldFilter } from "../helpers/filterHelper.js";
 
 export class DbService {
   constructor(initialData) {

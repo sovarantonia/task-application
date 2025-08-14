@@ -224,6 +224,7 @@ describe("Testing pagination handler", () => {
         currentPageNo: 1,
         itemsPerPage: 10,
       });
+      
     });
     done();
   });
