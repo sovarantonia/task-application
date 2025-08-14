@@ -423,14 +423,14 @@
       this.objectList = initialData;
     }
 
-    save({objToSave}) {
+    save({ objToSave }) {
       return new Promise((resolve) => {
         this.objectList.push(objToSave);
         resolve(objToSave);
       });
     }
 
-    update({id, props}) {
+    update({ id, props }) {
       return new Promise((resolve, reject) => {
         const objToFind = this.objectList.find((obj) => obj.id === id);
         if (!objToFind) {
@@ -475,18 +475,19 @@
         let items = [...this.objectList];
 
         if (filterCriteria.length > 0) {
-          items = items.filter(multiFieldFilter({criteria: filterCriteria}));
+          items = items.filter(multiFieldFilter({ criteria: filterCriteria }));
         }
 
         if (sortCriteria.length > 0) {
-          items = items.sort(multiFieldSort({criteria: sortCriteria}));
+          items = items.sort(multiFieldSort({ criteria: sortCriteria }));
         }
 
-        const paginatedItems = getPaginatedElements({elementList: items,
+        const paginatedItems = getPaginatedElements({
+          elementList: items,
           currentPageNo,
           itemsPerPage,
         });
-        const totalPages = getTotalPages({elementList: items, itemsPerPage});
+        const totalPages = getTotalPages({ elementList: items, itemsPerPage });
 
         setTimeout(() => resolve({ paginatedItems, totalPages }), 2000);
       });
@@ -608,7 +609,7 @@
   }
 
   class PagerData {
-    constructor(onPagerDataChanged = null) {
+    constructor({onPagerDataChanged = null}) {
       this.currentPageNo = 1;
       this.itemsPerPage = 5;
 
@@ -664,7 +665,7 @@
       loaderUtils.addLoader();
 
       const { currentPageNo, itemsPerPage } = this.pagerData;
-      this.paginationFunction({
+      return this.paginationFunction({
         currentPageNo: currentPageNo,
         itemsPerPage: itemsPerPage,
         sortCriteria: this.sortCriteria,
@@ -683,12 +684,12 @@
 
     onSortCriteriaChanged = (sortCriteria) => {
       this.sortCriteria = sortCriteria;
-      this.getPaginatedItems();
+      return this.getPaginatedItems();
     };
 
     onFilterCriteriaChanged = (filterCriteria) => {
       this.filterCriteria = filterCriteria;
-      this.getPaginatedItems();
+      return this.getPaginatedItems();
     };
   }
 
@@ -1184,7 +1185,7 @@
   class TaskLogic {
     constructor({ initialTaskData = [] } = {}) {
       this.taskService = new TaskService(initialTaskData);
-      this.pagerData = new PagerData();
+      this.pagerData = new PagerData({});
 
       this.paginationHandler = new PaginationHandler({
         paginationFunction: this.taskService.getPaginatedTasks,
@@ -1539,7 +1540,7 @@
       this.onUserListChanged = onUserListChanged;
 
       this.userService = new UserService(initialUserData);
-      this.pagerData = new PagerData();
+      this.pagerData = new PagerData({});
 
       this.paginationHandler = new PaginationHandler({
         paginationFunction: this.userService.getPaginatedUsers,

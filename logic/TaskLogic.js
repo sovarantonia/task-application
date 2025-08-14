@@ -15,7 +15,7 @@ import { ViewTaskUI } from "../ui/ViewTaskUI.js";
 export class TaskLogic {
   constructor({ initialTaskData = [] } = {}) {
     this.taskService = new TaskService(initialTaskData);
-    this.pagerData = new PagerData();
+    this.pagerData = new PagerData({});
 
     this.paginationHandler = new PaginationHandler({
       paginationFunction: this.taskService.getPaginatedTasks,

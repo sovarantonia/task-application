@@ -18,7 +18,7 @@ export class PaginationHandler {
     loaderUtils.addLoader();
 
     const { currentPageNo, itemsPerPage } = this.pagerData;
-    this.paginationFunction({
+    return this.paginationFunction({
       currentPageNo: currentPageNo,
       itemsPerPage: itemsPerPage,
       sortCriteria: this.sortCriteria,
@@ -37,11 +37,11 @@ export class PaginationHandler {
 
   onSortCriteriaChanged = (sortCriteria) => {
     this.sortCriteria = sortCriteria;
-    this.getPaginatedItems();
+    return this.getPaginatedItems();
   };
 
   onFilterCriteriaChanged = (filterCriteria) => {
     this.filterCriteria = filterCriteria;
-    this.getPaginatedItems();
+    return this.getPaginatedItems();
   };
 }

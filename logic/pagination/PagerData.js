@@ -1,5 +1,5 @@
 export class PagerData {
-  constructor(onPagerDataChanged = null) {
+  constructor({onPagerDataChanged = null}) {
     this.currentPageNo = 1;
     this.itemsPerPage = 5;
 

@@ -14,7 +14,7 @@ export class UserLogic {
     this.onUserListChanged = onUserListChanged;
 
     this.userService = new UserService(initialUserData);
-    this.pagerData = new PagerData();
+    this.pagerData = new PagerData({});
 
     this.paginationHandler = new PaginationHandler({
       paginationFunction: this.userService.getPaginatedUsers,

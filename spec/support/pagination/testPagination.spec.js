@@ -1,7 +1,7 @@
 import {
   getPaginatedElements,
   getTotalPages,
-} from "../../service/Pagination.js";
+} from "../../../logic/pagination/Pagination.js";
 
 describe("Testing pagination logic", () => {
   let list = [

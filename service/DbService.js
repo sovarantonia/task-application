@@ -1,4 +1,7 @@
-import { getPaginatedElements, getTotalPages } from "../service/Pagination";
+import {
+  getPaginatedElements,
+  getTotalPages,
+} from "../logic/pagination/Pagination";
 import { multiFieldSort } from "../helpers/sortHelper";
 import { multiFieldFilter } from "../helpers/filterHelper";
 
@@ -7,14 +10,14 @@ export class DbService {
     this.objectList = initialData;
   }
 
-  save({objToSave}) {
+  save({ objToSave }) {
     return new Promise((resolve) => {
       this.objectList.push(objToSave);
       resolve(objToSave);
     });
   }
 
-  update({id, props}) {
+  update({ id, props }) {
     return new Promise((resolve, reject) => {
       const objToFind = this.objectList.find((obj) => obj.id === id);
       if (!objToFind) {
@@ -59,18 +62,19 @@ export class DbService {
       let items = [...this.objectList];
 
       if (filterCriteria.length > 0) {
-        items = items.filter(multiFieldFilter({criteria: filterCriteria}));
+        items = items.filter(multiFieldFilter({ criteria: filterCriteria }));
       }
 
       if (sortCriteria.length > 0) {
-        items = items.sort(multiFieldSort({criteria: sortCriteria}));
+        items = items.sort(multiFieldSort({ criteria: sortCriteria }));
       }
 
-      const paginatedItems = getPaginatedElements({elementList: items,
+      const paginatedItems = getPaginatedElements({
+        elementList: items,
         currentPageNo,
         itemsPerPage,
       });
-      const totalPages = getTotalPages({elementList: items, itemsPerPage});
+      const totalPages = getTotalPages({ elementList: items, itemsPerPage });
 
       setTimeout(() => resolve({ paginatedItems, totalPages }), 2000);
     });
