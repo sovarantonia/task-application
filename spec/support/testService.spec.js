@@ -8,27 +8,64 @@ describe("Testing service functionalities", () => {
 
   beforeEach(() => {
     list = [
-      { title: "Task title", description: "First description", user: "Bob" },
       {
+        id: 1,
+        title: "Task title",
+        description: "First description",
+        user: "Bob",
+      },
+      {
+        id: 2,
         title: "Another title",
         description: "Get a description",
         user: "Alice",
       },
-      { title: "Title", description: "Description", user: "Bob" },
-      { title: "New title", description: "Something new", user: "Alice" },
+      { id: 3, title: "Title", description: "Description", user: "Bob" },
       {
+        id: 4,
+        title: "New title",
+        description: "Something new",
+        user: "Alice",
+      },
+      {
+        id: 5,
         title: "Random",
         description: "Very random description",
         user: "Alice",
       },
-      { title: "Task title", description: "Other description", user: "Bob" },
+      {
+        id: 6,
+        title: "Task title",
+        description: "Other description",
+        user: "Bob",
+      },
 
-      { title: "Task title", description: "First description", user: "Alice" },
-      { title: "Another title", description: "Get a description", user: "C" },
-      { title: "Title", description: "Description", user: "C" },
-      { title: "New title", description: "Something new", user: "Bob" },
-      { title: "Random", description: "Very random description", user: "C" },
-      { title: "Task title", description: "Other description", user: "C" },
+      {
+        id: 7,
+        title: "Task title",
+        description: "First description",
+        user: "Alice",
+      },
+      {
+        id: 8,
+        title: "Another title",
+        description: "Get a description",
+        user: "C",
+      },
+      { id: 9, title: "Title", description: "Description", user: "C" },
+      { id: 10, title: "New title", description: "Something new", user: "Bob" },
+      {
+        id: 11,
+        title: "Random",
+        description: "Very random description",
+        user: "C",
+      },
+      {
+        id: 12,
+        title: "Task title",
+        description: "Other description",
+        user: "C",
+      },
     ];
     service = new DbService(list);
   });
@@ -80,6 +117,41 @@ describe("Testing service functionalities", () => {
     promise.then((objToSave) => {
       expect(objToSave).toEqual(newObj);
       done();
+    });
+  });
+
+  it("Testing the update method", (done) => {
+    const updateObj = {
+      id: 2,
+      title: "Another title but shorter",
+      description: "Get a description but longer",
+      user: "Alice",
+    };
+
+    const promise = service.update({ id: updateObj.id, props: updateObj });
+
+    promise.then((objToUpdate) => {
+      expect(objToUpdate).toEqual(updateObj);
+    });
+
+    done();
+  });
+
+  it("Testing delete method", (done) => {
+    const deleteObj = {
+      id: 2,
+      title: "Another title",
+      description: "Get a description",
+      user: "Alice",
+    };
+    const id = 2;
+    const promise = service.delete(id);
+
+    promise.then((removed) => {
+        expect(removed).toEqual(deleteObj);
+        expect(list.find((item) => item.id === id)).toBe(undefined);
+
+        done();
     });
   });
 });
