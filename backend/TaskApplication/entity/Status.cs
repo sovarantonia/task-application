@@ -2,9 +2,9 @@
 {
     public enum Status
     {
-        ToDo,
-        InProgress,
-        InReview,
-        Done
+        ToDo = 1,
+        InProgress = 2,
+        InReview = 3,
+        Done = 4
     }
 }
