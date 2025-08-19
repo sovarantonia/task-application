@@ -1,4 +1,6 @@
-﻿using MySql.Data.MySqlClient;
+﻿using Microsoft.AspNetCore.Http.HttpResults;
+using MySql.Data.MySqlClient;
+using Org.BouncyCastle.Asn1.X509.Qualified;
 using System.Reflection;
 
 namespace TaskApplication.service
@@ -133,9 +135,27 @@ t == typeof(DateTime);
                             if (!IsSimple(convertTo))
                             {
                                 colName = colName + "Id";
+                                if (convertTo.IsEnum)
+                                {
+                                    property.SetValue(item,
+                                        Enum.ToObject(convertTo,
+                                               Convert.ChangeType(reader[colName], Enum.GetUnderlyingType(convertTo))), null);
+                                }
+                                
+                                else
+                                {
+                                    var instance = Activator.CreateInstance(convertTo);
+                                    var idProp = convertTo.GetProperty("Id");
+                                    idProp.SetValue(instance, idProp.ToString(), null);
+
+                                    property.SetValue(item, instance, null);
+                                }
                             }
-                            
-                            property.SetValue(item, Convert.ChangeType(reader[colName], convertTo), null);
+                            else
+                            {
+                                property.SetValue(item, Convert.ChangeType(reader[colName], convertTo), null);
+                            }
+                                
                         }
                     }
                     return item;
