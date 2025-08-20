@@ -175,7 +175,7 @@
 
         public T FindById(Guid id)
         {
-            String queryString = $"SELECT * FROM {tableName} WHERE id = @id";
+            string queryString = $"SELECT * FROM {tableName} WHERE id = @id";
             var properties = typeof(T).GetProperties();
             using MySqlConnection connection = new MySqlConnection(DbConnection.GetConnectionString());
             connection.Open();

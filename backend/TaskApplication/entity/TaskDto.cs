@@ -2,14 +2,14 @@
 {
     public class TaskDto
     {
-        public String Id { get; set; }
-        public String Title { get; set; }
-        public String Description { get; set; }
-        public DateTime CreationDate { get; set; }
-        public String UserId { get; set; }
-        public Status Status { get; set; }
+        public string Id { get; set; }
+        public string Title { get; set; }
+        public string Description { get; set; }
+        public string CreationDate { get; set; }
+        public string UserId { get; set; }
+        public string Status { get; set; }
 
-        public TaskDto(string id, string title, string description, DateTime creationDate, string userId, Status status)
+        public TaskDto(string id, string title, string description, string creationDate, string userId, string status)
         {
             Id = id;
             Title = title;
@@ -19,7 +19,7 @@
             Status = status;
         }
 
-        public TaskDto(string title, string description, DateTime creationDate, string userId, Status status)
+        public TaskDto(string title, string description, string creationDate, string userId, string status)
         {
             Title = title;
             Description = description;
