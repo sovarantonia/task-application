@@ -2,12 +2,12 @@
 {
     public class User
     { 
-        public string Id { get; set; }
+        public Guid Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string Department { get; set; }
 
-        public User(string userId, string name, string email, string department)
+        public User(Guid userId, string name, string email, string department)
         {
             Id = userId;
             Name = name;

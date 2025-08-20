@@ -2,30 +2,30 @@
 {
     public class Task
     {
-        public string Id { get; set; }
+        public Guid Id { get; set; }
         public string Title { get; set; }
         public string Description { get; set; }
-        public DateTime CreationDate { get; set; }
-        public User User { get; set; }
-        public Status Status { get; set; }
+        public DateOnly CreationDate { get; set; }
+        public Guid UserId { get; set; }
+        public int StatusId { get; set; }
 
-        public Task(string taskId, string title, string description, DateTime creationDate, User user, Status status)
+        public Task(Guid taskId, string title, string description, DateOnly creationDate, Guid userId, int statusId)
         {
             Id = taskId;
             Title = title;
             Description = description;
             CreationDate = creationDate;
-            User = user;
-            Status = status;
+            UserId = userId;
+            StatusId = statusId;
         }
 
-        public Task(string title, string description, DateTime creationDate, User user, Status status)
+        public Task(string title, string description, DateOnly creationDate, Guid userId, int statusId)
         {
             Title = title;
             Description = description;
             CreationDate = creationDate;
-            User = user;
-            Status = status;
+            UserId = userId;
+            StatusId = statusId;
         }
 
         public Task()
@@ -36,7 +36,7 @@
         public override string ToString()
         {
             return String.Format("Title: {0}, Description: {1}, Assigned to: {2}, Created at: {3}, Status: {4}", 
-                Title, Description, User.ToString(), CreationDate.ToString(), Status.ToString());
+                Title, Description, UserId.ToString(), CreationDate.ToString(), StatusId.ToString());
         }
     }
 }
