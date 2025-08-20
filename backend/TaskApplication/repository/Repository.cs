@@ -107,8 +107,6 @@
         public void Update(T entity)
         {
             var properties = typeof(T).GetProperties();
-            var values = new List<string>();
-            var columns = new List<string>();
             var setColumnValues = new List<string>();
 
             Guid id = Guid.Empty;
