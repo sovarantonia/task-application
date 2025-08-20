@@ -31,6 +31,12 @@
             foreach (PropertyInfo prop in properties)
             {
                 var colName = prop.Name;
+
+                if (colName.Equals("Id", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    continue;
+                }
+
                 object? val = prop.GetValue(entity);
                 var type = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
 
@@ -125,29 +131,22 @@
                     {
                         var colName = property.Name;
                         Type convertTo = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-                        //if (!IsSimple(convertTo))
-                        //{
-                        //    colName = colName + "Id";
-                        //    if (convertTo.IsEnum)
-                        //    {
-                        //        property.SetValue(item,
-                        //            Enum.ToObject(convertTo,
-                        //                   Convert.ChangeType(reader[colName], Enum.GetUnderlyingType(convertTo))), null);
-                        //    }
 
-                        //    else
-                        //    {
-                        //        var instance = Activator.CreateInstance(convertTo);
-                        //        var idProp = convertTo.GetProperty("Id");
-                        //        idProp.SetValue(instance, idProp.ToString(), null);
 
-                        //        property.SetValue(item, instance, null);
-                        //    }
-                        //}
-                        //else
-                        //{
-                        property.SetValue(item, Convert.ChangeType(reader[colName], convertTo), null);
-                        //}
+                        if (convertTo == typeof(Guid))
+                        {
+                            var guid = Guid.Parse(reader[colName].ToString());
+                            property.SetValue(item, guid, null);
+                        }
+                        if (convertTo == typeof(DateOnly))
+                        {
+                            var date = reader.GetDateTime(colName);
+                            property.SetValue(item, DateOnly.FromDateTime(date), null);
+                        }
+                        else
+                        {
+                            property.SetValue(item, Convert.ChangeType(reader[colName], convertTo), null);
+                        }
 
                     }
                 }

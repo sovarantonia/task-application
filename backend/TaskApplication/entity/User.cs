@@ -29,7 +29,7 @@
 
         public override string ToString()
         {
-            return String.Format("User name: {0}, email: {1}, department: {2}", this.Name, this.Email, this.Department);
+            return $"Id: {Id}, User name: {Name}, email: {Email}, department: {Department}"; 
         }
     }
     

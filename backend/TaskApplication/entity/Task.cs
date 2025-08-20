@@ -35,8 +35,7 @@
 
         public override string ToString()
         {
-            return String.Format("Title: {0}, Description: {1}, Assigned to: {2}, Created at: {3}, Status: {4}", 
-                Title, Description, UserId.ToString(), CreationDate.ToString(), StatusId.ToString());
+            return $"Id: {Id} Title: {Title}, Description: {Description}, Assigned to: {UserId}, Created at: {CreationDate}, Status: {StatusId}";
         }
     }
 }
