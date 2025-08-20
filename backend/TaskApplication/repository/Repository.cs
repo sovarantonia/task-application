@@ -132,7 +132,7 @@
                 var placeholder = $"@p{i++}";
                 setColumnValues.Add($"{colName} = {placeholder}");
 
-                var param = command.Parameters.Add(placeholder, MySqlDbType.VarString);
+                var param = command.Parameters.Add(placeholder, MySqlDbType.VarChar);
                 if (val is null)
                 {
                     param.Value = DBNull.Value;
