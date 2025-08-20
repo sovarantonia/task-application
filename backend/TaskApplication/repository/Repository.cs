@@ -1,6 +1,5 @@
 ﻿namespace TaskApplication.service
 {
-    //using MySql.Data.MySqlClient;
     using System.Reflection;
     using MySqlConnector;
 
@@ -105,10 +104,76 @@
             }
         }
 
-        //public T Update(T entity)
-        //{
+        public void Update(T entity)
+        {
+            var properties = typeof(T).GetProperties();
+            var values = new List<string>();
+            var columns = new List<string>();
+            var setColumnValues = new List<string>();
 
-        //}
+            Guid id = Guid.Empty;
+
+            using MySqlConnection connection = new MySqlConnection(DbConnection.GetConnectionString());
+            connection.Open();
+            using MySqlCommand command = new MySqlCommand { Connection = connection };
+
+            int i = 0;
+            foreach (PropertyInfo prop in properties)
+            {
+                var colName = prop.Name;
+
+                if (colName.Equals("Id", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    id = (Guid) prop.GetValue(entity);
+                    continue;
+                }
+
+                object? val = prop.GetValue(entity);
+                var type = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+
+                var placeholder = $"@p{i++}";
+                setColumnValues.Add($"{colName} = {placeholder}");
+
+                var param = command.Parameters.Add(placeholder, MySqlDbType.VarString);
+                if (val is null)
+                {
+                    param.Value = DBNull.Value;
+                    continue;
+                }
+
+                if (type == typeof(DateOnly))
+                {
+                    param.MySqlDbType = MySqlDbType.Date;
+                    param.Value = (DateOnly)val;
+                }
+                else if (type == typeof(Guid))
+                {
+                    param.MySqlDbType = MySqlDbType.Guid;
+                    param.Value = (Guid)val;
+                }
+                else
+                {
+                    param.Value = val;
+                }
+            }
+
+            command.CommandText = $"UPDATE `{tableName}` SET {string.Join(", ", setColumnValues)} WHERE id = @id";
+
+            try
+            {
+                var param = command.Parameters.Add("@id", MySqlDbType.Guid);
+                param.Value = id.ToString("D");
+                command.ExecuteNonQuery();
+            }
+            catch (MySqlException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
 
         public T FindById(Guid id)
         {

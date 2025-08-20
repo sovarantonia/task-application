@@ -11,9 +11,12 @@ dbConn.Password = "root";
 
 Repository<User> dbService = new Repository<User>(dbConn, "users");
 User user = new User("Alice Morgan", "alice.morgan@example.com", "Backend Development");
-dbService.Save(user);
-//var result = dbService.FindById(Guid.Parse("c1a4d379-90c1-4e25-bbe2-9a413f0f2c67"));
+//dbService.Save(user);
+//var result = dbService.FindById(Guid.Parse("63fce19d-7dbc-11f0-b933-00505692e06f"));
 //Console.WriteLine(result.ToString());
+User updatedUser = new User(Guid.Parse("6b07b671-7dc3-11f0-b933-00505692e06f"), "Alice Aaaa", "alice.morgan@example.com", "Backend Development2");
+dbService.Update(updatedUser);
+Console.WriteLine(dbService.FindById(Guid.Parse("6b07b671-7dc3-11f0-b933-00505692e06f")));
 
 //TaskApplication.entity.Task task = new TaskApplication.entity.Task
 //    (Guid.Parse("24ab0076-1acc-41c2-952e-ca889c8c7695"), "Fix login bug", "Users cannot log in with correct credentials.",
