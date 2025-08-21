@@ -43,7 +43,7 @@
                 columns.Add($"`{colName}`");
                 values.Add(placeholder);
 
-                var param = command.Parameters.Add(placeholder, MySqlDbType.VarString);
+                var param = command.Parameters.Add(placeholder, MySqlDbType.VarChar);
                 if (val is null)
                 {
                     param.Value = DBNull.Value;
@@ -223,6 +223,74 @@
             { reader.Close(); connection.Close(); }
 
             return default(T);
+        }
+
+        public List<T> getPaginatedItems(int currentPageNo, int itemsPerPage)
+        {
+            /**
+             * SELECT column1, column2, column3 ...
+FROM table_name
+LIMIT number_of_rows OFFSET offset_value;
+            number_of_rows = itemsPerPage
+            offset_value = ((currentPageNo - 1) * itemsPerPage) ---
+            sort: order by col asc/desc (asc = 1; desc = -1)
+            filter: where col=val?
+             */
+
+            List<T> items = new List<T>();
+            var properties = typeof(T).GetProperties();
+
+            string queryString = $"SELECT * FROM {tableName} LIMIT {itemsPerPage} OFFSET {(currentPageNo - 1) * itemsPerPage}";
+
+            using MySqlConnection connection = new MySqlConnection(DbConnection.GetConnectionString());
+            connection.Open();
+
+            MySqlCommand command = new MySqlCommand(queryString, connection);
+
+            try
+            {
+                var reader = command.ExecuteReader();
+                while(reader.Read())
+                {
+                    var item = Activator.CreateInstance<T>();
+                    foreach(var prop in properties)
+                    {
+                        var colName = prop.Name;
+                        Type convertTo = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+
+                        if(prop.PropertyType == typeof(Guid))
+                        {
+                            var guid = Guid.Parse(reader[colName].ToString());
+                            prop.SetValue(item, guid, null);
+                        }
+                         if(prop.PropertyType == typeof(DateOnly))
+                        {
+                            var date = reader.GetDateTime(colName);
+                            prop.SetValue(item, DateOnly.FromDateTime(date), null);
+                        }
+                        else
+                        {
+                            prop.SetValue(item, Convert.ChangeType(reader[colName], convertTo), null);
+                        }
+                        
+                    }
+                    items.Add(item);
+                }
+
+                reader.Close();
+            }
+
+            catch(MySqlException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            finally
+            {
+                connection.Close();
+            }
+
+            return items;
         }
     }
 }
