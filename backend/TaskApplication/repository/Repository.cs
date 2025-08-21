@@ -1,6 +1,7 @@
 ﻿namespace TaskApplication.service
 {
     using System.Reflection;
+    using System.Security.Principal;
     using MySqlConnector;
 
     public class Repository<T>
@@ -240,12 +241,14 @@ LIMIT number_of_rows OFFSET offset_value;
             List<T> items = new List<T>();
             var properties = typeof(T).GetProperties();
 
-            string queryString = $"SELECT * FROM {tableName} LIMIT {itemsPerPage} OFFSET {(currentPageNo - 1) * itemsPerPage}";
-
             using MySqlConnection connection = new MySqlConnection(DbConnection.GetConnectionString());
             connection.Open();
 
-            MySqlCommand command = new MySqlCommand(queryString, connection);
+            MySqlCommand command = new MySqlCommand("GetPaginatedItems", connection);
+            command.CommandType = System.Data.CommandType.StoredProcedure;
+            command.Parameters.Add("tableName", MySqlDbType.VarChar).Value = tableName;
+            command.Parameters.Add("currentPageNo", MySqlDbType.Int64).Value = currentPageNo;
+            command.Parameters.Add("itemsPerPage", MySqlDbType.Int64).Value = itemsPerPage;
 
             try
             {
