@@ -2,6 +2,7 @@
 {
     using System.Reflection;
     using System.Security.Principal;
+    using System.Text.Json;
     using MySqlConnector;
 
     public class Repository<T>
@@ -123,7 +124,7 @@
 
                 if (colName.Equals("Id", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    id = (Guid) prop.GetValue(entity);
+                    id = (Guid)prop.GetValue(entity);
                     continue;
                 }
 
@@ -226,7 +227,7 @@
             return default(T);
         }
 
-        public List<T> getPaginatedItems(int currentPageNo, int itemsPerPage)
+        public List<T> getPaginatedItems(int currentPageNo, int itemsPerPage, Dictionary<string, int> sortCriteria)
         {
             /**
              * SELECT column1, column2, column3 ...
@@ -250,23 +251,52 @@ LIMIT number_of_rows OFFSET offset_value;
             command.Parameters.Add("currentPageNo", MySqlDbType.Int64).Value = currentPageNo;
             command.Parameters.Add("itemsPerPage", MySqlDbType.Int64).Value = itemsPerPage;
 
+
+            List<string> sortColumns = new List<string>();
+            List<int> sortDirections = new List<int>();
+
+
+            if (sortCriteria.Count > 0)
+            {
+
+                foreach (var criterion in sortCriteria)
+                {
+                    sortColumns.Add(criterion.Key);
+                    sortDirections.Add(criterion.Value);
+                }
+
+                var jsonColumns = JsonSerializer.Serialize(sortColumns);
+                var jsonDirections = JsonSerializer.Serialize(sortDirections);
+
+                command.Parameters.Add("sortColumns", MySqlDbType.JSON).Value = jsonColumns;
+                command.Parameters.Add("sortDirections", MySqlDbType.JSON).Value = jsonDirections;
+            }
+            else
+            {
+                command.Parameters.Add("sortColumns", MySqlDbType.JSON).Value = DBNull.Value;
+                command.Parameters.Add("sortDirections", MySqlDbType.JSON).Value = DBNull.Value;
+            }
+
+
+
+
             try
             {
                 var reader = command.ExecuteReader();
-                while(reader.Read())
+                while (reader.Read())
                 {
                     var item = Activator.CreateInstance<T>();
-                    foreach(var prop in properties)
+                    foreach (var prop in properties)
                     {
                         var colName = prop.Name;
                         Type convertTo = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
 
-                        if(prop.PropertyType == typeof(Guid))
+                        if (prop.PropertyType == typeof(Guid))
                         {
                             var guid = Guid.Parse(reader[colName].ToString());
                             prop.SetValue(item, guid, null);
                         }
-                         if(prop.PropertyType == typeof(DateOnly))
+                        if (prop.PropertyType == typeof(DateOnly))
                         {
                             var date = reader.GetDateTime(colName);
                             prop.SetValue(item, DateOnly.FromDateTime(date), null);
@@ -275,7 +305,7 @@ LIMIT number_of_rows OFFSET offset_value;
                         {
                             prop.SetValue(item, Convert.ChangeType(reader[colName], convertTo), null);
                         }
-                        
+
                     }
                     items.Add(item);
                 }
@@ -283,7 +313,7 @@ LIMIT number_of_rows OFFSET offset_value;
                 reader.Close();
             }
 
-            catch(MySqlException e)
+            catch (MySqlException e)
             {
                 Console.WriteLine(e.Message);
             }

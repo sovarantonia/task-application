@@ -36,8 +36,11 @@ User user10 = new User("Alice Morgan10", "10alice.morgan@example.com", "Backend 
 //var result = dbService.FindById(Guid.Parse("63fce19d-7dbc-11f0-b933-00505692e06f"));
 //Console.WriteLine(result.ToString());
 
+Dictionary<string, int> sortCriteria = new Dictionary<string, int>();
+sortCriteria.Add("name", -1);
 
-List<User> result = dbService.getPaginatedItems(2, 5);
+
+List<User> result = dbService.getPaginatedItems(2, 5, sortCriteria);
 result.ForEach(e => Console.WriteLine(e));
 
 //TaskApplication.entity.Task task = new TaskApplication.entity.Task
