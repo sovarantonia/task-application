@@ -227,7 +227,7 @@
             return default(T);
         }
 
-        public List<T> getPaginatedItems(int currentPageNo, int itemsPerPage, Dictionary<string, int> sortCriteria)
+        public List<T> getPaginatedItems(int currentPageNo, int itemsPerPage, Dictionary<string, int> sortCriteria, Dictionary<string, string> filterCriteria)
         {
             /**
              * SELECT column1, column2, column3 ...
@@ -254,6 +254,8 @@ LIMIT number_of_rows OFFSET offset_value;
 
             List<string> sortColumns = new List<string>();
             List<int> sortDirections = new List<int>();
+            List<string> filterColumns = new List<string>();
+            List<string> filterColumnValues = new List<string>();
 
 
             if (sortCriteria.Count > 0)
@@ -265,10 +267,10 @@ LIMIT number_of_rows OFFSET offset_value;
                     sortDirections.Add(criterion.Value);
                 }
 
-                var jsonColumns = JsonSerializer.Serialize(sortColumns);
+                var jsonSortColumns = JsonSerializer.Serialize(sortColumns);
                 var jsonDirections = JsonSerializer.Serialize(sortDirections);
 
-                command.Parameters.Add("sortColumns", MySqlDbType.JSON).Value = jsonColumns;
+                command.Parameters.Add("sortColumns", MySqlDbType.JSON).Value = jsonSortColumns;
                 command.Parameters.Add("sortDirections", MySqlDbType.JSON).Value = jsonDirections;
             }
             else
@@ -277,51 +279,72 @@ LIMIT number_of_rows OFFSET offset_value;
                 command.Parameters.Add("sortDirections", MySqlDbType.JSON).Value = DBNull.Value;
             }
 
-
-
-
-            try
+            if (filterCriteria.Count > 0)
             {
-                var reader = command.ExecuteReader();
-                while (reader.Read())
+                foreach(var criterion in filterCriteria)
                 {
-                    var item = Activator.CreateInstance<T>();
-                    foreach (var prop in properties)
-                    {
-                        var colName = prop.Name;
-                        Type convertTo = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
-
-                        if (prop.PropertyType == typeof(Guid))
-                        {
-                            var guid = Guid.Parse(reader[colName].ToString());
-                            prop.SetValue(item, guid, null);
-                        }
-                        if (prop.PropertyType == typeof(DateOnly))
-                        {
-                            var date = reader.GetDateTime(colName);
-                            prop.SetValue(item, DateOnly.FromDateTime(date), null);
-                        }
-                        else
-                        {
-                            prop.SetValue(item, Convert.ChangeType(reader[colName], convertTo), null);
-                        }
-
-                    }
-                    items.Add(item);
+                    filterColumns.Add(criterion.Key);
+                    filterColumnValues.Add(criterion.Value);
                 }
 
-                reader.Close();
+                var jsonFilterColumns = JsonSerializer.Serialize(filterColumns);
+                var jsonFilterColumnValues = JsonSerializer.Serialize(filterColumnValues);
+
+                command.Parameters.Add("filterColumns", MySqlDbType.JSON).Value = jsonFilterColumns;
+                command.Parameters.Add("filterColumnValues", MySqlDbType.JSON).Value = jsonFilterColumnValues;
             }
 
-            catch (MySqlException e)
+            else
             {
-                Console.WriteLine(e.Message);
+                command.Parameters.Add("filterColumns", MySqlDbType.JSON).Value = DBNull.Value;
+                command.Parameters.Add("filterColumnValues", MySqlDbType.JSON).Value = DBNull.Value;
             }
 
-            finally
-            {
-                connection.Close();
-            }
+
+
+
+                try
+                {
+                    var reader = command.ExecuteReader();
+                    while (reader.Read())
+                    {
+                        var item = Activator.CreateInstance<T>();
+                        foreach (var prop in properties)
+                        {
+                            var colName = prop.Name;
+                            Type convertTo = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
+
+                            if (prop.PropertyType == typeof(Guid))
+                            {
+                                var guid = Guid.Parse(reader[colName].ToString());
+                                prop.SetValue(item, guid, null);
+                            }
+                            if (prop.PropertyType == typeof(DateOnly))
+                            {
+                                var date = reader.GetDateTime(colName);
+                                prop.SetValue(item, DateOnly.FromDateTime(date), null);
+                            }
+                            else
+                            {
+                                prop.SetValue(item, Convert.ChangeType(reader[colName], convertTo), null);
+                            }
+
+                        }
+                        items.Add(item);
+                    }
+
+                    reader.Close();
+                }
+
+                catch (MySqlException e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+
+                finally
+                {
+                    connection.Close();
+                }
 
             return items;
         }
