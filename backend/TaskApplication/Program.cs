@@ -1,4 +1,5 @@
 using System;
+using TaskApplication.controller;
 using TaskApplication.entity;
 using TaskApplication.service;
 using Task = TaskApplication.entity.Task;
@@ -150,10 +151,10 @@ Dictionary<string, string> filterCriteria = new Dictionary<string, string>();
 filterCriteria.Add("statusId", "2");
 
 
-List<Task> result = taskRepository.getPaginatedItems(1, 5, sortCriteria, filterCriteria);
-List<Task> result1 = taskRepository.getPaginatedItems(2, 5, sortCriteria, filterCriteria);
-List<Task> result2 = taskRepository.getPaginatedItems(1, 5, new Dictionary<string, int>(), filterCriteria);
-List<Task> result3 = taskRepository.getPaginatedItems(2, 5, new Dictionary<string, int>(), filterCriteria);
+List<Task> result = taskRepository.GetPaginatedItems(1, 5, sortCriteria, filterCriteria);
+List<Task> result1 = taskRepository.GetPaginatedItems(2, 5, sortCriteria, filterCriteria);
+List<Task> result2 = taskRepository.GetPaginatedItems(1, 5, new Dictionary<string, int>(), filterCriteria);
+List<Task> result3 = taskRepository.GetPaginatedItems(2, 5, new Dictionary<string, int>(), filterCriteria);
 Console.WriteLine("Pagination first page and 5 items");
 result2.ForEach(e => Console.WriteLine(e));
 Console.WriteLine("\n");
@@ -169,5 +170,16 @@ Console.WriteLine("\n");
 Console.WriteLine("Pagination with sort second page and 5 items");
 result1.ForEach(e => Console.WriteLine(e));
 Console.WriteLine("\n");
+
+var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddControllers();
+var app = builder.Build();
+
+var controller = new UserController(dbConn);
+
+app.MapControllers();
+
+app.Run();
+
 
 

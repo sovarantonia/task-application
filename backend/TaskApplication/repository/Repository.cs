@@ -9,13 +9,13 @@
     {
         public DbConnection DbConnection { get; set; }
 
-        public string tableName { get; set; }
+        public string TableName { get; set; }
 
         public Repository(DbConnection DbConnection, string tableName)
         {
             this.DbConnection = DbConnection;
 
-            this.tableName = tableName;
+            this.TableName = tableName;
         }
 
         public void Save(T entity)
@@ -68,7 +68,7 @@
                 }
             }
 
-            command.CommandText = $"INSERT INTO `{tableName}` ({string.Join(", ", columns)}) VALUES ({string.Join(", ", values)})";
+            command.CommandText = $"INSERT INTO `{TableName}` ({string.Join(", ", columns)}) VALUES ({string.Join(", ", values)})";
 
             try
             {
@@ -86,7 +86,7 @@
 
         public void Delete(Guid id)
         {
-            String queryString = $"DELETE FROM {tableName} WHERE id = @id";
+            String queryString = $"DELETE FROM {TableName} WHERE id = @id";
             using MySqlConnection connection = new MySqlConnection(DbConnection.GetConnectionString());
             connection.Open();
             using MySqlCommand command = new MySqlCommand(queryString, connection);
@@ -157,7 +157,7 @@
                 }
             }
 
-            command.CommandText = $"UPDATE `{tableName}` SET {string.Join(", ", setColumnValues)} WHERE id = @id";
+            command.CommandText = $"UPDATE `{TableName}` SET {string.Join(", ", setColumnValues)} WHERE id = @id";
 
             try
             {
@@ -177,7 +177,7 @@
 
         public T FindById(Guid id)
         {
-            string queryString = $"SELECT * FROM {tableName} WHERE id = @id";
+            string queryString = $"SELECT * FROM {TableName} WHERE id = @id";
             var properties = typeof(T).GetProperties();
             using MySqlConnection connection = new MySqlConnection(DbConnection.GetConnectionString());
             connection.Open();
@@ -227,18 +227,8 @@
             return default(T);
         }
 
-        public List<T> getPaginatedItems(int currentPageNo, int itemsPerPage, Dictionary<string, int> sortCriteria, Dictionary<string, string> filterCriteria)
+        public List<T> GetPaginatedItems(int currentPageNo, int itemsPerPage, Dictionary<string, int> sortCriteria, Dictionary<string, string> filterCriteria)
         {
-            /**
-             * SELECT column1, column2, column3 ...
-FROM table_name
-LIMIT number_of_rows OFFSET offset_value;
-            number_of_rows = itemsPerPage
-            offset_value = ((currentPageNo - 1) * itemsPerPage) ---
-            sort: order by col asc/desc (asc = 1; desc = -1)
-            filter: where col=val?
-             */
-
             List<T> items = new List<T>();
             var properties = typeof(T).GetProperties();
 
@@ -247,7 +237,7 @@ LIMIT number_of_rows OFFSET offset_value;
 
             MySqlCommand command = new MySqlCommand("GetPaginatedItems", connection);
             command.CommandType = System.Data.CommandType.StoredProcedure;
-            command.Parameters.Add("tableName", MySqlDbType.VarChar).Value = tableName;
+            command.Parameters.Add("tableName", MySqlDbType.VarChar).Value = TableName;
             command.Parameters.Add("currentPageNo", MySqlDbType.Int64).Value = currentPageNo;
             command.Parameters.Add("itemsPerPage", MySqlDbType.Int64).Value = itemsPerPage;
 

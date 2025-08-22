@@ -2,14 +2,9 @@
 
 namespace TaskApplication.service
 {
-    public class TaskService
+    public class TaskService(DbConnection dbConnection)
     {
-        public Repository<Task> taskRepository;
-
-        public TaskService(DbConnection dbConnection)
-        {
-            taskRepository = new Repository<entity.Task>(dbConnection, "tasks");
-        }
+        public Repository<Task> TaskRepository = new Repository<entity.Task>(dbConnection, "tasks");
 
         public void Save()
         {
@@ -18,17 +13,24 @@ namespace TaskApplication.service
 
         public Task FindTaskById(string id)
         {
-            return taskRepository.FindById(Guid.Parse(id));
+            return TaskRepository.FindById(Guid.Parse(id));
         }
 
         public void DeleteTask(string id)
         {
-            taskRepository.Delete(Guid.Parse(id));
+            TaskRepository.Delete(Guid.Parse(id));
         }
 
         public void UpdateTask()
         {
 
         }
+
+        public List<Task> GetPaginatedTasks(int currentPageNo, int itemsPerPage, Dictionary<string, int> sortCriteria, Dictionary<string, string> filterCriteria)
+        {
+            return TaskRepository.GetPaginatedItems(currentPageNo, itemsPerPage, sortCriteria, filterCriteria);
+        }
+
+       
     }
 }
