@@ -22,9 +22,9 @@
             UserRepository.Delete(id);
         }
 
-        public User UpdateUser(User userToUpdate)
+        public User UpdateUser(Guid id, User userToUpdate)
         {
-            return UserRepository.Update(userToUpdate);
+            return UserRepository.Update(id, userToUpdate);
         }
 
         public List<User> GetPaginatedUsers(int currentPageNo, int itemsPerPage, Dictionary<string, int> sortCriteria, Dictionary<string, string> filterCriteria)

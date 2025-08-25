@@ -112,12 +112,11 @@
             }
         }
 
-        public T Update(T entity)
+        public T Update(Guid id, T entity)
         {
             var properties = typeof(T).GetProperties();
             var setColumnValues = new List<string>();
 
-            Guid id = Guid.Empty;
 
             using MySqlConnection connection = new MySqlConnection(_connectionString);
             connection.Open();
@@ -130,7 +129,6 @@
 
                 if (colName.Equals("Id", StringComparison.CurrentCultureIgnoreCase))
                 {
-                    id = (Guid)prop.GetValue(entity);
                     continue;
                 }
 

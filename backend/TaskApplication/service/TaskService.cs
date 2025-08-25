@@ -7,9 +7,9 @@ namespace TaskApplication.service
     {
         public Repository<Task> TaskRepository = new Repository<entity.Task>("tasks");
 
-        public void Save(Task taskToSave)
+        public Task Save(Task taskToSave)
         {
-            TaskRepository.Save(taskToSave);
+            return TaskRepository.Save(taskToSave);
         }
 
         public Task FindTaskById(Guid id)
@@ -22,9 +22,9 @@ namespace TaskApplication.service
             TaskRepository.Delete(id);
         }
 
-        public void UpdateTask(Task taskToUpdate)
+        public Task UpdateTask(Guid id, Task taskToUpdate)
         {
-            TaskRepository.Update(taskToUpdate);
+            return TaskRepository.Update(id, taskToUpdate);
         }
 
         public List<Task> GetPaginatedTasks(int currentPageNo, int itemsPerPage, Dictionary<string, int> sortCriteria, Dictionary<string, string> filterCriteria)
@@ -32,6 +32,6 @@ namespace TaskApplication.service
             return TaskRepository.GetPaginatedItems(currentPageNo, itemsPerPage, sortCriteria, filterCriteria);
         }
 
-       
+
     }
 }

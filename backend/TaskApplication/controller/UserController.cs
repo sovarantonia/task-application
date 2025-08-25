@@ -11,8 +11,8 @@ namespace TaskApplication.controller
         public UserService UserService = new UserService();
 
 
-        [HttpGet]
-        public ActionResult<User> GetUserById([FromQuery] Guid id)
+        [HttpGet("{id:guid}")]
+        public ActionResult<User> GetUserById(Guid id)
         {
             return UserService.FindUserById(id);
         }
@@ -23,17 +23,17 @@ namespace TaskApplication.controller
             return UserService.SaveUser(userToSave);
         }
 
-        [HttpDelete]
-        public IActionResult DeleteUser([FromQuery] Guid id)
+        [HttpDelete("{id:guid}")]
+        public IActionResult DeleteUser(Guid id)
         {
             UserService.DeleteUser(id);
             return Ok();
         }
 
-        [HttpPut]
-        public ActionResult<User> UpdateUser([FromBody] User userToUpdate)
+        [HttpPut("{id:guid}")] 
+        public ActionResult<User> UpdateUser(Guid id, [FromBody] User userToUpdate)
         {
-            return UserService.UpdateUser(userToUpdate);   
+            return UserService.UpdateUser(id, userToUpdate);   
         }
 
         [HttpGet]
