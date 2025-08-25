@@ -1,12 +1,13 @@
 ﻿namespace TaskApplication.repository
 {
+    using Microsoft.Extensions.Configuration;
+    using MySqlConnector;
     using System.Reflection;
     using System.Text.Json;
-    using MySqlConnector;
-    using Microsoft.Extensions.Configuration;
+
     public class Repository<T>
     {
-        private readonly string _connectionString = 
+        private readonly string _connectionString =
             new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("ConnectionStrings")["DefaultConnection"].ToString();
 
         public string TableName { get; set; }
@@ -16,7 +17,7 @@
             this.TableName = tableName;
         }
 
-        public void Save(T entity)
+        public T Save(T entity)
         {
             var properties = typeof(T).GetProperties();
             var values = new List<string>();
@@ -66,11 +67,16 @@
                 }
             }
 
-            command.CommandText = $"INSERT INTO `{TableName}` ({string.Join(", ", columns)}) VALUES ({string.Join(", ", values)})";
+            command.CommandText = $"INSERT INTO `{TableName}` ({string.Join(", ", columns)}) VALUES ({string.Join(", ", values)}); " +
+                $"SELECT* FROM {TableName} where id = LAST_INSERT_ID();";
 
             try
             {
-                command.ExecuteNonQuery();
+                MySqlDataReader reader = command.ExecuteReader();
+                while (reader.Read())
+                {
+                    return SetItemProperties(reader);
+                }
             }
             catch (MySqlException e)
             {
@@ -80,6 +86,8 @@
             {
                 connection.Close();
             }
+
+            return default(T);
         }
 
         public void Delete(Guid id)
@@ -104,7 +112,7 @@
             }
         }
 
-        public void Update(T entity)
+        public T Update(T entity)
         {
             var properties = typeof(T).GetProperties();
             var setColumnValues = new List<string>();
@@ -155,13 +163,18 @@
                 }
             }
 
-            command.CommandText = $"UPDATE `{TableName}` SET {string.Join(", ", setColumnValues)} WHERE id = @id";
+            command.CommandText = $"UPDATE `{TableName}` SET {string.Join(", ", setColumnValues)} WHERE id = @id;" +
+                $"SELECT* FROM {TableName} WHERE id = @id;";
 
             try
             {
                 var param = command.Parameters.Add("@id", MySqlDbType.Guid);
                 param.Value = id.ToString("D");
-                command.ExecuteNonQuery();
+                MySqlDataReader reader = command.ExecuteReader();
+                while(reader.Read())
+                {
+                    return SetItemProperties(reader);
+                }
             }
             catch (MySqlException e)
             {
@@ -171,12 +184,13 @@
             {
                 connection.Close();
             }
+
+            return default(T);
         }
 
         public T FindById(Guid id)
         {
             string queryString = $"SELECT * FROM {TableName} WHERE id = @id";
-            var properties = typeof(T).GetProperties();
             using MySqlConnection connection = new MySqlConnection(_connectionString);
             connection.Open();
 
@@ -186,34 +200,12 @@
             MySqlDataReader reader = command.ExecuteReader();
             try
             {
-                var item = Activator.CreateInstance<T>();
+
                 while (reader.Read())
                 {
-
-                    foreach (var property in properties)
-                    {
-                        var colName = property.Name;
-                        Type convertTo = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
-
-
-                        if (convertTo == typeof(Guid))
-                        {
-                            var guid = Guid.Parse(reader[colName].ToString());
-                            property.SetValue(item, guid, null);
-                        }
-                        if (convertTo == typeof(DateOnly))
-                        {
-                            var date = reader.GetDateTime(colName);
-                            property.SetValue(item, DateOnly.FromDateTime(date), null);
-                        }
-                        else
-                        {
-                            property.SetValue(item, Convert.ChangeType(reader[colName], convertTo), null);
-                        }
-
-                    }
+                    return SetItemProperties(reader);
                 }
-                return item;
+
             }
             catch (MySqlException e)
             {
@@ -228,8 +220,7 @@
         public List<T> GetPaginatedItems(int currentPageNo, int itemsPerPage, Dictionary<string, int> sortCriteria, Dictionary<string, string> filterCriteria)
         {
             List<T> items = new List<T>();
-            var properties = typeof(T).GetProperties();
-
+           
             using MySqlConnection connection = new MySqlConnection(_connectionString);
             connection.Open();
 
@@ -269,7 +260,7 @@
 
             if (filterCriteria.Count > 0)
             {
-                foreach(var criterion in filterCriteria)
+                foreach (var criterion in filterCriteria)
                 {
                     filterColumns.Add(criterion.Key);
                     filterColumnValues.Add(criterion.Value);
@@ -288,53 +279,60 @@
                 command.Parameters.Add("filterColumnValues", MySqlDbType.JSON).Value = DBNull.Value;
             }
 
-
-
-
-                try
+            try
+            {
+                var reader = command.ExecuteReader();
+                while (reader.Read())
                 {
-                    var reader = command.ExecuteReader();
-                    while (reader.Read())
-                    {
-                        var item = Activator.CreateInstance<T>();
-                        foreach (var prop in properties)
-                        {
-                            var colName = prop.Name;
-                            Type convertTo = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType;
-
-                            if (prop.PropertyType == typeof(Guid))
-                            {
-                                var guid = Guid.Parse(reader[colName].ToString());
-                                prop.SetValue(item, guid, null);
-                            }
-                            if (prop.PropertyType == typeof(DateOnly))
-                            {
-                                var date = reader.GetDateTime(colName);
-                                prop.SetValue(item, DateOnly.FromDateTime(date), null);
-                            }
-                            else
-                            {
-                                prop.SetValue(item, Convert.ChangeType(reader[colName], convertTo), null);
-                            }
-
-                        }
-                        items.Add(item);
-                    }
-
-                    reader.Close();
+                    var item = SetItemProperties(reader);
+                    items.Add(item);
                 }
 
-                catch (MySqlException e)
-                {
-                    Console.WriteLine(e.Message);
-                }
+                reader.Close();
+            }
 
-                finally
-                {
-                    connection.Close();
-                }
+            catch (MySqlException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+
+            finally
+            {
+                connection.Close();
+            }
 
             return items;
+        }
+
+        private static T SetItemProperties(MySqlDataReader reader)
+        {
+            var properties = typeof(T).GetProperties();
+            var item = Activator.CreateInstance<T>();
+
+            foreach (var property in properties)
+            {
+                var colName = property.Name;
+                Type convertTo = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
+
+
+                if (convertTo == typeof(Guid))
+                {
+                    var guid = Guid.Parse(reader[colName].ToString());
+                    property.SetValue(item, guid, null);
+                }
+                if (convertTo == typeof(DateOnly))
+                {
+                    var date = reader.GetDateTime(colName);
+                    property.SetValue(item, DateOnly.FromDateTime(date), null);
+                }
+                else
+                {
+                    property.SetValue(item, Convert.ChangeType(reader[colName], convertTo), null);
+                }
+
+            }
+
+            return item;
         }
     }
 }

@@ -6,7 +6,7 @@ namespace TaskApplication.controller
 {
     [ApiController]
     [Route("[controller]")]
-    public class UserController: ControllerBase
+    public class UserController : ControllerBase
     {
         public UserService UserService = new UserService();
 
@@ -17,6 +17,12 @@ namespace TaskApplication.controller
             return UserService.FindUserById(id);
         }
 
+        [HttpPost]
+        public ActionResult<User> SaveUser([FromBody] User userToSave)
+        {
+            return UserService.SaveUser(userToSave);
+        }
+
         [HttpDelete]
         public IActionResult DeleteUser([FromQuery] Guid id)
         {
@@ -24,7 +30,19 @@ namespace TaskApplication.controller
             return Ok();
         }
 
-        //[HttpGet]
-        //public ActionResult<List<User>> GetPaginatedUsers()
+        [HttpPut]
+        public ActionResult<User> UpdateUser([FromBody] User userToUpdate)
+        {
+            return UserService.UpdateUser(userToUpdate);   
+        }
+
+        [HttpGet]
+        [Route("list")]
+        public ActionResult<List<User>> GetPaginatedUsers([FromQuery] int currentPageNo, [FromQuery] int itemsPerPage)
+        {
+            return UserService.GetPaginatedUsers(currentPageNo, itemsPerPage, new Dictionary<string, int>(), new Dictionary<string, string>());
+        }
+
+
     }
 }

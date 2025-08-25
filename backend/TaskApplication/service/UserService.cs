@@ -7,9 +7,9 @@
     {
         public Repository<User> UserRepository = new Repository<User>("users");
 
-        public void SaveUser(User userToSave)
+        public User SaveUser(User userToSave)
         {
-            UserRepository.Save(userToSave);
+            return UserRepository.Save(userToSave);
         }
 
         public User FindUserById(Guid id)
@@ -22,9 +22,9 @@
             UserRepository.Delete(id);
         }
 
-        public void UpdateUser(User userToUpdate)
+        public User UpdateUser(User userToUpdate)
         {
-            UserRepository.Update(userToUpdate);
+            return UserRepository.Update(userToUpdate);
         }
 
         public List<User> GetPaginatedUsers(int currentPageNo, int itemsPerPage, Dictionary<string, int> sortCriteria, Dictionary<string, string> filterCriteria)
