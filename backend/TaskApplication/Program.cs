@@ -1,17 +1,10 @@
-using System;
-using TaskApplication.controller;
 using TaskApplication.entity;
-using TaskApplication.service;
+using TaskApplication.repository;
 using Task = TaskApplication.entity.Task;
 
-var dbConn = DbConnection.Instance();
-dbConn.Server = " 127.0.0.1";
-dbConn.Database = "task_application";
-dbConn.UserName = "root";
-dbConn.Password = "root";
 
 
-Repository<User> dbService = new Repository<User>(dbConn, "users");
+Repository<User> userRepository = new Repository<User>("users");
 User user1 = new User("Alice Morgan1", "A", "Backend Development");
 User user2 = new User("Alice Morgan2", "B", "Backend Development");
 User user3 = new User("Alice Morgan3", "E", "Backend Development");
@@ -24,17 +17,6 @@ User user8 = new User("Alice Morgan8", "O", "Backend Development");
 User user9 = new User("Alice Morgan9", "I", "Backend Development");
 User user10 = new User("Alice Morgan10", "R", "Backend Development");
 
-//dbService.Save(user1);
-//dbService.Save(user2);
-//dbService.Save(user3);
-//dbService.Save(user4);
-//dbService.Save(user5);
-
-//dbService.Save(user6);
-//dbService.Save(user7);
-//dbService.Save(user8);
-//dbService.Save(user9);
-//dbService.Save(user10);
 
 
 var task1 = new Task(
@@ -118,29 +100,7 @@ var task10 = new Task(
 );
 
 
-Repository<Task> taskRepository = new Repository<TaskApplication.entity.Task>(dbConn, "tasks");
-//taskRepository.Save(task1);
-//taskRepository.Save(task2);
-//taskRepository.Save(task3); 
-//taskRepository.Save(task4);
-//taskRepository.Save(task5);
-
-//taskRepository.Save(task6);
-//taskRepository.Save(task7);
-//taskRepository.Save(task8);
-//taskRepository.Save(task9);
-//taskRepository.Save(task10);
-
-
-
-
-//Dictionary<string, int> sortCriteria = new Dictionary<string, int>();
-//sortCriteria.Add("name", -1);
-//Dictionary<string, string> filterCriteria = new Dictionary<string, string>();
-
-
-//List<User> result = dbService.getPaginatedItems(2, 5, sortCriteria, filterCriteria);
-//result.ForEach(e => Console.WriteLine(e));
+Repository<Task> taskRepository = new Repository<TaskApplication.entity.Task>("tasks");
 
 
 
@@ -173,9 +133,8 @@ Console.WriteLine("\n");
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
-var app = builder.Build();
 
-var controller = new UserController(dbConn);
+var app = builder.Build();
 
 app.MapControllers();
 

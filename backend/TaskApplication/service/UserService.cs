@@ -1,13 +1,15 @@
 ﻿namespace TaskApplication.service
 {
     using TaskApplication.entity;
-    public class UserService(DbConnection dbConnection)
+    using TaskApplication.repository;
+
+    public class UserService
     {
-        public Repository<User> UserRepository { get; set; } = new Repository<User>(dbConnection, "users");
+        public Repository<User> UserRepository = new Repository<User>("users");
 
-        public void SaveUser()
+        public void SaveUser(User userToSave)
         {
-
+            UserRepository.Save(userToSave);
         }
 
         public User FindUserById(Guid id)
@@ -15,14 +17,14 @@
             return UserRepository.FindById(id);
         }
 
-        public void DeleteUser(string id)
+        public void DeleteUser(Guid id)
         {
-            UserRepository.Delete(Guid.Parse(id));
+            UserRepository.Delete(id);
         }
 
-        public void UpdateUser()
+        public void UpdateUser(User userToUpdate)
         {
-
+            UserRepository.Update(userToUpdate);
         }
 
         public List<User> GetPaginatedUsers(int currentPageNo, int itemsPerPage, Dictionary<string, int> sortCriteria, Dictionary<string, string> filterCriteria)

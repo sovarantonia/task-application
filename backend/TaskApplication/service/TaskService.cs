@@ -1,29 +1,30 @@
-﻿using Task = TaskApplication.entity.Task;
+﻿using TaskApplication.repository;
+using Task = TaskApplication.entity.Task;
 
 namespace TaskApplication.service
 {
-    public class TaskService(DbConnection dbConnection)
+    public class TaskService
     {
-        public Repository<Task> TaskRepository = new Repository<entity.Task>(dbConnection, "tasks");
+        public Repository<Task> TaskRepository = new Repository<entity.Task>("tasks");
 
-        public void Save()
+        public void Save(Task taskToSave)
         {
-
+            TaskRepository.Save(taskToSave);
         }
 
-        public Task FindTaskById(string id)
+        public Task FindTaskById(Guid id)
         {
-            return TaskRepository.FindById(Guid.Parse(id));
+            return TaskRepository.FindById(id);
         }
 
-        public void DeleteTask(string id)
+        public void DeleteTask(Guid id)
         {
-            TaskRepository.Delete(Guid.Parse(id));
+            TaskRepository.Delete(id);
         }
 
-        public void UpdateTask()
+        public void UpdateTask(Task taskToUpdate)
         {
-
+            TaskRepository.Update(taskToUpdate);
         }
 
         public List<Task> GetPaginatedTasks(int currentPageNo, int itemsPerPage, Dictionary<string, int> sortCriteria, Dictionary<string, string> filterCriteria)

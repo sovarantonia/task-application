@@ -1,20 +1,18 @@
-﻿namespace TaskApplication.service
+﻿namespace TaskApplication.repository
 {
     using System.Reflection;
-    using System.Security.Principal;
     using System.Text.Json;
     using MySqlConnector;
-
+    using Microsoft.Extensions.Configuration;
     public class Repository<T>
     {
-        public DbConnection DbConnection { get; set; }
+        private readonly string _connectionString = 
+            new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("ConnectionStrings")["DefaultConnection"].ToString();
 
         public string TableName { get; set; }
 
-        public Repository(DbConnection DbConnection, string tableName)
+        public Repository(string tableName)
         {
-            this.DbConnection = DbConnection;
-
             this.TableName = tableName;
         }
 
@@ -24,7 +22,7 @@
             var values = new List<string>();
             var columns = new List<string>();
 
-            using MySqlConnection connection = new MySqlConnection(DbConnection.GetConnectionString());
+            using MySqlConnection connection = new MySqlConnection(_connectionString);
             connection.Open();
             using MySqlCommand command = new MySqlCommand { Connection = connection };
 
@@ -87,7 +85,7 @@
         public void Delete(Guid id)
         {
             String queryString = $"DELETE FROM {TableName} WHERE id = @id";
-            using MySqlConnection connection = new MySqlConnection(DbConnection.GetConnectionString());
+            using MySqlConnection connection = new MySqlConnection(_connectionString);
             connection.Open();
             using MySqlCommand command = new MySqlCommand(queryString, connection);
             try
@@ -113,7 +111,7 @@
 
             Guid id = Guid.Empty;
 
-            using MySqlConnection connection = new MySqlConnection(DbConnection.GetConnectionString());
+            using MySqlConnection connection = new MySqlConnection(_connectionString);
             connection.Open();
             using MySqlCommand command = new MySqlCommand { Connection = connection };
 
@@ -179,7 +177,7 @@
         {
             string queryString = $"SELECT * FROM {TableName} WHERE id = @id";
             var properties = typeof(T).GetProperties();
-            using MySqlConnection connection = new MySqlConnection(DbConnection.GetConnectionString());
+            using MySqlConnection connection = new MySqlConnection(_connectionString);
             connection.Open();
 
             MySqlCommand command = new MySqlCommand(queryString, connection);
@@ -232,7 +230,7 @@
             List<T> items = new List<T>();
             var properties = typeof(T).GetProperties();
 
-            using MySqlConnection connection = new MySqlConnection(DbConnection.GetConnectionString());
+            using MySqlConnection connection = new MySqlConnection(_connectionString);
             connection.Open();
 
             MySqlCommand command = new MySqlCommand("GetPaginatedItems", connection);
