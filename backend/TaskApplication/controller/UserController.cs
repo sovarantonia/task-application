@@ -30,10 +30,10 @@ namespace TaskApplication.controller
             return Ok();
         }
 
-        [HttpPut("{id:guid}")] 
+        [HttpPut("{id:guid}")]
         public ActionResult<User> UpdateUser(Guid id, [FromBody] User userToUpdate)
         {
-            return UserService.UpdateUser(id, userToUpdate);   
+            return UserService.UpdateUser(id, userToUpdate);
         }
 
         [HttpGet]

@@ -115,21 +115,21 @@ List<Task> result = taskRepository.GetPaginatedItems(1, 5, sortCriteria, filterC
 List<Task> result1 = taskRepository.GetPaginatedItems(2, 5, sortCriteria, filterCriteria);
 List<Task> result2 = taskRepository.GetPaginatedItems(1, 5, new Dictionary<string, int>(), filterCriteria);
 List<Task> result3 = taskRepository.GetPaginatedItems(2, 5, new Dictionary<string, int>(), filterCriteria);
-Console.WriteLine("Pagination first page and 5 items");
-result2.ForEach(e => Console.WriteLine(e));
-Console.WriteLine("\n");
+//Console.WriteLine("Pagination first page and 5 items");
+//result2.ForEach(e => Console.WriteLine(e));
+//Console.WriteLine("\n");
 
-Console.WriteLine("Pagination last page and 5 items");
-result3.ForEach(e => Console.WriteLine(e));
-Console.WriteLine("\n");
+//Console.WriteLine("Pagination last page and 5 items");
+//result3.ForEach(e => Console.WriteLine(e));
+//Console.WriteLine("\n");
 
-Console.WriteLine("Pagination with sort first page and 5 items");
-result.ForEach(e => Console.WriteLine(e));
-Console.WriteLine("\n");
+//Console.WriteLine("Pagination with sort first page and 5 items");
+//result.ForEach(e => Console.WriteLine(e));
+//Console.WriteLine("\n");
 
-Console.WriteLine("Pagination with sort second page and 5 items");
-result1.ForEach(e => Console.WriteLine(e));
-Console.WriteLine("\n");
+//Console.WriteLine("Pagination with sort second page and 5 items");
+//result1.ForEach(e => Console.WriteLine(e));
+//Console.WriteLine("\n");
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
