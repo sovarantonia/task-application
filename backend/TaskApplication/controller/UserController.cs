@@ -38,9 +38,9 @@ namespace TaskApplication.controller
 
         [HttpGet]
         [Route("list")]
-        public ActionResult<List<User>> GetPaginatedUsers([FromQuery] int currentPageNo, [FromQuery] int itemsPerPage)
+        public ActionResult<List<User>> GetPaginatedUsers([FromBody] Dictionary<string, object> paginationDetails)
         {
-            return UserService.GetPaginatedUsers(currentPageNo, itemsPerPage, new Dictionary<string, int>(), new Dictionary<string, string>());
+            return UserService.GetPaginatedUsers(paginationDetails);
         }
 
 
