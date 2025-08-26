@@ -11,6 +11,9 @@ export class PaginationHandler {
 
     this.pagerData = pagerData;
     this.pagerData.onPagerDataChanged = this.getPaginatedItems;
+
+    this.sortCriteria = [];
+    this.filterCriteria = [];
   }
 
   //calls the pagination function and passes the result to pagination response
@@ -23,7 +26,18 @@ export class PaginationHandler {
       itemsPerPage: itemsPerPage,
       sortCriteria: this.sortCriteria,
       filterCriteria: this.filterCriteria,
-    }).then(({ paginatedItems, totalPages }) => {
+    })
+    // .then(response => {
+    //   loaderUtils.hideLoader();
+    //   if (!response.ok) {
+    //     return response.text().then((text) => {
+    //         throw new Error("Error " + response.status + " " + text);
+    //     })
+        
+    //   }
+    //   return response.json();
+    // })
+    .then(( {paginatedItems, totalPages}) => {
       loaderUtils.hideLoader();
 
       this.onPaginationResponse({

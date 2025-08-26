@@ -1,5 +1,5 @@
 import { createButton } from "./ButtonComponent.js";
-import { createElementComponent } from "./createElementComponent.js";
+import { createElementComponent } from "./CreateElementComponent.js";
 
 export class Modal {
   constructor({ headerContent = [], bodyContent = [], footerContent = [] }) {

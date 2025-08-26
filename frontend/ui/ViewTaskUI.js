@@ -1,4 +1,4 @@
-import { createElementComponent } from "../components/createElementComponent.js";
+import { createElementComponent } from "../components/CreateElementComponent.js";
 import { createForm } from "../components/FormComponent.js";
 import { Modal } from "../components/ModalComponent.js";
 import { SelectComponent } from "../components/SelectComponent.js";

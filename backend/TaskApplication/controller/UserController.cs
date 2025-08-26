@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Text.Json;
 using TaskApplication.entity;
 using TaskApplication.service;
 
@@ -36,11 +37,13 @@ namespace TaskApplication.controller
             return UserService.UpdateUser(id, userToUpdate);
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("list")]
-        public ActionResult<List<User>> GetPaginatedUsers([FromBody] Dictionary<string, object> paginationDetails)
+        public IActionResult GetPaginatedUsers([FromBody] Dictionary<string, object> paginationDetails)
         {
-            return UserService.GetPaginatedUsers(paginationDetails);
+            int itemsPerPage = ((JsonElement)paginationDetails["itemsPerPage"]).GetInt32();
+
+            return Ok(new { paginatedItems = UserService.GetPaginatedUsers(paginationDetails), totalPages = UserService.GetTotalUsersNo() /  itemsPerPage});
         }
 
 

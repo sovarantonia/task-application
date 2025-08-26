@@ -1,24 +1,25 @@
-import { PagerComponentUI } from "../ui/PagerComponentUI";
-import { TaskService } from "../service/TaskService";
-import { TaskPresentationUI } from "../ui/TaskPresentationUI";
+import { PagerComponentUI } from "../ui/PagerComponentUI.js";
+import { TaskService } from "../service/TaskService.js";
+import { TaskPresentationUI } from "../ui/TaskPresentationUI.js";
 import { PagerData } from "./pagination/PagerData.js";
 import { PaginationHandler } from "./pagination/PaginationHandler.js";
-import { SortControlUI } from "../ui/SortControlUI";
-import { SortCriteriaHandler } from "../logic/sort/SortCriteriaHandler";
-import { FilterCriteriaHandler } from "../logic/filter/FilterCriteriaHandler";
-import { FilterControlUI } from "../ui/FilterControlUI";
-import { taskStatus } from "../data/taskStatus";
-import { initialUserData } from "../data/initialUserData";
-import { CreateTaskModalUI } from "../ui/CreateTaskModalUI.js";
+import { SortControlUI } from "../ui/SortControlUI.js";
+import { SortCriteriaHandler } from "../logic/sort/SortCriteriaHandler.js";
+import { FilterCriteriaHandler } from "../logic/filter/FilterCriteriaHandler.js";
+import { FilterControlUI } from "../ui/FilterControlUI.js";
+import { taskStatus } from "../data/taskStatus.js";
+import { initialUserData } from "../data/initialUserData.js";
+import { CreateTaskUI } from "../ui/CreateTaskUI.js";
 import { handleFormData } from "./FormHandler.js";
 import { ViewTaskUI } from "../ui/ViewTaskUI.js";
+import { getPaginatedTasks } from "../service/api.js";
 export class TaskLogic {
   constructor({ initialTaskData = [] } = {}) {
     this.taskService = new TaskService(initialTaskData);
     this.pagerData = new PagerData({});
 
     this.paginationHandler = new PaginationHandler({
-      paginationFunction: this.taskService.getPaginatedTasks,
+      paginationFunction: getPaginatedTasks,
       onPaginationResponse: this.onPaginationResponse,
       pagerData: this.pagerData,
     });
@@ -61,14 +62,14 @@ export class TaskLogic {
       ],
     });
 
-    this.createTaskModalUI = new CreateTaskModalUI({
+    this.createTaskUI = new CreateTaskUI({
       containerId: "createTaskContainer",
       onSubmit: ({ formData }) => {
         handleFormData({
           sendTheDataFunction: (item) =>
             this.taskService.saveTask({ newTask: item }),
           onDataSent: () => {
-            this.createTaskModalUI.closeModal();
+            this.createTaskUI.closeModal();
             this.paginationHandler.getPaginatedItems();
           },
           formData,

@@ -1,5 +1,5 @@
-import { createElementComponent } from "../components/createElementComponent";
-import { SelectComponent } from "../components/SelectComponent";
+import { createElementComponent } from "../components/CreateElementComponent.js";
+import { SelectComponent } from "../components/SelectComponent.js";
 
 export class FilterControlUI {
   constructor({

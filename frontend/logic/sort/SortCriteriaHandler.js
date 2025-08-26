@@ -1,4 +1,4 @@
-import { SortCriteria } from "./SortCriteria";
+import { SortCriteria } from "./SortCriteria.js";
 export class SortCriteriaHandler {
   constructor({ onNotifyPaginationHandler = null, columnList = [] } = {}) {
     this.sortCriteriaInstances = new Map();

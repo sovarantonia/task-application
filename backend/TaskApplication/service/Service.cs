@@ -55,5 +55,10 @@ namespace TaskApplication.service
 
             return Repository.GetPaginatedItems(currentPageNo, itemsPerPage, sortCriteria, filterCriteria);
         }
+
+        public long GetTotalItemsNo()
+        {
+            return Repository.GetTotalItemNo();
+        }
     }
 }

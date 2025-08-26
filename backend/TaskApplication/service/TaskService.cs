@@ -31,5 +31,10 @@ namespace TaskApplication.service
             return Service.GetPaginatedItems(paginationDetails);
         }
 
+        public long GetTotalTasksNo()
+        {
+            return Service.GetTotalItemsNo();
+        }
+
     }
 }

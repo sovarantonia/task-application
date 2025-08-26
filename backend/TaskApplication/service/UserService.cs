@@ -33,5 +33,10 @@
             return Service.GetPaginatedItems(paginationDetails);
         }
 
+        public long GetTotalUsersNo()
+        {
+            return Service.GetTotalItemsNo();
+        }
+
     }
 }

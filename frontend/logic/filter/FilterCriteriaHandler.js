@@ -1,4 +1,4 @@
-import { FilterCriteria } from "./FilterCriteria";
+import { FilterCriteria } from "./FilterCriteria.js";
 
 export class FilterCriteriaHandler {
   constructor({onNotifyPaginationHandler}) {

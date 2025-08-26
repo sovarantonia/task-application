@@ -1,9 +1,8 @@
-import { createElementComponent } from "../components/createElementComponent.js";
 import { Modal } from "../components/ModalComponent.js";
 import { createForm } from "../components/FormComponent.js";
 import { createButton } from "../components/ButtonComponent.js";
-
-export class CreateTaskModalUI {
+import { createElementComponent } from "../components/CreateElementComponent.js";
+export class CreateTaskUI {
   constructor({ containerId, onSubmit = null }) {
     this.onSubmit = onSubmit;
 

@@ -302,6 +302,29 @@
             return items;
         }
 
+        public long GetTotalItemNo()
+        {
+            string queryString = $"SELECT COUNT(*) FROM {TableName}";
+            using MySqlConnection connection = new MySqlConnection(_connectionString);
+            connection.Open();
+            using MySqlCommand command = new MySqlCommand(queryString, connection);
+
+            try
+            {
+                return (Int64) command.ExecuteScalar();
+            }
+            catch(MySqlException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return 0;
+        }
+
         private static T SetItemProperties(MySqlDataReader reader)
         {
             var properties = typeof(T).GetProperties();

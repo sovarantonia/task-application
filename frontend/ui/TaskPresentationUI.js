@@ -1,4 +1,4 @@
-import { renderTasks } from "../ui/taskListRenderer";
+import { renderTasks } from "../ui/taskListRenderer.js";
 export class TaskPresentationUI {
   constructor({ containerId, onViewClick }) {
     this.containerId = containerId

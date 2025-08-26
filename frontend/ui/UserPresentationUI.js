@@ -1,4 +1,4 @@
-import { renderUsers } from "./renderUsers";
+import { renderUsers } from "./renderUsers.js";
 
 export class UserPresentationUI {
   constructor({ containerId, onCheckboxChecked = null }) {

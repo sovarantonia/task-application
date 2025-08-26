@@ -40,11 +40,12 @@ namespace TaskApplication.controller
         }
 
 
-        [HttpGet]
+        [HttpPost]
         [Route("list")]
-        public ActionResult<List<Task>> GetPaginatedTasks([FromBody] Dictionary<string, object> paginationDetails)
+        public IActionResult GetPaginatedTasks([FromBody] Dictionary<string, object> paginationDetails)
         {
-            return TaskService.GetPaginatedTasks(paginationDetails);
+            int itemsPerPage = ((JsonElement)paginationDetails["itemsPerPage"]).GetInt32();
+            return Ok(new { paginatedItems = TaskService.GetPaginatedTasks(paginationDetails), totalPages = TaskService.GetTotalTasksNo() / itemsPerPage });
         }
     }
 }

@@ -1,14 +1,15 @@
-import { UserService } from "../service/UserService";
-import { PagerData } from "../logic/pagination/PagerData";
-import { PaginationHandler } from "../logic/pagination/PaginationHandler";
-import { PagerComponentUI } from "../ui/PagerComponentUI";
-import { UserPresentationUI } from "../ui/UserPresentationUI";
-import { SendEmailComponentUI } from "../ui/SendEmailComponentUI";
-import { CheckboxHandler } from "./CheckboxHandler";
-import { SendEmailHandler } from "./SendEmailHandler";
-import { CheckboxCheckUI } from "../ui/CheckboxCheckUI";
-import { AddUserModalUI } from "../ui/AddUserModalUI.js";
+import { UserService } from "../service/UserService.js";
+import { PagerData } from "../logic/pagination/PagerData.js";
+import { PaginationHandler } from "../logic/pagination/PaginationHandler.js";
+import { PagerComponentUI } from "../ui/PagerComponentUI.js";
+import { UserPresentationUI } from "../ui/UserPresentationUI.js";
+import { SendEmailComponentUI } from "../ui/SendEmailComponentUI.js";
+import { CheckboxHandler } from "./CheckboxHandler.js";
+import { SendEmailHandler } from "./SendEmailHandler.js";
+import { CheckboxCheckUI } from "../ui/CheckboxCheckUI.js";
+import { AddUserUI } from "../ui/AddUserUI.js";
 import { handleFormData } from "./FormHandler.js";
+import { getPaginatedUsers } from "../service/api.js";
 export class UserLogic {
   constructor({ initialUserData = [], onUserListChanged = null }) {
     this.onUserListChanged = onUserListChanged;
@@ -17,7 +18,7 @@ export class UserLogic {
     this.pagerData = new PagerData({});
 
     this.paginationHandler = new PaginationHandler({
-      paginationFunction: this.userService.getPaginatedUsers,
+      paginationFunction: getPaginatedUsers,
       onPaginationResponse: this.onPaginationResponse,
       pagerData: this.pagerData,
     });
@@ -53,14 +54,14 @@ export class UserLogic {
       onCurrentPageChange: setCurrentPageNo,
     });
 
-    this.addUserModalUI = new AddUserModalUI({
+    this.AddUserUI = new AddUserUI({
       containerId: "addUserContainer",
       onSubmit: ({ formData }) => {
         handleFormData({
           sendTheDataFunction: (item) =>
             this.userService.saveUser({ user: item }),
           onDataSent: () => {
-            this.addUserModalUI.closeModal();
+            this.AddUserUI.closeModal();
             this.paginationHandler.getPaginatedItems();
             this.onUserListChanged({
               userList: this.userService.service.objectList,

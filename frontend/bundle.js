@@ -658,6 +658,9 @@
 
       this.pagerData = pagerData;
       this.pagerData.onPagerDataChanged = this.getPaginatedItems;
+
+      this.sortCriteria = [];
+      this.filterCriteria = [];
     }
 
     //calls the pagination function and passes the result to pagination response
@@ -670,7 +673,18 @@
         itemsPerPage: itemsPerPage,
         sortCriteria: this.sortCriteria,
         filterCriteria: this.filterCriteria,
-      }).then(({ paginatedItems, totalPages }) => {
+      })
+      // .then(response => {
+      //   loaderUtils.hideLoader();
+      //   if (!response.ok) {
+      //     return response.text().then((text) => {
+      //         throw new Error("Error " + response.status + " " + text);
+      //     })
+          
+      //   }
+      //   return response.json();
+      // })
+      .then(( {paginatedItems, totalPages}) => {
         loaderUtils.hideLoader();
 
         this.onPaginationResponse({
@@ -1065,7 +1079,7 @@
     return form;
   }
 
-  class CreateTaskModalUI {
+  class CreateTaskUI {
     constructor({ containerId, onSubmit = null }) {
       this.onSubmit = onSubmit;
 
@@ -1182,13 +1196,51 @@
     };
   }
 
+  function getPaginatedUsers(paginationDetails) {
+      return fetch("http://localhost:5143/User/list/", {
+          body: JSON.stringify(paginationDetails),
+          headers: {
+        "Content-Type": "application/json"
+      },
+          method: "POST",
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.text().then((text) => {
+              throw new Error("Error " + response.status + " " + text);
+          })
+          
+        }
+        return response.json();
+      });
+  }
+
+  function getPaginatedTasks(paginationDetails){
+      return fetch("http://localhost:5143/Task/list", {
+          body: JSON.stringify(paginationDetails),
+          headers: {
+        "Content-Type": "application/json"
+      },
+          method: "POST",
+      })
+      .then(response => {
+        if (!response.ok) {
+          return response.text().then((text) => {
+              throw new Error("Error " + response.status + " " + text);
+          })
+          
+        }
+        return response.json();
+      });
+  }
+
   class TaskLogic {
     constructor({ initialTaskData = [] } = {}) {
       this.taskService = new TaskService(initialTaskData);
       this.pagerData = new PagerData({});
 
       this.paginationHandler = new PaginationHandler({
-        paginationFunction: this.taskService.getPaginatedTasks,
+        paginationFunction: getPaginatedTasks,
         onPaginationResponse: this.onPaginationResponse,
         pagerData: this.pagerData,
       });
@@ -1231,14 +1283,14 @@
         ],
       });
 
-      this.createTaskModalUI = new CreateTaskModalUI({
+      this.createTaskUI = new CreateTaskUI({
         containerId: "createTaskContainer",
         onSubmit: ({ formData }) => {
           handleFormData({
             sendTheDataFunction: (item) =>
               this.taskService.saveTask({ newTask: item }),
             onDataSent: () => {
-              this.createTaskModalUI.closeModal();
+              this.createTaskUI.closeModal();
               this.paginationHandler.getPaginatedItems();
             },
             formData,
@@ -1370,7 +1422,7 @@
 
       const nameInfo = createElementComponent({
         elementType: "h3",
-        text: `${element.user}`,
+        text: `${element.name}`,
       });
 
       const emailInfo = createElementComponent({
@@ -1491,7 +1543,7 @@
     };
   }
 
-  class AddUserModalUI {
+  class AddUserUI {
     constructor({ containerId, onSubmit }) {
       const target = document.getElementById(containerId);
 
@@ -1543,7 +1595,7 @@
       this.pagerData = new PagerData({});
 
       this.paginationHandler = new PaginationHandler({
-        paginationFunction: this.userService.getPaginatedUsers,
+        paginationFunction: getPaginatedUsers,
         onPaginationResponse: this.onPaginationResponse,
         pagerData: this.pagerData,
       });
@@ -1579,14 +1631,14 @@
         onCurrentPageChange: setCurrentPageNo,
       });
 
-      this.addUserModalUI = new AddUserModalUI({
+      this.AddUserUI = new AddUserUI({
         containerId: "addUserContainer",
         onSubmit: ({ formData }) => {
           handleFormData({
             sendTheDataFunction: (item) =>
               this.userService.saveUser({ user: item }),
             onDataSent: () => {
-              this.addUserModalUI.closeModal();
+              this.AddUserUI.closeModal();
               this.paginationHandler.getPaginatedItems();
               this.onUserListChanged({
                 userList: this.userService.service.objectList,

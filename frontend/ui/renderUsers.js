@@ -1,5 +1,5 @@
 import { createCheckbox } from "../components/CheckboxComponent";
-import { createElementComponent } from "../components/createElementComponent";
+import { createElementComponent } from "../components/CreateElementComponent";
 
 export function renderUsers({
   userList,
@@ -27,7 +27,7 @@ export function renderUsers({
 
     const nameInfo = createElementComponent({
       elementType: "h3",
-      text: `${element.user}`,
+      text: `${element.name}`,
     });
 
     const emailInfo = createElementComponent({

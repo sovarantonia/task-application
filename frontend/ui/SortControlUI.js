@@ -1,4 +1,4 @@
-import { createButton } from "../components/ButtonComponent";
+import { createButton } from "../components/ButtonComponent.js";
 export class SortControlUI {
   constructor({ containerId, onSortCriteriaChanged, columnMap }) {
     this.onSortCriteriaChanged = onSortCriteriaChanged;

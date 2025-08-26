@@ -1,6 +1,6 @@
-import { createElementComponent } from "../components/createElementComponent";
-import { SelectComponent } from "../components/SelectComponent";
-import { updatePageSelectOptions } from "../logic/updatePageSelect";
+import { createElementComponent } from "../components/CreateElementComponent.js";
+import { SelectComponent } from "../components/SelectComponent.js";
+import { updatePageSelectOptions } from "../logic/updatePageSelect.js";
 
 //** This renders the items per page and current page select */
 export class PagerComponentUI {
