@@ -1,4 +1,4 @@
-import { loaderUtils } from "../../ui/loader.js";
+import { loaderUtils } from '../../ui/loader.js';
 
 export class PaginationHandler {
   constructor({
@@ -19,25 +19,14 @@ export class PaginationHandler {
   //calls the pagination function and passes the result to pagination response
   getPaginatedItems = () => {
     loaderUtils.addLoader();
-
     const { currentPageNo, itemsPerPage } = this.pagerData;
+
     return this.paginationFunction({
       currentPageNo: currentPageNo,
       itemsPerPage: itemsPerPage,
       sortCriteria: this.sortCriteria,
       filterCriteria: this.filterCriteria,
-    })
-    // .then(response => {
-    //   loaderUtils.hideLoader();
-    //   if (!response.ok) {
-    //     return response.text().then((text) => {
-    //         throw new Error("Error " + response.status + " " + text);
-    //     })
-        
-    //   }
-    //   return response.json();
-    // })
-    .then(( {paginatedItems, totalPages}) => {
+    }).then(({ paginatedItems, totalPages }) => {
       loaderUtils.hideLoader();
 
       this.onPaginationResponse({
@@ -46,6 +35,7 @@ export class PaginationHandler {
         currentPageNo,
         itemsPerPage,
       });
+
     });
   };
 

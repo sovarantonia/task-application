@@ -39,7 +39,7 @@ export function renderTasks({
     });
     const createdAt = createElementComponent({
       elementType: "p",
-      text: `Created at: ${element.date}`,
+      text: `Created at: ${element.creationDate}`,
     });
 
     card.append(title, statusP, description, assignedTo, createdAt, viewButton);

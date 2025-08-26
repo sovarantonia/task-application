@@ -1,4 +1,4 @@
-import { SortCriteria } from "./SortCriteria.js";
+import { SortCriteria } from './SortCriteria.js';
 export class SortCriteriaHandler {
   constructor({ onNotifyPaginationHandler = null, columnList = [] } = {}) {
     this.sortCriteriaInstances = new Map();
@@ -23,12 +23,14 @@ export class SortCriteriaHandler {
       .entries()
       .reduce((acc, [key, value]) => {
         const { direction, priority } = value.sortOption;
+        if (direction !== 0) {
           acc.push({
             property: key,
             direction: direction,
             priority: priority,
           });
-  
+        }
+
         return acc;
       }, [])
       .sort((a, b) => a.priority - b.priority);

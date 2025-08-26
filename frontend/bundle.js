@@ -581,7 +581,7 @@
       });
       const createdAt = createElementComponent({
         elementType: "p",
-        text: `Created at: ${element.date}`,
+        text: `Created at: ${element.creationDate}`,
       });
 
       card.append(title, statusP, description, assignedTo, createdAt, viewButton);
@@ -666,25 +666,14 @@
     //calls the pagination function and passes the result to pagination response
     getPaginatedItems = () => {
       loaderUtils.addLoader();
-
       const { currentPageNo, itemsPerPage } = this.pagerData;
+
       return this.paginationFunction({
         currentPageNo: currentPageNo,
         itemsPerPage: itemsPerPage,
         sortCriteria: this.sortCriteria,
         filterCriteria: this.filterCriteria,
-      })
-      // .then(response => {
-      //   loaderUtils.hideLoader();
-      //   if (!response.ok) {
-      //     return response.text().then((text) => {
-      //         throw new Error("Error " + response.status + " " + text);
-      //     })
-          
-      //   }
-      //   return response.json();
-      // })
-      .then(( {paginatedItems, totalPages}) => {
+      }).then(({ paginatedItems, totalPages }) => {
         loaderUtils.hideLoader();
 
         this.onPaginationResponse({
@@ -693,6 +682,7 @@
           currentPageNo,
           itemsPerPage,
         });
+
       });
     };
 
@@ -783,12 +773,14 @@
         .entries()
         .reduce((acc, [key, value]) => {
           const { direction, priority } = value.sortOption;
+          if (direction !== 0) {
             acc.push({
               property: key,
               direction: direction,
               priority: priority,
             });
-    
+          }
+
           return acc;
         }, [])
         .sort((a, b) => a.priority - b.priority);
@@ -1197,41 +1189,37 @@
   }
 
   function getPaginatedUsers(paginationDetails) {
-      return fetch("http://localhost:5143/User/list/", {
-          body: JSON.stringify(paginationDetails),
-          headers: {
-        "Content-Type": "application/json"
+    return fetch('http://localhost:5143/User/list/', {
+      body: JSON.stringify(paginationDetails),
+      headers: {
+        'Content-Type': 'application/json',
       },
-          method: "POST",
-      })
-      .then(response => {
-        if (!response.ok) {
-          return response.text().then((text) => {
-              throw new Error("Error " + response.status + " " + text);
-          })
-          
-        }
-        return response.json();
-      });
+      method: 'POST',
+    }).then((response) => {
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error('Error ' + response.status + ' ' + text);
+        });
+      }
+      return response.json();
+    });
   }
 
-  function getPaginatedTasks(paginationDetails){
-      return fetch("http://localhost:5143/Task/list", {
-          body: JSON.stringify(paginationDetails),
-          headers: {
-        "Content-Type": "application/json"
+  function getPaginatedTasks(paginationDetails) {
+    return fetch('http://localhost:5143/Task/list', {
+      body: JSON.stringify(paginationDetails),
+      headers: {
+        'Content-Type': 'application/json',
       },
-          method: "POST",
-      })
-      .then(response => {
-        if (!response.ok) {
-          return response.text().then((text) => {
-              throw new Error("Error " + response.status + " " + text);
-          })
-          
-        }
-        return response.json();
-      });
+      method: 'POST',
+    }).then((response) => {
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error('Error ' + response.status + ' ' + text);
+        });
+      }
+      return response.json();
+    });
   }
 
   class TaskLogic {
@@ -1247,7 +1235,7 @@
 
       this.sortCriteriaHandler = new SortCriteriaHandler({
         onNotifyPaginationHandler: this.paginationHandler.onSortCriteriaChanged,
-        columnList: ["title", "date"],
+        columnList: ['title', 'creationDate'],
       });
 
       this.filterCriteriaHandler = new FilterCriteriaHandler({
@@ -1255,36 +1243,36 @@
       });
 
       this.taskPresentationUI = new TaskPresentationUI({
-        containerId: "taskPaginationContainer",
+        containerId: 'taskPaginationContainer',
         onViewClick: (item) => this.viewTaskUI.onViewItem(item),
       });
 
       const { setItemsPerPage, setCurrentPageNo } = this.pagerData;
       this.pagerComponentUI = new PagerComponentUI({
-        containerId: "taskPerPageSelect",
+        containerId: 'taskPerPageSelect',
         onItemsPerPageChange: setItemsPerPage,
         onCurrentPageChange: setCurrentPageNo,
       });
 
       this.sortTaskControlUI = new SortControlUI({
-        containerId: "sortTaskContainer",
+        containerId: 'sortTaskContainer',
         onSortCriteriaChanged: this.sortCriteriaHandler.onSortCriteriaChanged,
         columnMap: this.sortCriteriaHandler.sortCriteriaInstances,
       });
 
       this.filterTaskControlUI = new FilterControlUI({
-        containerId: "filterTaskContainer",
+        containerId: 'filterTaskContainer',
         onFilterCriteriaChanged:
           this.filterCriteriaHandler.onFilterCriteriaChanged,
         columnOptionList: [taskStatus, initialUserData],
         keyValue: [
-          { key: "id", value: "status" },
-          { key: "id", value: "user" },
+          { key: 'id', value: 'status' },
+          { key: 'id', value: 'user' },
         ],
       });
 
       this.createTaskUI = new CreateTaskUI({
-        containerId: "createTaskContainer",
+        containerId: 'createTaskContainer',
         onSubmit: ({ formData }) => {
           handleFormData({
             sendTheDataFunction: (item) =>
@@ -1299,7 +1287,7 @@
       });
 
       this.viewTaskUI = new ViewTaskUI({
-        containerId: "viewTask",
+        containerId: 'viewTask',
         onSubmit: ({ formData, item }) => {
           handleFormData({
             sendTheDataFunction: (item) =>
@@ -1338,8 +1326,8 @@
       this.filterTaskControlUI.onFilterOptionsChanged({
         columnOptionList: [taskStatus, this.userList],
         keyValue: [
-          { key: "id", value: "status" },
-          { key: "id", value: "user" },
+          { key: 'id', value: 'status' },
+          { key: 'id', value: 'user' },
         ],
       });
     };

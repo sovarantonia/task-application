@@ -4,15 +4,20 @@
   "type": "module",
   "scripts": {
     "start": "concurrently \"npx live-server\" \"npx rollup Main.js --file bundle.js --format iife --watch\"",
-    "test": "jasmine"
+    "test": "jasmine",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write ."
   },
   "dependencies": {
-    "eslint": "^8.57.1",
     "prettier": "^3.6.2",
     "prettier-eslint": "^16.4.2"
   },
   "devDependencies": {
+    "@eslint/js": "^9.34.0",
     "concurrently": "^9.2.1",
+    "eslint": "^8.57.1",
+    "globals": "^16.3.0",
     "jasmine": "^5.9.0"
   }
 }

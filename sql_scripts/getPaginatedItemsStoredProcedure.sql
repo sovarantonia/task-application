@@ -1,4 +1,3 @@
-use task_application;
 DELIMITER //
 create procedure GetPaginatedItems 
 (in tableName varchar(50), in currentPageNo int, in itemsPerPage int, 
@@ -11,7 +10,6 @@ declare sortCount int default 0;
 declare filterCount int default 0;
 declare sortOption varchar(100) default '';
 declare filterOption varchar(100) default '';
-
 
 set offst = (currentPageNo - 1) * (itemsPerPage);
 set @s = concat('select * from ', tableName, ' ');
@@ -54,13 +52,15 @@ SET @json_SortDirection = JSON_UNQUOTE(JSON_EXTRACT(sortDirections, @json_path))
   
   if @json_SortDirection = 1 then
   set sortOption = concat( sortOption, @json_SortColumn, ' ASC ', ', ');
-  else set sortOption = concat(sortOption, @json_SortColumn, ' DESC ', ', ');
+   elseif @json_SortDirection = -1 then 
+   set sortOption = concat(sortOption, @json_SortColumn, ' DESC ', ', ');
   end if;
   
   if sortCount + 1 = json_length(sortColumns) then
   if @json_SortDirection = 1 then
   set sortOption = concat(sortOption, @json_SortColumn, ' ASC ');
-  else set sortOption = concat(sortOption, @json_SortColumn, ' DESC ');
+  elseif @json_SortDirection = -1 then 
+  set sortOption = concat(sortOption, @json_SortColumn, ' DESC ');
   end if;
   end if;
  

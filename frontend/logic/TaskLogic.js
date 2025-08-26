@@ -1,18 +1,18 @@
-import { PagerComponentUI } from "../ui/PagerComponentUI.js";
-import { TaskService } from "../service/TaskService.js";
-import { TaskPresentationUI } from "../ui/TaskPresentationUI.js";
-import { PagerData } from "./pagination/PagerData.js";
-import { PaginationHandler } from "./pagination/PaginationHandler.js";
-import { SortControlUI } from "../ui/SortControlUI.js";
-import { SortCriteriaHandler } from "../logic/sort/SortCriteriaHandler.js";
-import { FilterCriteriaHandler } from "../logic/filter/FilterCriteriaHandler.js";
-import { FilterControlUI } from "../ui/FilterControlUI.js";
-import { taskStatus } from "../data/taskStatus.js";
-import { initialUserData } from "../data/initialUserData.js";
-import { CreateTaskUI } from "../ui/CreateTaskUI.js";
-import { handleFormData } from "./FormHandler.js";
-import { ViewTaskUI } from "../ui/ViewTaskUI.js";
-import { getPaginatedTasks } from "../service/api.js";
+import { PagerComponentUI } from '../ui/PagerComponentUI.js';
+import { TaskService } from '../service/TaskService.js';
+import { TaskPresentationUI } from '../ui/TaskPresentationUI.js';
+import { PagerData } from './pagination/PagerData.js';
+import { PaginationHandler } from './pagination/PaginationHandler.js';
+import { SortControlUI } from '../ui/SortControlUI.js';
+import { SortCriteriaHandler } from '../logic/sort/SortCriteriaHandler.js';
+import { FilterCriteriaHandler } from '../logic/filter/FilterCriteriaHandler.js';
+import { FilterControlUI } from '../ui/FilterControlUI.js';
+import { taskStatus } from '../data/taskStatus.js';
+import { initialUserData } from '../data/initialUserData.js';
+import { CreateTaskUI } from '../ui/CreateTaskUI.js';
+import { handleFormData } from './FormHandler.js';
+import { ViewTaskUI } from '../ui/ViewTaskUI.js';
+import { getPaginatedTasks } from '../service/api.js';
 export class TaskLogic {
   constructor({ initialTaskData = [] } = {}) {
     this.taskService = new TaskService(initialTaskData);
@@ -26,7 +26,7 @@ export class TaskLogic {
 
     this.sortCriteriaHandler = new SortCriteriaHandler({
       onNotifyPaginationHandler: this.paginationHandler.onSortCriteriaChanged,
-      columnList: ["title", "date"],
+      columnList: ['title', 'creationDate'],
     });
 
     this.filterCriteriaHandler = new FilterCriteriaHandler({
@@ -34,36 +34,36 @@ export class TaskLogic {
     });
 
     this.taskPresentationUI = new TaskPresentationUI({
-      containerId: "taskPaginationContainer",
+      containerId: 'taskPaginationContainer',
       onViewClick: (item) => this.viewTaskUI.onViewItem(item),
     });
 
     const { setItemsPerPage, setCurrentPageNo } = this.pagerData;
     this.pagerComponentUI = new PagerComponentUI({
-      containerId: "taskPerPageSelect",
+      containerId: 'taskPerPageSelect',
       onItemsPerPageChange: setItemsPerPage,
       onCurrentPageChange: setCurrentPageNo,
     });
 
     this.sortTaskControlUI = new SortControlUI({
-      containerId: "sortTaskContainer",
+      containerId: 'sortTaskContainer',
       onSortCriteriaChanged: this.sortCriteriaHandler.onSortCriteriaChanged,
       columnMap: this.sortCriteriaHandler.sortCriteriaInstances,
     });
 
     this.filterTaskControlUI = new FilterControlUI({
-      containerId: "filterTaskContainer",
+      containerId: 'filterTaskContainer',
       onFilterCriteriaChanged:
         this.filterCriteriaHandler.onFilterCriteriaChanged,
       columnOptionList: [taskStatus, initialUserData],
       keyValue: [
-        { key: "id", value: "status" },
-        { key: "id", value: "user" },
+        { key: 'id', value: 'status' },
+        { key: 'id', value: 'user' },
       ],
     });
 
     this.createTaskUI = new CreateTaskUI({
-      containerId: "createTaskContainer",
+      containerId: 'createTaskContainer',
       onSubmit: ({ formData }) => {
         handleFormData({
           sendTheDataFunction: (item) =>
@@ -78,7 +78,7 @@ export class TaskLogic {
     });
 
     this.viewTaskUI = new ViewTaskUI({
-      containerId: "viewTask",
+      containerId: 'viewTask',
       onSubmit: ({ formData, item }) => {
         handleFormData({
           sendTheDataFunction: (item) =>
@@ -117,8 +117,8 @@ export class TaskLogic {
     this.filterTaskControlUI.onFilterOptionsChanged({
       columnOptionList: [taskStatus, this.userList],
       keyValue: [
-        { key: "id", value: "status" },
-        { key: "id", value: "user" },
+        { key: 'id', value: 'status' },
+        { key: 'id', value: 'user' },
       ],
     });
   };
