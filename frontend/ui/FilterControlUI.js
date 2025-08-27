@@ -1,5 +1,5 @@
-import { createElementComponent } from "../components/CreateElementComponent.js";
-import { SelectComponent } from "../components/SelectComponent.js";
+import { createElementComponent } from '../components/CreateElementComponent.js';
+import { SelectComponent } from '../components/SelectComponent.js';
 
 export class FilterControlUI {
   constructor({
@@ -20,15 +20,15 @@ export class FilterControlUI {
       this.createSelectComponent = this.select.createSelect({
         list: columnOptionList[i],
         onSelectionChanged: (e) =>
-          this.onFilterCriteriaChanged(keyValue[i].value, e.target.value),
+          this.onFilterCriteriaChanged(keyValue[i].foreignKey, e.target.value),
         key: keyValue[i].key,
-        value: keyValue[i].value,
-        defaultOptionLabel: "All",
+        value: keyValue[i].foreignKey,
+        defaultOptionLabel: 'All',
       });
 
       this.filterBySpan = createElementComponent({
-        elementType: "span",
-        text: `Filter by ${keyValue[i].value}: `,
+        elementType: 'span',
+        text: `Filter by ${keyValue[i].columnName}: `,
       });
 
       this.selectList.push(this.createSelectComponent);
@@ -43,9 +43,9 @@ export class FilterControlUI {
         select: this.selectList[i],
         options: columnOptionList[i],
         key: keyValue[i].key,
-        value: keyValue[i].value,
-        defaultOptionLabel: "All"
-      }); 
+        value: keyValue[i].foreignKey,
+        defaultOptionLabel: 'All',
+      });
     }
   };
 }

@@ -60,5 +60,10 @@ namespace TaskApplication.service
         {
             return Repository.GetTotalItemNo();
         }
+
+        public List<T> GetAllItems()
+        {
+            return Repository.GetAllItems();
+        }
     }
 }

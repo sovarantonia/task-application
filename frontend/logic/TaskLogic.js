@@ -12,7 +12,11 @@ import { initialUserData } from '../data/initialUserData.js';
 import { CreateTaskUI } from '../ui/CreateTaskUI.js';
 import { handleFormData } from './FormHandler.js';
 import { ViewTaskUI } from '../ui/ViewTaskUI.js';
-import { getPaginatedTasks } from '../service/api.js';
+import {
+  getAllStatuses,
+  getAllUsers,
+  getPaginatedTasks,
+} from '../service/api.js';
 export class TaskLogic {
   constructor({ initialTaskData = [] } = {}) {
     this.taskService = new TaskService(initialTaskData);
@@ -57,8 +61,8 @@ export class TaskLogic {
         this.filterCriteriaHandler.onFilterCriteriaChanged,
       columnOptionList: [taskStatus, initialUserData],
       keyValue: [
-        { key: 'id', value: 'status' },
-        { key: 'id', value: 'user' },
+        { key: 'id', foreignKey: 'statusId', columnName: 'Status' },
+        { key: 'id', foreignKey: 'userId', columnName: 'User' },
       ],
     });
 
@@ -114,16 +118,31 @@ export class TaskLogic {
 
     this.viewTaskUI.onAssignUserListChanged({ assignUserList: this.userList });
 
-    this.filterTaskControlUI.onFilterOptionsChanged({
-      columnOptionList: [taskStatus, this.userList],
-      keyValue: [
-        { key: 'id', value: 'status' },
-        { key: 'id', value: 'user' },
-      ],
-    });
+    // this.filterTaskControlUI.onFilterOptionsChanged({
+    //   columnOptionList: [taskStatus, this.userList],
+    //   keyValue: [
+    //     { key: 'id', foreignKey: 'statusId', columnName: 'Status' },
+    //     { key: 'id', foreignKey: 'userId', columnName: 'User' },
+    //   ],
+    // });
   };
 
   init() {
     this.pagerData.init();
+    Promise.all([getAllStatuses(), getAllUsers()]).then(([statuses, users]) => {
+      let taskStatus = statuses.map((s) => ({
+        id: s.id,
+        status: s.statusName,
+      }));
+      let userData = users.map((u) => ({ id: u.id, user: u.name }));
+
+      this.filterTaskControlUI.onFilterOptionsChanged({
+        columnOptionList: [taskStatus, userData],
+        keyValue: [
+          { key: 'id', foreignKey: 'status' },
+          { key: 'id', foreignKey: 'user'},
+        ],
+      });
+    });
   }
 }

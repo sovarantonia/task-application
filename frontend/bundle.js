@@ -857,15 +857,15 @@
         this.createSelectComponent = this.select.createSelect({
           list: columnOptionList[i],
           onSelectionChanged: (e) =>
-            this.onFilterCriteriaChanged(keyValue[i].value, e.target.value),
+            this.onFilterCriteriaChanged(keyValue[i].foreignKey, e.target.value),
           key: keyValue[i].key,
-          value: keyValue[i].value,
-          defaultOptionLabel: "All",
+          value: keyValue[i].foreignKey,
+          defaultOptionLabel: 'All',
         });
 
         this.filterBySpan = createElementComponent({
-          elementType: "span",
-          text: `Filter by ${keyValue[i].value}: `,
+          elementType: 'span',
+          text: `Filter by ${keyValue[i].columnName}: `,
         });
 
         this.selectList.push(this.createSelectComponent);
@@ -880,9 +880,9 @@
           select: this.selectList[i],
           options: columnOptionList[i],
           key: keyValue[i].key,
-          value: keyValue[i].value,
-          defaultOptionLabel: "All"
-        }); 
+          value: keyValue[i].foreignKey,
+          defaultOptionLabel: 'All',
+        });
       }
     };
   }
@@ -1206,6 +1206,7 @@
   }
 
   function getPaginatedTasks(paginationDetails) {
+    console.log(paginationDetails);
     return fetch('http://localhost:5143/Task/list', {
       body: JSON.stringify(paginationDetails),
       headers: {
@@ -1213,6 +1214,28 @@
       },
       method: 'POST',
     }).then((response) => {
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error('Error ' + response.status + ' ' + text);
+        });
+      }
+      return response.json();
+    });
+  }
+
+  function getAllStatuses() {
+    return fetch('http://localhost:5143/Status/').then((response) => {
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error('Error ' + response.status + ' ' + text);
+        });
+      }
+      return response.json();
+    });
+  }
+
+  function getAllUsers() {
+    return fetch('http://localhost:5143/User/').then((response) => {
       if (!response.ok) {
         return response.text().then((text) => {
           throw new Error('Error ' + response.status + ' ' + text);
@@ -1266,8 +1289,8 @@
           this.filterCriteriaHandler.onFilterCriteriaChanged,
         columnOptionList: [taskStatus, initialUserData],
         keyValue: [
-          { key: 'id', value: 'status' },
-          { key: 'id', value: 'user' },
+          { key: 'id', foreignKey: 'statusId', columnName: 'Status' },
+          { key: 'id', foreignKey: 'userId', columnName: 'User' },
         ],
       });
 
@@ -1323,17 +1346,32 @@
 
       this.viewTaskUI.onAssignUserListChanged({ assignUserList: this.userList });
 
-      this.filterTaskControlUI.onFilterOptionsChanged({
-        columnOptionList: [taskStatus, this.userList],
-        keyValue: [
-          { key: 'id', value: 'status' },
-          { key: 'id', value: 'user' },
-        ],
-      });
+      // this.filterTaskControlUI.onFilterOptionsChanged({
+      //   columnOptionList: [taskStatus, this.userList],
+      //   keyValue: [
+      //     { key: 'id', foreignKey: 'statusId', columnName: 'Status' },
+      //     { key: 'id', foreignKey: 'userId', columnName: 'User' },
+      //   ],
+      // });
     };
 
     init() {
       this.pagerData.init();
+      Promise.all([getAllStatuses(), getAllUsers()]).then(([statuses, users]) => {
+        let taskStatus = statuses.map((s) => ({
+          id: s.id,
+          status: s.statusName,
+        }));
+        let userData = users.map((u) => ({ id: u.id, user: u.name }));
+
+        this.filterTaskControlUI.onFilterOptionsChanged({
+          columnOptionList: [taskStatus, userData],
+          keyValue: [
+            { key: 'id', foreignKey: 'status' },
+            { key: 'id', foreignKey: 'user'},
+          ],
+        });
+      });
     }
   }
 

@@ -38,5 +38,10 @@
             return Service.GetTotalItemsNo();
         }
 
+        public List<User> GetAllUsers()
+        {
+            return Service.GetAllItems();
+        }
+
     }
 }

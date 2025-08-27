@@ -2,6 +2,7 @@
 {
     using Microsoft.Extensions.Configuration;
     using MySqlConnector;
+    using Org.BouncyCastle.Asn1.X509;
     using System.Reflection;
     using System.Text.Json;
 
@@ -323,6 +324,34 @@
             }
 
             return 0;
+        }
+
+        public List<T> GetAllItems()
+        {
+            List<T> items = new List<T>();
+            string queryString = $"SELECT * FROM {TableName}";
+            using MySqlConnection connection = new MySqlConnection(_connectionString);
+            connection.Open();
+            using MySqlCommand command = new MySqlCommand(queryString, connection);
+            try
+            {
+                MySqlDataReader reader = command.ExecuteReader();
+                while(reader.Read())
+                {
+                    var item = SetItemProperties(reader);
+                    items.Add(item);
+                }
+            }
+            catch(MySqlException e)
+            {
+                Console.WriteLine(e.Message);
+            }
+            finally
+            {
+                connection.Close();
+            }
+
+            return items;
         }
 
         private static T SetItemProperties(MySqlDataReader reader)

@@ -46,6 +46,13 @@ namespace TaskApplication.controller
             return Ok(new { paginatedItems = UserService.GetPaginatedUsers(paginationDetails), totalPages = UserService.GetTotalUsersNo() /  itemsPerPage});
         }
 
+        [HttpGet]
+        //[Route("all")]
+        public List<User> GetAllUsers()
+        {
+            return UserService.GetAllUsers();
+        }
+
 
     }
 }

@@ -1,10 +1,8 @@
 ﻿namespace TaskApplication.entity
 {
-    public enum Status
+    public class Status
     {
-        ToDo = 1,
-        InProgress = 2,
-        InReview = 3,
-        Done = 4
+        public int Id { get; set; }
+        public string StatusName { get; set; }
     }
 }
