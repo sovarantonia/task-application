@@ -4,10 +4,10 @@ export class SelectComponent {
     onSelectionChanged = null,
     key = null,
     value = null,
-    defaultOptionLabel = "",
+    defaultOptionLabel = '',
     selectId = null,
   }) {
-    this.select = document.createElement("select");
+    this.select = document.createElement('select');
 
     if (selectId) {
       this.select.id = selectId;
@@ -15,18 +15,18 @@ export class SelectComponent {
     }
 
     if (defaultOptionLabel) {
-      this.select.append(this.getOption(defaultOptionLabel));
+      this.select.append(this.getOption({element: defaultOptionLabel}));
     }
     list.forEach((element) => {
-      this.select.append(this.getOption(element, key, value));
+      this.select.append(this.getOption({element, key, value}));
     });
 
-    this.select.addEventListener("change", onSelectionChanged);
+    this.select.addEventListener('change', onSelectionChanged);
     return this.select;
   }
 
-  getOption(element, key = null, value = null) {
-    const opt = document.createElement("option");
+  getOption({element, key = null, value = null}) {
+    const opt = document.createElement('option');
     opt.value = element;
     opt.textContent = element;
     if (key && value) {
@@ -41,7 +41,7 @@ export class SelectComponent {
     options = [],
     key = null,
     value = null,
-    defaultOptionLabel = "",
+    defaultOptionLabel = '',
   }) {
     let optionNo = select.options.length - 1;
     if (optionNo > 0) {
@@ -51,11 +51,11 @@ export class SelectComponent {
     }
 
     if (defaultOptionLabel) {
-      select.append(this.getOption(defaultOptionLabel));
+      select.append(this.getOption({element: defaultOptionLabel}));
     }
 
     options.forEach((element) => {
-      select.append(this.getOption(element, key, value));
+      select.append(this.getOption({element, key, value}));
     });
 
     return select;

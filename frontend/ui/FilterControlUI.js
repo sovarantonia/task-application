@@ -37,13 +37,13 @@ export class FilterControlUI {
     }
   }
 
-  onFilterOptionsChanged = ({ columnOptionList, keyValue }) => {
+  onFilterOptionsChanged = ({ columnOptionList, keys }) => {
     for (let i = 0; i < columnOptionList.length; i++) {
       this.selectList[i] = this.select.updateSelect({
         select: this.selectList[i],
         options: columnOptionList[i],
-        key: keyValue[i].key,
-        value: keyValue[i].foreignKey,
+        key: keys[i].keyColumn,
+        value: keys[i].valueColumn,
         defaultOptionLabel: 'All',
       });
     }

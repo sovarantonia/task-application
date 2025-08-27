@@ -96,28 +96,26 @@ export class TaskLogic {
         });
       },
     });
-
-    this.userMap = new Map(initialUserData.map((user) => [user.id, user.user]));
-    this.statusMap = new Map(
-      taskStatus.map((status) => [status.id, status.status]),
-    );
   }
 
   onPaginationResponse = ({ paginatedItems, totalPages, currentPageNo }) => {
-    this.pagerComponentUI.updateSelect({ currentPageNo, totalPages });
-    this.taskPresentationUI.renderTasks({
-      paginatedItems,
-      userMap: this.userMap,
-      statusMap: this.statusMap,
+    Promise.all([getAllStatuses(), getAllUsers()]).then(([statuses, users]) => {
+      let statusMap = new Map(statuses.map((s) => [s.id, s.statusName]));
+      let userMap = new Map(users.map((u) => [u.id, u.name]));
+
+      this.taskPresentationUI.renderTasks({
+        paginatedItems,
+        userMap,
+        statusMap,
+      });
     });
+    this.pagerComponentUI.updateSelect({ currentPageNo, totalPages });
   };
 
   onUserListChanged = ({ userList }) => {
-    this.userList = userList;
-    this.userMap = new Map(this.userList.map((user) => [user.id, user.user]));
-
-    this.viewTaskUI.onAssignUserListChanged({ assignUserList: this.userList });
-
+    // this.userList = userList;
+    // this.userMap = new Map(this.userList.map((user) => [user.id, user.user]));
+    // this.viewTaskUI.onAssignUserListChanged({ assignUserList: this.userList });
     // this.filterTaskControlUI.onFilterOptionsChanged({
     //   columnOptionList: [taskStatus, this.userList],
     //   keyValue: [
@@ -138,11 +136,14 @@ export class TaskLogic {
 
       this.filterTaskControlUI.onFilterOptionsChanged({
         columnOptionList: [taskStatus, userData],
-        keyValue: [
-          { key: 'id', foreignKey: 'status' },
-          { key: 'id', foreignKey: 'user'},
+        keys: [
+          { keyColumn: 'id', valueColumn: 'status' },
+          { keyColumn: 'id', valueColumn: 'user' },
         ],
       });
+
+      this.userMap = userData;
+      this.statusMap = taskStatus;
     });
   }
 }

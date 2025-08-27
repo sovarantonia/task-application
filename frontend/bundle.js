@@ -220,10 +220,10 @@
       onSelectionChanged = null,
       key = null,
       value = null,
-      defaultOptionLabel = "",
+      defaultOptionLabel = '',
       selectId = null,
     }) {
-      this.select = document.createElement("select");
+      this.select = document.createElement('select');
 
       if (selectId) {
         this.select.id = selectId;
@@ -231,18 +231,18 @@
       }
 
       if (defaultOptionLabel) {
-        this.select.append(this.getOption(defaultOptionLabel));
+        this.select.append(this.getOption({element: defaultOptionLabel}));
       }
       list.forEach((element) => {
-        this.select.append(this.getOption(element, key, value));
+        this.select.append(this.getOption({element, key, value}));
       });
 
-      this.select.addEventListener("change", onSelectionChanged);
+      this.select.addEventListener('change', onSelectionChanged);
       return this.select;
     }
 
-    getOption(element, key = null, value = null) {
-      const opt = document.createElement("option");
+    getOption({element, key = null, value = null}) {
+      const opt = document.createElement('option');
       opt.value = element;
       opt.textContent = element;
       if (key && value) {
@@ -257,7 +257,7 @@
       options = [],
       key = null,
       value = null,
-      defaultOptionLabel = "",
+      defaultOptionLabel = '',
     }) {
       let optionNo = select.options.length - 1;
       if (optionNo > 0) {
@@ -267,11 +267,11 @@
       }
 
       if (defaultOptionLabel) {
-        select.append(this.getOption(defaultOptionLabel));
+        select.append(this.getOption({element: defaultOptionLabel}));
       }
 
       options.forEach((element) => {
-        select.append(this.getOption(element, key, value));
+        select.append(this.getOption({element, key, value}));
       });
 
       return select;
@@ -553,8 +553,8 @@
     const container = document.getElementById(containerId);
     container.innerHTML = "";
     taskList.forEach((element) => {
-      const user = userMap.get(element.user);
-      const status = statusMap.get(element.status);
+      const user = userMap.get(element.userId);
+      const status = statusMap.get(element.statusId);
 
       const card = createElementComponent({ elementType: "div" });
       card.className = "card";
@@ -874,13 +874,13 @@
       }
     }
 
-    onFilterOptionsChanged = ({ columnOptionList, keyValue }) => {
+    onFilterOptionsChanged = ({ columnOptionList, keys }) => {
       for (let i = 0; i < columnOptionList.length; i++) {
         this.selectList[i] = this.select.updateSelect({
           select: this.selectList[i],
           options: columnOptionList[i],
-          key: keyValue[i].key,
-          value: keyValue[i].foreignKey,
+          key: keys[i].keyColumn,
+          value: keys[i].valueColumn,
           defaultOptionLabel: 'All',
         });
       }
@@ -1324,28 +1324,26 @@
           });
         },
       });
-
-      this.userMap = new Map(initialUserData.map((user) => [user.id, user.user]));
-      this.statusMap = new Map(
-        taskStatus.map((status) => [status.id, status.status]),
-      );
     }
 
     onPaginationResponse = ({ paginatedItems, totalPages, currentPageNo }) => {
-      this.pagerComponentUI.updateSelect({ currentPageNo, totalPages });
-      this.taskPresentationUI.renderTasks({
-        paginatedItems,
-        userMap: this.userMap,
-        statusMap: this.statusMap,
+      Promise.all([getAllStatuses(), getAllUsers()]).then(([statuses, users]) => {
+        let statusMap = new Map(statuses.map((s) => [s.id, s.statusName]));
+        let userMap = new Map(users.map((u) => [u.id, u.name]));
+
+        this.taskPresentationUI.renderTasks({
+          paginatedItems,
+          userMap,
+          statusMap,
+        });
       });
+      this.pagerComponentUI.updateSelect({ currentPageNo, totalPages });
     };
 
     onUserListChanged = ({ userList }) => {
-      this.userList = userList;
-      this.userMap = new Map(this.userList.map((user) => [user.id, user.user]));
-
-      this.viewTaskUI.onAssignUserListChanged({ assignUserList: this.userList });
-
+      // this.userList = userList;
+      // this.userMap = new Map(this.userList.map((user) => [user.id, user.user]));
+      // this.viewTaskUI.onAssignUserListChanged({ assignUserList: this.userList });
       // this.filterTaskControlUI.onFilterOptionsChanged({
       //   columnOptionList: [taskStatus, this.userList],
       //   keyValue: [
@@ -1366,11 +1364,14 @@
 
         this.filterTaskControlUI.onFilterOptionsChanged({
           columnOptionList: [taskStatus, userData],
-          keyValue: [
-            { key: 'id', foreignKey: 'status' },
-            { key: 'id', foreignKey: 'user'},
+          keys: [
+            { keyColumn: 'id', valueColumn: 'status' },
+            { keyColumn: 'id', valueColumn: 'user' },
           ],
         });
+
+        this.userMap = userData;
+        this.statusMap = taskStatus;
       });
     }
   }

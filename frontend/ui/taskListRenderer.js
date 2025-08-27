@@ -11,8 +11,8 @@ export function renderTasks({
   const container = document.getElementById(containerId);
   container.innerHTML = "";
   taskList.forEach((element) => {
-    const user = userMap.get(element.user);
-    const status = statusMap.get(element.status);
+    const user = userMap.get(element.userId);
+    const status = statusMap.get(element.statusId);
 
     const card = createElementComponent({ elementType: "div" });
     card.className = "card";
