@@ -31,7 +31,7 @@ namespace TaskApplication.controller
             return Ok();
         }
 
-        [HttpPut("{id:guid}")]
+        [HttpPatch("{id:guid}")]
         public ActionResult<User> UpdateUser(Guid id, [FromBody] User userToUpdate)
         {
             return UserService.UpdateUser(id, userToUpdate);
@@ -43,7 +43,7 @@ namespace TaskApplication.controller
         {
             int itemsPerPage = ((JsonElement)paginationDetails["itemsPerPage"]).GetInt32();
 
-            return Ok(new { paginatedItems = UserService.GetPaginatedUsers(paginationDetails), totalPages = UserService.GetTotalUsersNo() /  itemsPerPage});
+            return Ok(new { paginatedItems = UserService.GetPaginatedUsers(paginationDetails), totalPages = Math.Ceiling(UserService.GetTotalUsersNo() * 1.0 /  itemsPerPage)});
         }
 
         [HttpGet]

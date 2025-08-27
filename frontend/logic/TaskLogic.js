@@ -13,6 +13,7 @@ import { CreateTaskUI } from '../ui/CreateTaskUI.js';
 import { handleFormData } from './FormHandler.js';
 import { ViewTaskUI } from '../ui/ViewTaskUI.js';
 import {
+  addTask,
   getAllStatuses,
   getAllUsers,
   getPaginatedTasks,
@@ -71,7 +72,7 @@ export class TaskLogic {
       onSubmit: ({ formData }) => {
         handleFormData({
           sendTheDataFunction: (item) =>
-            this.taskService.saveTask({ newTask: item }),
+            addTask(item),
           onDataSent: () => {
             this.createTaskUI.closeModal();
             this.paginationHandler.getPaginatedItems();
@@ -141,9 +142,7 @@ export class TaskLogic {
           { keyColumn: 'id', valueColumn: 'user' },
         ],
       });
-
-      this.userMap = userData;
-      this.statusMap = taskStatus;
     });
   }
+  
 }

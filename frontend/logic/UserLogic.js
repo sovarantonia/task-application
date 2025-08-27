@@ -1,15 +1,15 @@
-import { UserService } from "../service/UserService.js";
-import { PagerData } from "../logic/pagination/PagerData.js";
-import { PaginationHandler } from "../logic/pagination/PaginationHandler.js";
-import { PagerComponentUI } from "../ui/PagerComponentUI.js";
-import { UserPresentationUI } from "../ui/UserPresentationUI.js";
-import { SendEmailComponentUI } from "../ui/SendEmailComponentUI.js";
-import { CheckboxHandler } from "./CheckboxHandler.js";
-import { SendEmailHandler } from "./SendEmailHandler.js";
-import { CheckboxCheckUI } from "../ui/CheckboxCheckUI.js";
-import { AddUserUI } from "../ui/AddUserUI.js";
-import { handleFormData } from "./FormHandler.js";
-import { getPaginatedUsers } from "../service/api.js";
+import { UserService } from '../service/UserService.js';
+import { PagerData } from '../logic/pagination/PagerData.js';
+import { PaginationHandler } from '../logic/pagination/PaginationHandler.js';
+import { PagerComponentUI } from '../ui/PagerComponentUI.js';
+import { UserPresentationUI } from '../ui/UserPresentationUI.js';
+import { SendEmailComponentUI } from '../ui/SendEmailComponentUI.js';
+import { CheckboxHandler } from './CheckboxHandler.js';
+import { SendEmailHandler } from './SendEmailHandler.js';
+import { CheckboxCheckUI } from '../ui/CheckboxCheckUI.js';
+import { AddUserUI } from '../ui/AddUserUI.js';
+import { handleFormData } from './FormHandler.js';
+import { addUser, getAllUsers, getPaginatedUsers } from '../service/api.js';
 export class UserLogic {
   constructor({ initialUserData = [], onUserListChanged = null }) {
     this.onUserListChanged = onUserListChanged;
@@ -36,12 +36,12 @@ export class UserLogic {
     });
 
     this.userPresentationUI = new UserPresentationUI({
-      containerId: "userContainer",
+      containerId: 'userContainer',
       onCheckboxChecked: this.checkboxHandler.onCheckboxChecked,
     });
 
     this.sendEmailComponentUI = new SendEmailComponentUI({
-      containerId: "sendEmailActionControl",
+      containerId: 'sendEmailActionControl',
       onUserListChanged: this.sendEmailHandler.sendEmail,
       onUserListReceived: this.checkboxHandler.getCheckedKeys,
     });
@@ -49,23 +49,23 @@ export class UserLogic {
     const { setItemsPerPage, setCurrentPageNo } = this.pagerData;
 
     this.pagerComponentUI = new PagerComponentUI({
-      containerId: "userPageControls",
+      containerId: 'userPageControls',
       onItemsPerPageChange: setItemsPerPage,
       onCurrentPageChange: setCurrentPageNo,
     });
 
     this.AddUserUI = new AddUserUI({
-      containerId: "addUserContainer",
+      containerId: 'addUserContainer',
       onSubmit: ({ formData }) => {
         handleFormData({
           sendTheDataFunction: (item) =>
-            this.userService.saveUser({ user: item }),
+           addUser(item),
           onDataSent: () => {
             this.AddUserUI.closeModal();
             this.paginationHandler.getPaginatedItems();
-            this.onUserListChanged({
-              userList: this.userService.service.objectList,
-            });
+            // this.onUserListChanged({
+            //   userList: this.userService.service.objectList,
+            // });
           },
           formData,
         });
@@ -94,6 +94,9 @@ export class UserLogic {
 
   init() {
     this.pagerData.init();
-    this.onUserListChanged({ userList: this.userService.service.objectList });
+    getAllUsers().then((users) => {
+      this.onUserListChanged({ userList: users });
+      return users;
+    });
   }
 }

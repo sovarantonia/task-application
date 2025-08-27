@@ -45,7 +45,7 @@ namespace TaskApplication.controller
         public IActionResult GetPaginatedTasks([FromBody] Dictionary<string, object> paginationDetails)
         {
             int itemsPerPage = ((JsonElement)paginationDetails["itemsPerPage"]).GetInt32();
-            return Ok(new { paginatedItems = TaskService.GetPaginatedTasks(paginationDetails), totalPages = TaskService.GetTotalTasksNo() / itemsPerPage });
+            return Ok(new { paginatedItems = TaskService.GetPaginatedTasks(paginationDetails), totalPages = Math.Ceiling(TaskService.GetTotalTasksNo() * 1.0 / itemsPerPage) });
         }
     }
 }

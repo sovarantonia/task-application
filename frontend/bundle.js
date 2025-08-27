@@ -1206,7 +1206,6 @@
   }
 
   function getPaginatedTasks(paginationDetails) {
-    console.log(paginationDetails);
     return fetch('http://localhost:5143/Task/list', {
       body: JSON.stringify(paginationDetails),
       headers: {
@@ -1236,6 +1235,41 @@
 
   function getAllUsers() {
     return fetch('http://localhost:5143/User/').then((response) => {
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error('Error ' + response.status + ' ' + text);
+        });
+      }
+      return response.json();
+    });
+  }
+
+  function addUser(userToSave) {
+    console.log(userToSave);
+    return fetch('http://localhost:5143/User/', {
+      body: JSON.stringify(userToSave),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    }).then((response) => {
+      if (!response.ok) {
+        return response.text().then((text) => {
+          throw new Error('Error ' + response.status + ' ' + text);
+        });
+      }
+      return response.json();
+    });
+  }
+
+  function addTask(taskToSave) {
+    return fetch('http://localhost:5143/Task/', {
+      body: JSON.stringify(taskToSave),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      method: 'POST',
+    }).then((response) => {
       if (!response.ok) {
         return response.text().then((text) => {
           throw new Error('Error ' + response.status + ' ' + text);
@@ -1299,7 +1333,7 @@
         onSubmit: ({ formData }) => {
           handleFormData({
             sendTheDataFunction: (item) =>
-              this.taskService.saveTask({ newTask: item }),
+              addTask(item),
             onDataSent: () => {
               this.createTaskUI.closeModal();
               this.paginationHandler.getPaginatedItems();
@@ -1369,11 +1403,9 @@
             { keyColumn: 'id', valueColumn: 'user' },
           ],
         });
-
-        this.userMap = userData;
-        this.statusMap = taskStatus;
       });
     }
+    
   }
 
   class UserService {
@@ -1577,7 +1609,7 @@
       this.form = createForm({
         onSubmit: onSubmit,
         props: [
-          { id: "user", inputType: "text", name: "Name", isRequired: true },
+          { id: "name", inputType: "text", name: "Name", isRequired: true },
           { id: "email", inputType: "text", name: "Email", isRequired: true },
           {
             id: "department",
@@ -1640,12 +1672,12 @@
       });
 
       this.userPresentationUI = new UserPresentationUI({
-        containerId: "userContainer",
+        containerId: 'userContainer',
         onCheckboxChecked: this.checkboxHandler.onCheckboxChecked,
       });
 
       this.sendEmailComponentUI = new SendEmailComponentUI({
-        containerId: "sendEmailActionControl",
+        containerId: 'sendEmailActionControl',
         onUserListChanged: this.sendEmailHandler.sendEmail,
         onUserListReceived: this.checkboxHandler.getCheckedKeys,
       });
@@ -1653,23 +1685,23 @@
       const { setItemsPerPage, setCurrentPageNo } = this.pagerData;
 
       this.pagerComponentUI = new PagerComponentUI({
-        containerId: "userPageControls",
+        containerId: 'userPageControls',
         onItemsPerPageChange: setItemsPerPage,
         onCurrentPageChange: setCurrentPageNo,
       });
 
       this.AddUserUI = new AddUserUI({
-        containerId: "addUserContainer",
+        containerId: 'addUserContainer',
         onSubmit: ({ formData }) => {
           handleFormData({
             sendTheDataFunction: (item) =>
-              this.userService.saveUser({ user: item }),
+             addUser(item),
             onDataSent: () => {
               this.AddUserUI.closeModal();
               this.paginationHandler.getPaginatedItems();
-              this.onUserListChanged({
-                userList: this.userService.service.objectList,
-              });
+              // this.onUserListChanged({
+              //   userList: this.userService.service.objectList,
+              // });
             },
             formData,
           });
@@ -1698,7 +1730,10 @@
 
     init() {
       this.pagerData.init();
-      this.onUserListChanged({ userList: this.userService.service.objectList });
+      getAllUsers().then((users) => {
+        this.onUserListChanged({ userList: users });
+        return users;
+      });
     }
   }
 

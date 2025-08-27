@@ -16,7 +16,6 @@ export function getPaginatedUsers(paginationDetails) {
 }
 
 export function getPaginatedTasks(paginationDetails) {
-  console.log(paginationDetails);
   return fetch('http://localhost:5143/Task/list', {
     body: JSON.stringify(paginationDetails),
     headers: {
@@ -56,6 +55,7 @@ export function getAllUsers() {
 }
 
 export function addUser(userToSave) {
+  console.log(userToSave)
   return fetch('http://localhost:5143/User/', {
     body: JSON.stringify(userToSave),
     headers: {

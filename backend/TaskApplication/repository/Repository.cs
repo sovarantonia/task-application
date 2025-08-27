@@ -2,7 +2,6 @@
 {
     using Microsoft.Extensions.Configuration;
     using MySqlConnector;
-    using Org.BouncyCastle.Asn1.X509;
     using System.Reflection;
     using System.Text.Json;
 
@@ -124,6 +123,7 @@
             using MySqlCommand command = new MySqlCommand { Connection = connection };
 
             int i = 0;
+            T item = FindById(id);
             foreach (PropertyInfo prop in properties)
             {
                 var colName = prop.Name;
@@ -142,7 +142,7 @@
                 var param = command.Parameters.Add(placeholder, MySqlDbType.VarChar);
                 if (val is null)
                 {
-                    param.Value = DBNull.Value;
+                    param.Value = prop.GetValue(item);
                     continue;
                 }
 

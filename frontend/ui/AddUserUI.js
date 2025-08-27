@@ -10,7 +10,7 @@ export class AddUserUI {
     this.form = createForm({
       onSubmit: onSubmit,
       props: [
-        { id: "user", inputType: "text", name: "Name", isRequired: true },
+        { id: "name", inputType: "text", name: "Name", isRequired: true },
         { id: "email", inputType: "text", name: "Email", isRequired: true },
         {
           id: "department",
