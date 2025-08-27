@@ -1245,7 +1245,6 @@
   }
 
   function addUser(userToSave) {
-    console.log(userToSave);
     return fetch('http://localhost:5143/User/', {
       body: JSON.stringify(userToSave),
       headers: {
@@ -1332,8 +1331,7 @@
         containerId: 'createTaskContainer',
         onSubmit: ({ formData }) => {
           handleFormData({
-            sendTheDataFunction: (item) =>
-              addTask(item),
+            sendTheDataFunction: (item) => addTask(item),
             onDataSent: () => {
               this.createTaskUI.closeModal();
               this.paginationHandler.getPaginatedItems();
@@ -1374,30 +1372,33 @@
       this.pagerComponentUI.updateSelect({ currentPageNo, totalPages });
     };
 
-    onUserListChanged = ({ userList }) => {
-      // this.userList = userList;
-      // this.userMap = new Map(this.userList.map((user) => [user.id, user.user]));
-      // this.viewTaskUI.onAssignUserListChanged({ assignUserList: this.userList });
-      // this.filterTaskControlUI.onFilterOptionsChanged({
-      //   columnOptionList: [taskStatus, this.userList],
-      //   keyValue: [
-      //     { key: 'id', foreignKey: 'statusId', columnName: 'Status' },
-      //     { key: 'id', foreignKey: 'userId', columnName: 'User' },
-      //   ],
-      // });
+    onUserListChanged = () => {
+      getAllUsers().then((users) => {
+        this.userData = users.map((u) => ({ id: u.id, user: u.name }));
+        this.viewTaskUI.onAssignUserListChanged({
+          assignUserList: this.userData,
+        });
+        this.filterTaskControlUI.onFilterOptionsChanged({
+          columnOptionList: [this.taskStatus, this.userData],
+          keys: [
+            { keyColumn: 'id', valueColumn: 'status' },
+            { keyColumn: 'id', valueColumn: 'user' },
+          ],
+        });
+      });
     };
 
     init() {
       this.pagerData.init();
       Promise.all([getAllStatuses(), getAllUsers()]).then(([statuses, users]) => {
-        let taskStatus = statuses.map((s) => ({
+        this.taskStatus = statuses.map((s) => ({
           id: s.id,
           status: s.statusName,
         }));
-        let userData = users.map((u) => ({ id: u.id, user: u.name }));
+        this.userData = users.map((u) => ({ id: u.id, user: u.name }));
 
         this.filterTaskControlUI.onFilterOptionsChanged({
-          columnOptionList: [taskStatus, userData],
+          columnOptionList: [this.taskStatus, this.userData],
           keys: [
             { keyColumn: 'id', valueColumn: 'status' },
             { keyColumn: 'id', valueColumn: 'user' },
@@ -1405,7 +1406,6 @@
         });
       });
     }
-    
   }
 
   class UserService {
@@ -1699,9 +1699,7 @@
             onDataSent: () => {
               this.AddUserUI.closeModal();
               this.paginationHandler.getPaginatedItems();
-              // this.onUserListChanged({
-              //   userList: this.userService.service.objectList,
-              // });
+              this.onUserListChanged();
             },
             formData,
           });
@@ -1730,10 +1728,10 @@
 
     init() {
       this.pagerData.init();
-      getAllUsers().then((users) => {
-        this.onUserListChanged({ userList: users });
-        return users;
-      });
+      // getAllUsers().then((users) => {
+      //   this.onUserListChanged({ userList: users });
+      //   return users;
+      // });
     }
   }
 

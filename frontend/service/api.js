@@ -55,7 +55,6 @@ export function getAllUsers() {
 }
 
 export function addUser(userToSave) {
-  console.log(userToSave)
   return fetch('http://localhost:5143/User/', {
     body: JSON.stringify(userToSave),
     headers: {

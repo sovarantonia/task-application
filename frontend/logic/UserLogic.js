@@ -63,9 +63,7 @@ export class UserLogic {
           onDataSent: () => {
             this.AddUserUI.closeModal();
             this.paginationHandler.getPaginatedItems();
-            // this.onUserListChanged({
-            //   userList: this.userService.service.objectList,
-            // });
+            this.onUserListChanged();
           },
           formData,
         });
@@ -94,9 +92,9 @@ export class UserLogic {
 
   init() {
     this.pagerData.init();
-    getAllUsers().then((users) => {
-      this.onUserListChanged({ userList: users });
-      return users;
-    });
+    // getAllUsers().then((users) => {
+    //   this.onUserListChanged({ userList: users });
+    //   return users;
+    // });
   }
 }
