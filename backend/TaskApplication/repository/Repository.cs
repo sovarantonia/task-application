@@ -307,7 +307,7 @@
 
         public long GetTotalItemNo()
         {
-            string queryString = $"SELECT COUNT(*) FROM {TableName}";
+            string queryString = "select found_rows()";
             using MySqlConnection connection = new MySqlConnection(_connectionString);
             connection.Open();
             using MySqlCommand command = new MySqlCommand(queryString, connection);

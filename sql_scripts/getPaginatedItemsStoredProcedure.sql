@@ -1,3 +1,4 @@
+use task_application;
 DELIMITER //
 create procedure GetPaginatedItems 
 (in tableName varchar(50), in currentPageNo int, in itemsPerPage int, 
@@ -12,7 +13,7 @@ declare sortOption varchar(100) default '';
 declare filterOption varchar(100) default '';
 
 set offst = (currentPageNo - 1) * (itemsPerPage);
-set @s = concat('select * from ', tableName, ' ');
+set @s = concat('select sql_calc_found_rows * from ', tableName, ' ');
 
 if json_length(filterColumns) is not null then 
 
@@ -71,7 +72,7 @@ set @s = concat(@s, ' ORDER BY ', sortOption, ' ');
 
 end if;
 
-set @s = concat(@s, ' limit ', itemsPerPage, ' offset ', offst);
+set @s = concat(@s, ' limit ', itemsPerPage, ' offset ', offst, ';');
 
 PREPARE stmt FROM @s;
 EXECUTE stmt;
@@ -79,3 +80,6 @@ EXECUTE stmt;
 end; 
 //
 DELIMITER ;
+
+-- select sql_calc_found_rows * from tasks where statusId = 2;
+-- select found_rows();
