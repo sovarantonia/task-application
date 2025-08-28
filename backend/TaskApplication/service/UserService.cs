@@ -1,13 +1,32 @@
 ﻿namespace TaskApplication.service
 {
     using TaskApplication.entity;
+
     public class UserService
     {
         private Service<User> Service = new Service<User>("users");
 
+        public bool ValidateUser(User userToSave)
+        {
+            List<User> allUsers = Service.GetAllItems();
+            foreach (User user in allUsers)
+            {
+                if (string.Equals(userToSave.Email, user.Email, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
         public User SaveUser(User userToSave)
         {
-            return Service.Save(userToSave);
+            if (ValidateUser(userToSave))
+            {
+                return Service.Save(userToSave);
+            }
+
+            return null;
         }
 
         public User FindUserById(Guid id)

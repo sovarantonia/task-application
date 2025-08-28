@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Reflection.Metadata.Ecma335;
 using System.Text.Json;
 using TaskApplication.entity;
 using TaskApplication.service;
@@ -21,7 +22,8 @@ namespace TaskApplication.controller
         [HttpPost]
         public ActionResult<User> SaveUser([FromBody] User userToSave)
         {
-            return UserService.SaveUser(userToSave);
+            var savedUser = UserService.SaveUser(userToSave);
+            return savedUser == null ? BadRequest() : savedUser;
         }
 
         [HttpDelete("{id:guid}")]
