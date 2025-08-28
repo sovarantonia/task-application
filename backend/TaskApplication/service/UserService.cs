@@ -1,12 +1,9 @@
 ﻿namespace TaskApplication.service
 {
-    using Microsoft.AspNetCore.Mvc;
     using TaskApplication.entity;
-    using TaskApplication.repository;
-
     public class UserService
     {
-        public Service<User> Service = new Service<User>("users");
+        private Service<User> Service = new Service<User>("users");
 
         public User SaveUser(User userToSave)
         {

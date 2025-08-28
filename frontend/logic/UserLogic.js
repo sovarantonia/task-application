@@ -7,7 +7,7 @@ import { SendEmailComponentUI } from '../ui/SendEmailComponentUI.js';
 import { CheckboxHandler } from './CheckboxHandler.js';
 import { SendEmailHandler } from './SendEmailHandler.js';
 import { CheckboxCheckUI } from '../ui/CheckboxCheckUI.js';
-import { AddUserUI } from '../ui/AddUserUI.js';
+import { CreateUserUI } from '../ui/CreateUserUI.js';
 import { handleFormData } from './FormHandler.js';
 import { addUser, getAllUsers, getPaginatedUsers } from '../service/api.js';
 export class UserLogic {
@@ -54,14 +54,13 @@ export class UserLogic {
       onCurrentPageChange: setCurrentPageNo,
     });
 
-    this.AddUserUI = new AddUserUI({
+    this.CreateUserUI = new CreateUserUI({
       containerId: 'addUserContainer',
       onSubmit: ({ formData }) => {
         handleFormData({
-          sendTheDataFunction: (item) =>
-           addUser(item),
+          sendTheDataFunction: (item) => addUser(item),
           onDataSent: () => {
-            this.AddUserUI.closeModal();
+            this.CreateUserUI.closeModal();
             this.paginationHandler.getPaginatedItems();
             this.onUserListChanged();
           },
@@ -92,9 +91,5 @@ export class UserLogic {
 
   init() {
     this.pagerData.init();
-    // getAllUsers().then((users) => {
-    //   this.onUserListChanged({ userList: users });
-    //   return users;
-    // });
   }
 }

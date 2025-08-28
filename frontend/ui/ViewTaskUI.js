@@ -1,7 +1,7 @@
-import { createElementComponent } from "../components/CreateElementComponent.js";
-import { createForm } from "../components/FormComponent.js";
-import { Modal } from "../components/ModalComponent.js";
-import { SelectComponent } from "../components/SelectComponent.js";
+import { createElementComponent } from '../components/CreateElementComponent.js';
+import { createForm } from '../components/FormComponent.js';
+import { Modal } from '../components/ModalComponent.js';
+import { SelectComponent } from '../components/SelectComponent.js';
 export class ViewTaskUI {
   constructor({ containerId, onSubmit = null, userAssignList = [] }) {
     this.onSubmit = onSubmit;
@@ -10,21 +10,21 @@ export class ViewTaskUI {
     const target = document.getElementById(containerId);
 
     const title = createElementComponent({
-      elementType: "h1",
-      text: "Assign user",
+      elementType: 'h1',
+      text: 'Assign user',
     });
 
     this.select = new SelectComponent();
 
     this.selectUser = this.select.createSelect({
-      selectId: "user",
+      selectId: 'userId',
     });
 
     this.form = createForm({
-      formId: "viewTaskForm",
+      formId: 'viewTaskForm',
       selectList: [
         {
-          labelName: "Assign user",
+          labelName: 'Assign user',
           select: this.selectUser,
         },
       ],
@@ -54,9 +54,9 @@ export class ViewTaskUI {
     this.selectUser = this.select.updateSelect({
       select: this.selectUser,
       options: assignUserList,
-      key: "id",
-      value: "user",
-      defaultOptionLabel: "Select a user",
+      key: 'id',
+      value: 'user',
+      defaultOptionLabel: 'Select a user',
     });
   };
 }

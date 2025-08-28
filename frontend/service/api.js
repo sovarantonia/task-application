@@ -72,12 +72,29 @@ export function addUser(userToSave) {
 }
 
 export function addTask(taskToSave) {
-  return fetch('http://localhost:5143/Task/SaveTask/', {
+  return fetch('http://localhost:5143/Task/', {
     body: JSON.stringify(taskToSave),
     headers: {
       'Content-Type': 'application/json',
     },
     method: 'POST',
+  }).then((response) => {
+    if (!response.ok) {
+      return response.text().then((text) => {
+        throw new Error('Error ' + response.status + ' ' + text);
+      });
+    }
+    return response.json();
+  });
+}
+
+export function updateTask(id, taskToUpdate) {
+  return fetch(`http://localhost:5143/Task/${id}`, {
+    body: JSON.stringify(taskToUpdate),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    method: 'PATCH',
   }).then((response) => {
     if (!response.ok) {
       return response.text().then((text) => {

@@ -2,6 +2,7 @@
 {
     using Microsoft.Extensions.Configuration;
     using MySqlConnector;
+    using Swashbuckle.AspNetCore.SwaggerGen;
     using System.Reflection;
     using System.Text.Json;
 
@@ -10,7 +11,7 @@
         private readonly string _connectionString =
             new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("ConnectionStrings")["DefaultConnection"].ToString();
 
-        public string TableName { get; set; }
+        private string TableName { get; set; }
 
         public Repository(string tableName)
         {
@@ -48,6 +49,7 @@
                 if (val is null)
                 {
                     param.Value = DBNull.Value;
+                    //param.Value = val;
                     continue;
                 }
 
@@ -170,7 +172,7 @@
                 var param = command.Parameters.Add("@id", MySqlDbType.Guid);
                 param.Value = id.ToString("D");
                 MySqlDataReader reader = command.ExecuteReader();
-                while(reader.Read())
+                while (reader.Read())
                 {
                     return SetItemProperties(reader);
                 }
@@ -219,7 +221,7 @@
         public List<T> GetPaginatedItems(int currentPageNo, int itemsPerPage, Dictionary<string, int> sortCriteria, Dictionary<string, string> filterCriteria)
         {
             List<T> items = new List<T>();
-           
+
             using MySqlConnection connection = new MySqlConnection(_connectionString);
             connection.Open();
 
@@ -312,9 +314,9 @@
 
             try
             {
-                return (Int64) command.ExecuteScalar();
+                return (Int64)command.ExecuteScalar();
             }
-            catch(MySqlException e)
+            catch (MySqlException e)
             {
                 Console.WriteLine(e.Message);
             }
@@ -336,13 +338,13 @@
             try
             {
                 MySqlDataReader reader = command.ExecuteReader();
-                while(reader.Read())
+                while (reader.Read())
                 {
                     var item = SetItemProperties(reader);
                     items.Add(item);
                 }
             }
-            catch(MySqlException e)
+            catch (MySqlException e)
             {
                 Console.WriteLine(e.Message);
             }
@@ -364,12 +366,12 @@
                 var colName = property.Name;
                 Type convertTo = Nullable.GetUnderlyingType(property.PropertyType) ?? property.PropertyType;
 
-
-                if (convertTo == typeof(Guid))
+                if (reader[colName] is DBNull)
                 {
-                    var guid = Guid.Parse(reader[colName].ToString());
-                    property.SetValue(item, guid, null);
+                    property.SetValue(item, null, null);
                 }
+                else
+
                 if (convertTo == typeof(DateOnly))
                 {
                     var date = reader.GetDateTime(colName);

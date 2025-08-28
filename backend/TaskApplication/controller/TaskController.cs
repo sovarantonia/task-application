@@ -9,7 +9,7 @@ namespace TaskApplication.controller
     [ApiController]
     public class TaskController : ControllerBase
     {
-        public TaskService TaskService = new TaskService();
+        private TaskService TaskService = new TaskService();
 
         public TaskController()
         {
@@ -38,7 +38,7 @@ namespace TaskApplication.controller
         }
 
 
-        [HttpPut("{id:guid}")]
+        [HttpPatch("{id:guid}")]
         public ActionResult<Task> UpdateTask(Guid id, [FromBody] Task taskToUpdate)
         {
             return TaskService.UpdateTask(id, taskToUpdate);

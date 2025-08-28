@@ -8,7 +8,7 @@ namespace TaskApplication.controller
     [ApiController]
     public class StatusController : ControllerBase
     {
-        public StatusService StatusService = new StatusService();
+        private StatusService StatusService = new StatusService();
 
         [HttpGet]
         public List<Status> GetAllStatuses()

@@ -4,7 +4,7 @@ namespace TaskApplication.service
 {
     public class TaskService
     {
-        public Service<Task> Service = new Service<entity.Task>("tasks");
+        private Service<Task> Service = new Service<entity.Task>("tasks");
 
         public Task Save(Task taskToSave)
         {

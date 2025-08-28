@@ -4,7 +4,7 @@ namespace TaskApplication.service
 {
     public class StatusService
     {
-        public Service<Status> Service = new Service<Status>("statuses");
+        private Service<Status> Service = new Service<Status>("statuses");
 
         public List<Status> GetAllStatuses()
         {

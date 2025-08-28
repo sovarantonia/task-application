@@ -17,6 +17,7 @@ import {
   getAllStatuses,
   getAllUsers,
   getPaginatedTasks,
+  updateTask,
 } from '../service/api.js';
 export class TaskLogic {
   constructor({ initialTaskData = [] } = {}) {
@@ -86,7 +87,7 @@ export class TaskLogic {
       onSubmit: ({ formData, item }) => {
         handleFormData({
           sendTheDataFunction: (item) =>
-            this.taskService.updateTask({ task: item }),
+            updateTask(item.id, item),
           onDataSent: () => {
             this.viewTaskUI.closeView();
             this.paginationHandler.getPaginatedItems();
@@ -125,6 +126,9 @@ export class TaskLogic {
           { keyColumn: 'id', valueColumn: 'user' },
         ],
       });
+      this.createTaskUI.onAssignUserListChanged({
+        assignUserList: this.userData,
+      });
     });
   };
 
@@ -143,6 +147,14 @@ export class TaskLogic {
           { keyColumn: 'id', valueColumn: 'status' },
           { keyColumn: 'id', valueColumn: 'user' },
         ],
+      });
+
+      this.viewTaskUI.onAssignUserListChanged({
+        assignUserList: this.userData,
+      });
+
+      this.createTaskUI.onAssignUserListChanged({
+        assignUserList: this.userData,
       });
     });
   }
