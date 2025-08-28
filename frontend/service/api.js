@@ -72,7 +72,7 @@ export function addUser(userToSave) {
 }
 
 export function addTask(taskToSave) {
-  return fetch('http://localhost:5143/Task/', {
+  return fetch('http://localhost:5143/Task/SaveTask/', {
     body: JSON.stringify(taskToSave),
     headers: {
       'Content-Type': 'application/json',

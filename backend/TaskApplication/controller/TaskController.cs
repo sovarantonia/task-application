@@ -11,6 +11,11 @@ namespace TaskApplication.controller
     {
         public TaskService TaskService = new TaskService();
 
+        public TaskController()
+        {
+
+        }
+
         [HttpGet("{id:guid}")]
         public ActionResult<entity.Task> GetTaskById(Guid id)
         {
