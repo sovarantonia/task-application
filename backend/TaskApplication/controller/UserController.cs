@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Reflection.Metadata.Ecma335;
 using System.Text.Json;
 using TaskApplication.entity;
 using TaskApplication.service;
@@ -11,7 +10,6 @@ namespace TaskApplication.controller
     public class UserController : ControllerBase
     {
         private UserService UserService = new UserService();
-
 
         [HttpGet("{id:guid}")]
         public ActionResult<User> GetUserById(Guid id)
@@ -49,7 +47,6 @@ namespace TaskApplication.controller
         }
 
         [HttpGet]
-        //[Route("all")]
         public List<User> GetAllUsers()
         {
             return UserService.GetAllUsers();

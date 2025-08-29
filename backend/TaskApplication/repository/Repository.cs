@@ -2,16 +2,15 @@
 {
     using Microsoft.Extensions.Configuration;
     using MySqlConnector;
-    using Swashbuckle.AspNetCore.SwaggerGen;
     using System.Reflection;
     using System.Text.Json;
 
     public class Repository<T>
     {
-        private readonly string _connectionString =
+        protected readonly string _connectionString =
             new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("ConnectionStrings")["DefaultConnection"].ToString();
 
-        private string TableName { get; set; }
+        protected string TableName { get; set; }
 
         public Repository(string tableName)
         {
@@ -35,6 +34,8 @@
 
                 if (colName.Equals("Id", StringComparison.CurrentCultureIgnoreCase))
                 {
+                    columns.Add($"`{colName}`");
+                    values.Add("@new_id");
                     continue;
                 }
 
@@ -49,7 +50,6 @@
                 if (val is null)
                 {
                     param.Value = DBNull.Value;
-                    //param.Value = val;
                     continue;
                 }
 
@@ -69,8 +69,9 @@
                 }
             }
 
-            command.CommandText = $"INSERT INTO `{TableName}` ({string.Join(", ", columns)}) VALUES ({string.Join(", ", values)}); " +
-                $"SELECT* FROM {TableName} where id = LAST_INSERT_ID();";
+            command.CommandText = $"SET @new_id = UUID(); " +
+                $"INSERT INTO `{TableName}` ({string.Join(", ", columns)}) VALUES ({string.Join(", ", values)}); " +
+                $"SELECT* FROM {TableName} where id = @new_id;";
 
             try
             {
@@ -201,12 +202,10 @@
             MySqlDataReader reader = command.ExecuteReader();
             try
             {
-
                 while (reader.Read())
                 {
                     return SetItemProperties(reader);
                 }
-
             }
             catch (MySqlException e)
             {
@@ -237,10 +236,8 @@
             List<string> filterColumns = new List<string>();
             List<string> filterColumnValues = new List<string>();
 
-
             if (sortCriteria.Count > 0)
             {
-
                 foreach (var criterion in sortCriteria)
                 {
                     sortColumns.Add(criterion.Key);
@@ -305,7 +302,7 @@
             return items;
         }
 
-        public long GetTotalItemNo()
+        public long GetTotalItemsNo()
         {
             string queryString = "select found_rows()";
             using MySqlConnection connection = new MySqlConnection(_connectionString);
@@ -356,7 +353,7 @@
             return items;
         }
 
-        private static T SetItemProperties(MySqlDataReader reader)
+        protected static T SetItemProperties(MySqlDataReader reader)
         {
             var properties = typeof(T).GetProperties();
             var item = Activator.CreateInstance<T>();

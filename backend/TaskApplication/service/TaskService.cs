@@ -1,39 +1,42 @@
-﻿using Task = TaskApplication.entity.Task;
+﻿using TaskApplication.repository;
+using Task = TaskApplication.entity.Task;
 
 namespace TaskApplication.service
 {
     public class TaskService
     {
-        private Service<Task> Service = new Service<entity.Task>("tasks");
+        private TaskRepository TaskRepository = new TaskRepository();
+        private PaginationDetails PaginationDetails = new PaginationDetails();
 
         public Task Save(Task taskToSave)
         {
-            return Service.Save(taskToSave);
+            return TaskRepository.Save(taskToSave);
         }
 
         public Task FindTaskById(Guid id)
         {
-            return Service.FindById(id);
+            return TaskRepository.FindById(id);
         }
 
         public void DeleteTask(Guid id)
         {
-            Service.Delete(id);
+            TaskRepository.Delete(id);
         }
 
         public Task UpdateTask(Guid id, Task taskToUpdate)
         {
-            return Service.Update(id, taskToUpdate);
+            return TaskRepository.Update(id, taskToUpdate);
         }
 
         public List<Task> GetPaginatedTasks(Dictionary<string, object> paginationDetails)
         {
-            return Service.GetPaginatedItems(paginationDetails);
+            PaginationDetails.ExtractPaginationDetails(paginationDetails);
+            return TaskRepository.GetPaginatedItems(PaginationDetails.CurrentPageNo, PaginationDetails.ItemsPerPage, PaginationDetails.SortCriteria, PaginationDetails.FilterCriteria);
         }
 
         public long GetTotalTasksNo()
         {
-            return Service.GetTotalItemsNo();
+            return TaskRepository.GetTotalItemsNo();
         }
 
     }

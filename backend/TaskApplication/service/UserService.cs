@@ -1,29 +1,28 @@
 ﻿namespace TaskApplication.service
 {
     using TaskApplication.entity;
+    using TaskApplication.repository;
 
     public class UserService
     {
-        private Service<User> Service = new Service<User>("users");
+        private UserRepository UserRepository = new UserRepository();
+        private PaginationDetails PaginationDetails = new PaginationDetails();
 
         public bool ValidateUser(User userToSave)
         {
-            List<User> allUsers = Service.GetAllItems();
-            foreach (User user in allUsers)
+            var foundUser = UserRepository.FindUserByEmail(userToSave.Email);
+            if (foundUser != null)
             {
-                if (string.Equals(userToSave.Email, user.Email, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    return false;
-                }
+                return false;
             }
             return true;
         }
-
+        
         public User SaveUser(User userToSave)
         {
             if (ValidateUser(userToSave))
             {
-                return Service.Save(userToSave);
+                return UserRepository.Save(userToSave);
             }
 
             return null;
@@ -31,32 +30,33 @@
 
         public User FindUserById(Guid id)
         {
-            return Service.FindById(id);
+            return UserRepository.FindById(id);
         }
 
         public void DeleteUser(Guid id)
         {
-            Service.Delete(id);
+            UserRepository.Delete(id);
         }
 
         public User UpdateUser(Guid id, User userToUpdate)
         {
-            return Service.Update(id, userToUpdate);
+            return UserRepository.Update(id, userToUpdate);
         }
 
         public List<User> GetPaginatedUsers(Dictionary<string, object> paginationDetails)
         {
-            return Service.GetPaginatedItems(paginationDetails);
+            PaginationDetails.ExtractPaginationDetails(paginationDetails);
+            return UserRepository.GetPaginatedItems(PaginationDetails.CurrentPageNo, PaginationDetails.ItemsPerPage, PaginationDetails.SortCriteria, PaginationDetails.FilterCriteria);
         }
 
         public long GetTotalUsersNo()
         {
-            return Service.GetTotalItemsNo();
+            return UserRepository.GetTotalItemsNo();
         }
 
         public List<User> GetAllUsers()
         {
-            return Service.GetAllItems();
+            return UserRepository.GetAllItems();
         }
 
     }
