@@ -2,7 +2,7 @@
 
 namespace TaskApplication.repository
 {
-    public class TaskRepository : Repository<Task>
+    public class TaskRepository : Repository<Task>, ITaskRepository
     {
         public TaskRepository() : base("tasks")
         {

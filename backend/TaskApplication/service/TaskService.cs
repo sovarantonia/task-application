@@ -3,10 +3,15 @@ using Task = TaskApplication.entity.Task;
 
 namespace TaskApplication.service
 {
-    public class TaskService
+    public class TaskService : ITaskService
     {
-        private TaskRepository TaskRepository = new TaskRepository();
+        private ITaskRepository TaskRepository;
         private PaginationDetails PaginationDetails = new PaginationDetails();
+
+        public TaskService(ITaskRepository repository)
+        {
+            this.TaskRepository = repository;
+        }
 
         public Task Save(Task taskToSave)
         {

@@ -5,7 +5,7 @@
     using System.Reflection;
     using System.Text.Json;
 
-    public class Repository<T>
+    public class Repository<T> : IRepository<T>
     {
         protected readonly string _connectionString =
             new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("ConnectionStrings")["DefaultConnection"].ToString();
@@ -353,7 +353,7 @@
             return items;
         }
 
-        protected static T SetItemProperties(MySqlDataReader reader)
+        public T SetItemProperties(MySqlDataReader reader)
         {
             var properties = typeof(T).GetProperties();
             var item = Activator.CreateInstance<T>();

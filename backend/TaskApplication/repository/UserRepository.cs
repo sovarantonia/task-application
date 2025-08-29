@@ -3,7 +3,7 @@ using TaskApplication.entity;
 
 namespace TaskApplication.repository
 {
-    public class UserRepository : Repository<User>
+    public class UserRepository : Repository<User>, IUserRepository
     {
         public UserRepository() : base("users")
         {

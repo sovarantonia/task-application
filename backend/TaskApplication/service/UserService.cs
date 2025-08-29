@@ -3,10 +3,15 @@
     using TaskApplication.entity;
     using TaskApplication.repository;
 
-    public class UserService
+    public class UserService : IUserService
     {
-        private UserRepository UserRepository = new UserRepository();
+        private IUserRepository UserRepository;
         private PaginationDetails PaginationDetails = new PaginationDetails();
+
+        public UserService(IUserRepository repository)
+        {
+            this.UserRepository = repository;
+        }
 
         public bool ValidateUser(User userToSave)
         {

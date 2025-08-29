@@ -9,7 +9,12 @@ namespace TaskApplication.controller
     [Route("[controller]")]
     public class UserController : ControllerBase
     {
-        private UserService UserService = new UserService();
+        private IUserService UserService;
+
+        public UserController(IUserService service)
+        {
+            this.UserService = service;
+        }
 
         [HttpGet("{id:guid}")]
         public ActionResult<User> GetUserById(Guid id)

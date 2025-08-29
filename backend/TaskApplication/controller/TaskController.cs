@@ -9,11 +9,11 @@ namespace TaskApplication.controller
     [ApiController]
     public class TaskController : ControllerBase
     {
-        private TaskService TaskService = new TaskService();
+        private ITaskService TaskService;
 
-        public TaskController()
+        public TaskController(ITaskService service)
         {
-
+            this.TaskService = service;
         }
 
         [HttpGet("{id:guid}")]
