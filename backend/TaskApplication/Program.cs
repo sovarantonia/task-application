@@ -1,7 +1,5 @@
-using TaskApplication.entity;
 using TaskApplication.repository;
 using TaskApplication.service;
-using Task = TaskApplication.entity.Task;
 
 var  MyAllowSpecificOrigins = "MyAllowSpecificOrigins";
 
