@@ -43,7 +43,7 @@ namespace TaskApplication.controller
         public ActionResult<Task> UpdateTask(Guid id, [FromBody] Task taskToUpdate)
         {
             Task result = TaskService.UpdateTask(id, taskToUpdate);
-            return result == null ? BadRequest() : Ok(result);
+            return result == null ? NotFound() : Ok(result);
         }
 
 
