@@ -9,6 +9,12 @@ namespace TaskApplication.service.Tests
     public class UserServiceTests
     {
         readonly Mock<IUserRepository> userRepository = new Mock<IUserRepository>();
+        private IUserService service;
+
+        public UserServiceTests()
+        {
+            service = new UserService(userRepository.Object);
+        }
 
         [TestMethod()]
         public void ValidateUserTest()
@@ -18,7 +24,6 @@ namespace TaskApplication.service.Tests
                 .Returns((User?)null)
                 .Returns(userToSave);
 
-            IUserService service = new UserService(userRepository.Object);
             var firstCall = service.ValidateUser(userToSave);
             var secondCall = service.ValidateUser(userToSave);
 
@@ -33,8 +38,6 @@ namespace TaskApplication.service.Tests
             userRepository.Setup(repo => repo.Save(It.IsAny<User>()))
                 .Returns(userToSave);
 
-            IUserService service = new UserService(userRepository.Object);
-
             var savedUser = service.SaveUser(new User());
             Assert.AreEqual(Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f"), savedUser.Id);
             Assert.AreEqual("Name", savedUser.Name);
@@ -47,8 +50,6 @@ namespace TaskApplication.service.Tests
             User userToFind = new User { Id = Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f"), Name = "Name", Email = "email@example.com" };
             userRepository.Setup(repo => repo.FindById(It.IsAny<Guid>()))
                 .Returns(userToFind);
-
-            IUserService service = new UserService(userRepository.Object);
 
             var foundUser = service.FindUserById(Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f"));
             Assert.AreEqual(Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f"), foundUser.Id);
@@ -63,7 +64,6 @@ namespace TaskApplication.service.Tests
             userRepository.Setup(repo => repo.Delete(It.IsAny<Guid>()))
                 .Verifiable();
 
-            IUserService service = new UserService(userRepository.Object);
             service.DeleteUser(id);
             userRepository.Verify(repo => repo.Delete((It.IsAny<Guid>())), Times.Once());
         }
@@ -72,12 +72,12 @@ namespace TaskApplication.service.Tests
         public void UpdateUserTest()
         {
             User updatedUserDetails = new User { Id = Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f"), Name = "New name", Email = "new.email@example.com" };
+            var initialUser = new User { Id = Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f") };
             userRepository.Setup(repo => repo.Update(It.IsAny<Guid>(), It.IsAny<User>()))
                 .Returns(updatedUserDetails);
+            userRepository.Setup(repo => repo.FindById(It.IsAny<Guid>()))
+                .Returns(initialUser);
 
-            IUserService service = new UserService(userRepository.Object);
-
-            var initialUser = new User { Id = Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f") };
 
             var res = service.UpdateUser(initialUser.Id, updatedUserDetails);
 
@@ -103,8 +103,6 @@ namespace TaskApplication.service.Tests
             userRepository.Setup(repo => repo.GetPaginatedItems(It.IsAny<int>(), It.IsAny<int>()
                 , It.IsAny<Dictionary<string, int>>(), It.IsAny<Dictionary<string, string>>()))
                 .Returns(userList);
-
-            IUserService service = new UserService(userRepository.Object);
 
             string json = @"{
                 ""currentPageNo"": 1,
@@ -138,8 +136,6 @@ namespace TaskApplication.service.Tests
 
             userRepository.Setup(repo => repo.GetAllItems())
                 .Returns(userList);
-
-            IUserService service = new UserService(userRepository.Object);
 
             List<User> result = service.GetAllUsers();
 

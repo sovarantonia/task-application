@@ -22,7 +22,7 @@
             }
             return true;
         }
-        
+
         public User SaveUser(User userToSave)
         {
             if (ValidateUser(userToSave))
@@ -45,7 +45,12 @@
 
         public User UpdateUser(Guid id, User userToUpdate)
         {
-            return UserRepository.Update(id, userToUpdate);
+            if (ValidateUser(userToUpdate) && FindUserById(id) != null)
+            {
+                return UserRepository.Update(id, userToUpdate);
+            }
+
+            return null;
         }
 
         public List<User> GetPaginatedUsers(Dictionary<string, object> paginationDetails)

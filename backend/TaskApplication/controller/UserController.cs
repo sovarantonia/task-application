@@ -19,14 +19,15 @@ namespace TaskApplication.controller
         [HttpGet("{id:guid}")]
         public ActionResult<User> GetUserById(Guid id)
         {
-            return UserService.FindUserById(id);
+            User result = UserService.FindUserById(id);
+            return result == null? NotFound() : Ok(result);
         }
 
         [HttpPost]
         public ActionResult<User> SaveUser([FromBody] User userToSave)
         {
             var savedUser = UserService.SaveUser(userToSave);
-            return savedUser == null ? BadRequest() : savedUser;
+            return savedUser == null ? BadRequest() : Ok(savedUser);
         }
 
         [HttpDelete("{id:guid}")]
@@ -39,7 +40,8 @@ namespace TaskApplication.controller
         [HttpPatch("{id:guid}")]
         public ActionResult<User> UpdateUser(Guid id, [FromBody] User userToUpdate)
         {
-            return UserService.UpdateUser(id, userToUpdate);
+            var updatedUser = UserService.UpdateUser(id, userToUpdate);
+            return updatedUser == null ? BadRequest() : Ok(updatedUser);
         }
 
         [HttpPost]
