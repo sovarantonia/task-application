@@ -7,14 +7,23 @@
 
     public class Repository<T> : IRepository<T>
     {
-        protected readonly string _connectionString =
-            new ConfigurationBuilder().AddJsonFile("appsettings.json").Build().GetSection("ConnectionStrings")["DefaultConnection"].ToString();
-
+        protected readonly string _connectionString;
         protected string TableName { get; set; }
 
         public Repository(string tableName)
         {
             this.TableName = tableName;
+            this._connectionString = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json")
+                .Build()
+                .GetSection("ConnectionStrings")["DefaultConnection"]
+                .ToString();
+        }
+
+        public Repository(string connectionString, string tableName)
+        {
+            this.TableName = tableName;
+            this._connectionString = connectionString;
         }
 
         public T Save(T entity)

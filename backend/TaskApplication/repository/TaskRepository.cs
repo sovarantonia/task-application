@@ -8,5 +8,7 @@ namespace TaskApplication.repository
         {
 
         }
+
+        public TaskRepository(string connectionString) : base(connectionString, "tasks") { }
     }
 }

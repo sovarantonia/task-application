@@ -19,7 +19,8 @@ namespace TaskApplication.controller
         [HttpGet("{id:guid}")]
         public ActionResult<entity.Task> GetTaskById(Guid id)
         {
-            return TaskService.FindTaskById(id);
+            Task result = TaskService.FindTaskById(id);
+            return result == null ? NotFound() : Ok(result);
         }
 
 
@@ -41,7 +42,8 @@ namespace TaskApplication.controller
         [HttpPatch("{id:guid}")]
         public ActionResult<Task> UpdateTask(Guid id, [FromBody] Task taskToUpdate)
         {
-            return TaskService.UpdateTask(id, taskToUpdate);
+            Task result = TaskService.UpdateTask(id, taskToUpdate);
+            return result == null ? BadRequest() : Ok(result);
         }
 
 

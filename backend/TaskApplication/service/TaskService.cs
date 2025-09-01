@@ -30,7 +30,7 @@ namespace TaskApplication.service
 
         public Task UpdateTask(Guid id, Task taskToUpdate)
         {
-            return TaskRepository.Update(id, taskToUpdate);
+            return FindTaskById(id) != null ? TaskRepository.Update(id, taskToUpdate) : null;
         }
 
         public List<Task> GetPaginatedTasks(Dictionary<string, object> paginationDetails)
