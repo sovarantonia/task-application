@@ -169,8 +169,14 @@ namespace TaskApplication.controller.Tests
 
             ActionResult<List<User>> result = controller.GetAllUsers();
 
-            List<User> resultList = result.Value;
-            for(int i = 0; i < userList.Count; i++)
+            var ok = result.Result as OkObjectResult;
+            Assert.IsNotNull(ok);
+            Assert.AreEqual(200, ok.StatusCode);
+
+            var resultList = ok.Value as List<User>;
+            Assert.IsNotNull(resultList);
+            Assert.AreEqual(userList.Count, resultList!.Count);
+            for (int i = 0; i < userList.Count; i++)
             {
                 Assert.AreEqual(userList[i].Name, resultList[i].Name);
                 Assert.AreEqual(userList[i].Email, resultList[i].Email);

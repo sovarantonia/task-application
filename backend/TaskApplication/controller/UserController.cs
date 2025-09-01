@@ -54,9 +54,9 @@ namespace TaskApplication.controller
         }
 
         [HttpGet]
-        public List<User> GetAllUsers()
+        public ActionResult<List<User>> GetAllUsers()
         {
-            return UserService.GetAllUsers();
+            return Ok(UserService.GetAllUsers());
         }
 
 
