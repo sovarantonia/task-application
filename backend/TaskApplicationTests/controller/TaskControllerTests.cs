@@ -9,6 +9,7 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 using TaskApplication.controller;
+using TaskApplication.entity;
 using TaskApplication.service;
 using Task = TaskApplication.entity.Task;
 
@@ -78,8 +79,11 @@ namespace TaskApplication.controller.Tests
                 .Returns((Task?)null);
 
             ActionResult<Task> taskResult = controller.SaveTask(taskToSave);
+          
 
-            var task = taskResult.Value;
+            var ok = taskResult.Result as OkObjectResult;
+            Assert.IsNotNull(ok);
+            var task = ok.Value as Task;
             Assert.IsNotNull(task);
             Assert.AreEqual(savedTask.Title, task.Title);
             Assert.AreEqual(savedTask.CreationDate, task.CreationDate);

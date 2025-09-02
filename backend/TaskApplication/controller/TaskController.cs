@@ -35,7 +35,7 @@ namespace TaskApplication.controller
         [HttpPost]
         public ActionResult<Task> SaveTask([FromBody] Task taskToSave)
         {
-            return TaskService.Save(taskToSave);
+            return Ok(TaskService.Save(taskToSave));
         }
 
 

@@ -44,9 +44,11 @@ public class UserIntegrationTests
     {
         using var connection = new MySqlConnection(_conectionString);
         connection.Open();
+        using var dropFkCommand = new MySqlCommand("SET FOREIGN_KEY_CHECKS = 0;", connection);
+        dropFkCommand.ExecuteNonQuery();
         using var command = new MySqlCommand("TRUNCATE TABLE users;", connection);
         command.ExecuteNonQuery();
-  
+
         repository = new UserRepository(_conectionString);
         service = new UserService(repository);
         controller = new UserController(service);
