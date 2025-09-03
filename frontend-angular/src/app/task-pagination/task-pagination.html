@@ -1,0 +1,13 @@
+<div id="taskPaginationContainer" *mobxAutorun>
+  @for (result of taskService.paginatedTasks; track result.id) {
+    <div class="card">
+      <h3>{{ result.title }}</h3>
+      <p>Description: {{ result.description }}</p>
+      <p>Created at: {{ result.creationDate }}</p>
+      <p>Assigned to: {{ result.userId }}</p>
+      <p>Status: {{ result.statusId }}</p>
+    </div>
+  }
+</div>
+
+

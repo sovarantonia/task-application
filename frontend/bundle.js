@@ -3,174 +3,173 @@
 
   const initialTaskData = [
     {
-      id: '24ab0076-1acc-41c2-952e-ca889c8c7695',
-      title: 'Fix login bug',
-      description: 'Users cannot log in with correct credentials.',
-      status: '44d21520-d383-4bc3-b6db-848f3545df56',
-      user: 'c1a4d379-90c1-4e25-bbe2-9a413f0f2c67',
-      date: '2025-06-15',
+      id: "24ab0076-1acc-41c2-952e-ca889c8c7695",
+      title: "Fix login bug",
+      description: "Users cannot log in with correct credentials.",
+      status: "44d21520-d383-4bc3-b6db-848f3545df56",
+      user: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
+      date: "2025-06-15",
     },
     {
-      id: '1e0a63a7-6445-4254-8d58-9d8b19ab72e3',
-      title: 'Add user profile page',
+      id: "1e0a63a7-6445-4254-8d58-9d8b19ab72e3",
+      title: "Add user profile page",
       description:
-        'Create a page where users can update their personal information.',
-      status: 'ad06176e-88cd-4eee-90b5-44fcea585434',
-      user: 'e3b54b15-dbe5-4e2c-90a4-d215d7f8c624',
-      date: '2025-06-14',
+        "Create a page where users can update their personal information.",
+      status: "ad06176e-88cd-4eee-90b5-44fcea585434",
+      user: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
+      date: "2025-06-14",
     },
     {
-      id: '6a274a51-94cc-4244-b0fd-cc232f61d671',
-      title: 'Optimize database queries',
+      id: "6a274a51-94cc-4244-b0fd-cc232f61d671",
+      title: "Optimize database queries",
       description:
-        'Improve the performance of slow-loading pages by optimizing queries.',
-      status: 'd6c5c0b2-0b99-400d-8561-7c30b3bb0e79',
-      user: '21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d',
-      date: '2025-06-12',
+        "Improve the performance of slow-loading pages by optimizing queries.",
+      status: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79",
+      user: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
+      date: "2025-06-12",
     },
     {
-      id: 'b6354a2b-2adf-4954-9fbe-61c783b89360',
-      title: 'Implement dark mode',
-      description: 'Add an option for users to toggle dark mode in settings.',
-      status: 'ad06176e-88cd-4eee-90b5-44fcea585434',
-      user: 'a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721',
-      date: '2025-06-13',
+      id: "b6354a2b-2adf-4954-9fbe-61c783b89360",
+      title: "Implement dark mode",
+      description: "Add an option for users to toggle dark mode in settings.",
+      status: "ad06176e-88cd-4eee-90b5-44fcea585434",
+      user: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
+      date: "2025-06-13",
     },
     {
-      id: '43b82409-8234-44cf-a4b3-8dc590a6df6b',
-      title: 'Write integration tests for user service',
+      id: "43b82409-8234-44cf-a4b3-8dc590a6df6b",
+      title: "Write integration tests for user service",
       description:
-        'Ensure critical user workflows are covered by integration tests.',
-      status: 'b9920485-9f7e-4e82-bba6-3b761df91cb4',
-      user: 'cfed2f3a-7129-4af3-98c0-512e63a3f8ba',
-      date: '2025-06-15',
+        "Ensure critical user workflows are covered by integration tests.",
+      status: "b9920485-9f7e-4e82-bba6-3b761df91cb4",
+      user: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
+      date: "2025-06-15",
     },
     {
-      id: '4c20f508-a24c-41ba-97ff-e34616d2c57c',
-      title: 'Fix password reset issue',
-      description: 'Reset link fails for accounts created before 2024.',
-      status: '44d21520-d383-4bc3-b6db-848f3545df56',
-      user: 'c1a4d379-90c1-4e25-bbe2-9a413f0f2c67',
-      date: '2025-06-16',
+      id: "4c20f508-a24c-41ba-97ff-e34616d2c57c",
+      title: "Fix password reset issue",
+      description: "Reset link fails for accounts created before 2024.",
+      status: "44d21520-d383-4bc3-b6db-848f3545df56",
+      user: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
+      date: "2025-06-16",
     },
     {
-      id: '41634150-0e26-4f2d-a62c-abadc417eaa4',
-      title: 'Redesign user profile UI',
-      description: 'Modernize the layout of the user profile page.',
-      status: '44d21520-d383-4bc3-b6db-848f3545df56',
-      user: 'e3b54b15-dbe5-4e2c-90a4-d215d7f8c624',
-      date: '2025-06-17',
+      id: "41634150-0e26-4f2d-a62c-abadc417eaa4",
+      title: "Redesign user profile UI",
+      description: "Modernize the layout of the user profile page.",
+      status: "44d21520-d383-4bc3-b6db-848f3545df56",
+      user: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
+      date: "2025-06-17",
     },
     {
-      id: 'fcbbf209-17b9-4e41-a307-71235780de6e',
-      title: 'Add indexing to improve search speed',
-      description: 'Use PostgreSQL indexing to enhance filtering by title.',
-      status: 'ad06176e-88cd-4eee-90b5-44fcea585434',
-      user: '21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d',
-      date: '2025-06-17',
+      id: "fcbbf209-17b9-4e41-a307-71235780de6e",
+      title: "Add indexing to improve search speed",
+      description: "Use PostgreSQL indexing to enhance filtering by title.",
+      status: "ad06176e-88cd-4eee-90b5-44fcea585434",
+      user: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
+      date: "2025-06-17",
     },
     {
-      id: 'abf36db4-4446-4404-a58e-6ca43bc1db22',
-      title: 'Add system-wide color theme toggle',
-      description: 'Support dynamic switching between themes.',
-      status: 'ad06176e-88cd-4eee-90b5-44fcea585434',
-      user: 'a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721',
-      date: '2025-06-18',
+      id: "abf36db4-4446-4404-a58e-6ca43bc1db22",
+      title: "Add system-wide color theme toggle",
+      description: "Support dynamic switching between themes.",
+      status: "ad06176e-88cd-4eee-90b5-44fcea585434",
+      user: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
+      date: "2025-06-18",
     },
     {
-      id: 'eff52628-aae3-4357-8857-6713c56f1f7e',
-      title: 'Refactor test suite structure',
-      description: 'Organize unit and integration tests into separate folders.',
-      status: '44d21520-d383-4bc3-b6db-848f3545df56',
-      user: 'cfed2f3a-7129-4af3-98c0-512e63a3f8ba',
-      date: '2025-06-18',
+      id: "eff52628-aae3-4357-8857-6713c56f1f7e",
+      title: "Refactor test suite structure",
+      description: "Organize unit and integration tests into separate folders.",
+      status: "44d21520-d383-4bc3-b6db-848f3545df56",
+      user: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
+      date: "2025-06-18",
     },
     {
-      id: '35f172b6-b462-4d37-91c2-91d3938321c2',
-      title: 'Fix login redirect bug',
-      description: 'Users stay on login page even after successful login.',
-      status: 'd6c5c0b2-0b99-400d-8561-7c30b3bb0e79',
-      user: 'c1a4d379-90c1-4e25-bbe2-9a413f0f2c67',
-      date: '2025-06-10',
+      id: "35f172b6-b462-4d37-91c2-91d3938321c2",
+      title: "Fix login redirect bug",
+      description: "Users stay on login page even after successful login.",
+      status: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79",
+      user: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
+      date: "2025-06-10",
     },
     {
-      id: '5acef95d-1971-45cd-ae8f-c789cb256807',
-      title: 'Add avatar upload on profile page',
-      description: 'Users can upload and crop their profile picture.',
-      status: 'ad06176e-88cd-4eee-90b5-44fcea585434',
-      user: 'e3b54b15-dbe5-4e2c-90a4-d215d7f8c624',
-      date: '2025-06-19',
+      id: "5acef95d-1971-45cd-ae8f-c789cb256807",
+      title: "Add avatar upload on profile page",
+      description: "Users can upload and crop their profile picture.",
+      status: "ad06176e-88cd-4eee-90b5-44fcea585434",
+      user: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
+      date: "2025-06-19",
     },
     {
-      id: '563a2664-bf68-43d7-9b3d-3899bf24bd08',
-      title: 'Clean up deprecated SQL queries',
-      description: 'Remove old joins and improve query structure.',
-      status: 'd6c5c0b2-0b99-400d-8561-7c30b3bb0e79',
-      user: '21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d',
-      date: '2025-06-09',
+      id: "563a2664-bf68-43d7-9b3d-3899bf24bd08",
+      title: "Clean up deprecated SQL queries",
+      description: "Remove old joins and improve query structure.",
+      status: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79",
+      user: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
+      date: "2025-06-09",
     },
     {
-      id: '95a896da-f3be-4f92-b60e-c5c390e1e4c4',
-      title: 'Improve dark mode contrast',
-      description:
-        'Adjust color palette for better accessibility in dark mode.',
-      status: '44d21520-d383-4bc3-b6db-848f3545df56',
-      user: 'a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721',
-      date: '2025-06-20',
+      id: "95a896da-f3be-4f92-b60e-c5c390e1e4c4",
+      title: "Improve dark mode contrast",
+      description: "Adjust color palette for better accessibility in dark mode.",
+      status: "44d21520-d383-4bc3-b6db-848f3545df56",
+      user: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
+      date: "2025-06-20",
     },
     {
-      id: '118763b8-6d69-4a7c-901e-c41fd97f1fde',
-      title: 'Test PDF export functionality',
-      description: 'Validate correctness of downloaded PDFs for shared notes.',
-      status: 'b9920485-9f7e-4e82-bba6-3b761df91cb4',
-      user: 'cfed2f3a-7129-4af3-98c0-512e63a3f8ba',
-      date: '2025-06-20',
+      id: "118763b8-6d69-4a7c-901e-c41fd97f1fde",
+      title: "Test PDF export functionality",
+      description: "Validate correctness of downloaded PDFs for shared notes.",
+      status: "b9920485-9f7e-4e82-bba6-3b761df91cb4",
+      user: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
+      date: "2025-06-20",
     },
     {
-      id: 'f98e4427-0c0c-4d83-9f00-1866f9683a47',
-      title: 'Fix session timeout bug',
-      description: 'Auto logout occurs prematurely after login.',
-      status: 'ad06176e-88cd-4eee-90b5-44fcea585434',
-      user: 'c1a4d379-90c1-4e25-bbe2-9a413f0f2c67',
-      date: '2025-06-21',
+      id: "f98e4427-0c0c-4d83-9f00-1866f9683a47",
+      title: "Fix session timeout bug",
+      description: "Auto logout occurs prematurely after login.",
+      status: "ad06176e-88cd-4eee-90b5-44fcea585434",
+      user: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
+      date: "2025-06-21",
     },
     {
-      id: '01734573-74cf-41e7-84e4-e0635529fbea',
-      title: 'Add contact information section',
-      description: 'Enable users to save multiple contact details.',
-      status: '44d21520-d383-4bc3-b6db-848f3545df56',
-      user: 'e3b54b15-dbe5-4e2c-90a4-d215d7f8c624',
-      date: '2025-06-21',
+      id: "01734573-74cf-41e7-84e4-e0635529fbea",
+      title: "Add contact information section",
+      description: "Enable users to save multiple contact details.",
+      status: "44d21520-d383-4bc3-b6db-848f3545df56",
+      user: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
+      date: "2025-06-21",
     },
     {
-      id: 'b0c420d1-21d1-4431-a8af-0b43cf8732ef',
-      title: 'Analyze DB performance metrics',
-      description: 'Generate weekly reports on slow queries and memory usage.',
-      status: 'd6c5c0b2-0b99-400d-8561-7c30b3bb0e79',
-      user: '21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d',
-      date: '2025-06-11',
+      id: "b0c420d1-21d1-4431-a8af-0b43cf8732ef",
+      title: "Analyze DB performance metrics",
+      description: "Generate weekly reports on slow queries and memory usage.",
+      status: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79",
+      user: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
+      date: "2025-06-11",
     },
     {
-      id: '25c76bc3-177e-4bc9-834a-5d15dfdde382',
-      title: 'Add auto dark mode using system preference',
+      id: "25c76bc3-177e-4bc9-834a-5d15dfdde382",
+      title: "Add auto dark mode using system preference",
       description: "Use media query to detect and apply user's OS theme.",
-      status: 'ad06176e-88cd-4eee-90b5-44fcea585434',
-      user: 'a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721',
-      date: '2025-06-22',
+      status: "ad06176e-88cd-4eee-90b5-44fcea585434",
+      user: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
+      date: "2025-06-22",
     },
     {
-      id: '5ad61f51-d697-43b4-afad-e88538399827',
-      title: 'Expand test coverage for PDF module',
-      description: 'Cover edge cases and error handling in export logic.',
-      status: 'b9920485-9f7e-4e82-bba6-3b761df91cb4',
-      user: 'cfed2f3a-7129-4af3-98c0-512e63a3f8ba',
-      date: '2025-06-22',
+      id: "5ad61f51-d697-43b4-afad-e88538399827",
+      title: "Expand test coverage for PDF module",
+      description: "Cover edge cases and error handling in export logic.",
+      status: "b9920485-9f7e-4e82-bba6-3b761df91cb4",
+      user: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
+      date: "2025-06-22",
     },
   ];
 
   function createElementComponent({
-    elementType = '',
-    text = '',
+    elementType = "",
+    text = "",
     elementId = null,
   }) {
     let element = document.createElement(elementType);
@@ -179,35 +178,35 @@
     }
 
     switch (elementType) {
-      case 'span':
+      case "span":
         element.textContent = text;
         break;
 
-      case 'p':
+      case "p":
         element.innerText = text;
         break;
 
-      case 'h1':
+      case "h1":
         element.textContent = text;
         break;
 
-      case 'h2':
+      case "h2":
         element.textContent = text;
         break;
 
-      case 'h3':
+      case "h3":
         element.textContent = text;
         break;
 
-      case 'h4':
+      case "h4":
         element.textContent = text;
         break;
 
-      case 'h5':
+      case "h5":
         element.textContent = text;
         break;
 
-      case 'h6':
+      case "h6":
         element.textContent = text;
         break;
     }
@@ -232,17 +231,17 @@
       }
 
       if (defaultOptionLabel) {
-        this.select.append(this.getOption({ element: defaultOptionLabel }));
+        this.select.append(this.getOption({element: defaultOptionLabel}));
       }
       list.forEach((element) => {
-        this.select.append(this.getOption({ element, key, value }));
+        this.select.append(this.getOption({element, key, value}));
       });
 
       this.select.addEventListener('change', onSelectionChanged);
       return this.select;
     }
 
-    getOption({ element, key = null, value = null }) {
+    getOption({element, key = null, value = null}) {
       const opt = document.createElement('option');
       opt.value = element;
       opt.textContent = element;
@@ -268,11 +267,11 @@
       }
 
       if (defaultOptionLabel) {
-        select.append(this.getOption({ element: defaultOptionLabel }));
+        select.append(this.getOption({element: defaultOptionLabel}));
       }
 
       options.forEach((element) => {
-        select.append(this.getOption({ element, key, value }));
+        select.append(this.getOption({element, key, value}));
       });
 
       return select;
@@ -294,7 +293,7 @@
     const options = Array.from({ length: totalPages }, (_, i) => i + 1);
 
     options.forEach((element) => {
-      const opt = document.createElement('option');
+      const opt = document.createElement("option");
       opt.value = element;
       opt.textContent = element;
       selectComponent.append(opt);
@@ -326,13 +325,13 @@
       });
 
       this.selectItemsPerPageSpan = createElementComponent({
-        elementType: 'span',
-        text: 'Items per page',
+        elementType: "span",
+        text: "Items per page",
       });
 
       this.selectCurrentPageSpan = createElementComponent({
-        elementType: 'span',
-        text: 'Page',
+        elementType: "span",
+        text: "Page",
       });
 
       this.selectCurrentPageNo = select.createSelect({
@@ -362,28 +361,27 @@
   }
 
   function generateGUID() {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(
-      /[xy]/g,
-      function (c) {
-        const r = (Math.random() * 16) | 0;
-        const v = c === 'x' ? r : (r & 0x3) | 0x8;
-        return v.toString(16);
-      },
-    );
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, function (c) {
+      const r = (Math.random() * 16) | 0;
+      const v = c === "x" ? r : (r & 0x3) | 0x8;
+      return v.toString(16);
+    });
   }
 
-  function getPaginatedElements({ elementList, currentPageNo, itemsPerPage }) {
+  function getPaginatedElements(
+    { elementList, currentPageNo, itemsPerPage },
+  ) {
     const start = (currentPageNo - 1) * itemsPerPage;
     const end = start + itemsPerPage;
 
     return elementList.slice(start, end);
   }
 
-  function getTotalPages({ elementList, itemsPerPage }) {
+  function getTotalPages({elementList, itemsPerPage}) {
     return Math.ceil(elementList.length / itemsPerPage);
   }
 
-  function combineComparisonFunctions({ compareFunctions }) {
+  function combineComparisonFunctions({compareFunctions}) {
     return (a, b) => {
       for (const compareFunction of compareFunctions) {
         const result = compareFunction(a, b);
@@ -395,7 +393,7 @@
     };
   }
 
-  function multiFieldSort({ criteria }) {
+  function multiFieldSort({criteria}) {
     const compareFunctions = criteria.map(({ property, direction }) => {
       return (a, b) => {
         if (a[property] === b[property]) return 0;
@@ -403,18 +401,18 @@
       };
     });
 
-    return combineComparisonFunctions({ compareFunctions });
+    return combineComparisonFunctions({compareFunctions});
   }
 
-  function multiFieldFilter({ criteria }) {
+  function multiFieldFilter({criteria}) {
     const filterFunctions = criteria.map(({ property, value }) => {
       return (item) => item[property] === value;
     });
 
-    return combineFilterComparisonFunctions({ functions: filterFunctions });
+    return combineFilterComparisonFunctions({functions: filterFunctions});
   }
 
-  function combineFilterComparisonFunctions({ functions }) {
+  function combineFilterComparisonFunctions({functions}) {
     return (item) => {
       return functions.every((f) => f(item));
     };
@@ -504,19 +502,19 @@
       this.service = new DbService(taskData);
     }
 
-    saveTask({ newTask }) {
+    saveTask({newTask}) {
       const id = generateGUID();
       newTask.id = id;
-      return this.service.save({ objToSave: newTask });
+      return this.service.save({objToSave: newTask});
     }
 
     getTaskById(id) {
       return this.service.findById(id);
     }
 
-    updateTask({ task }) {
+    updateTask({task}) {
       const { id, ...props } = task;
-      return this.service.update({ id: id, props: props });
+      return this.service.update({id: id, props: props});
     }
 
     getPaginatedTasks = ({
@@ -534,14 +532,14 @@
     };
   }
 
-  function createButton({ text = '', onClick = null, type = null }) {
-    const element = document.createElement('button');
+  function createButton({ text = "", onClick = null, type = null }) {
+    const element = document.createElement("button");
     element.textContent = text;
     element.innerHTML = text;
     if (type) {
       element.type = type;
     }
-    element.addEventListener('click', onClick);
+    element.addEventListener("click", onClick);
     return element;
   }
 
@@ -553,47 +551,40 @@
     onClick = null,
   }) {
     const container = document.getElementById(containerId);
-    container.innerHTML = '';
+    container.innerHTML = "";
     taskList.forEach((element) => {
       const user = userMap.get(element.userId);
       const status = statusMap.get(element.statusId);
 
-      const card = createElementComponent({ elementType: 'div' });
-      card.className = 'card';
+      const card = createElementComponent({ elementType: "div" });
+      card.className = "card";
       const viewButton = createButton({
-        text: 'Assign task',
+        text: "Assign task",
         onClick: () => onClick(element),
       });
 
       const title = createElementComponent({
-        elementType: 'h2',
+        elementType: "h2",
         text: element.title,
       });
       const statusP = createElementComponent({
-        elementType: 'p',
+        elementType: "p",
         text: `Status: ${status}`,
       });
       const description = createElementComponent({
-        elementType: 'p',
+        elementType: "p",
         text: element.description,
       });
       const assignedTo = createElementComponent({
-        elementType: 'p',
+        elementType: "p",
         text: `Assigned to: ${user}`,
       });
       const createdAt = createElementComponent({
-        elementType: 'p',
+        elementType: "p",
         text: `Created at: ${element.creationDate}`,
       });
 
-      card.append(
-        title,
-        statusP,
-        description,
-        assignedTo,
-        createdAt,
-        viewButton,
-      );
+      card.append(title, statusP, description, assignedTo, createdAt, viewButton);
       container.appendChild(card);
     });
 
@@ -612,13 +603,13 @@
         taskList: paginatedItems,
         userMap,
         statusMap,
-        onClick: (item) => this.onViewClick(item),
+        onClick: (item) => this.onViewClick(item)
       });
     };
   }
 
   class PagerData {
-    constructor({ onPagerDataChanged = null }) {
+    constructor({onPagerDataChanged = null}) {
       this.currentPageNo = 1;
       this.itemsPerPage = 5;
 
@@ -643,16 +634,16 @@
 
   const loaderUtils = {
     addLoader: () => {
-      const loader = document.getElementById('loading');
-      const overlay = document.getElementById('overlay');
-      loader.classList.remove('hidden');
-      overlay.classList.remove('hidden');
+      const loader = document.getElementById("loading");
+      const overlay = document.getElementById("overlay");
+      loader.classList.remove("hidden");
+      overlay.classList.remove("hidden");
     },
     hideLoader: () => {
-      const loader = document.getElementById('loading');
-      const overlay = document.getElementById('overlay');
-      loader.classList.add('hidden');
-      overlay.classList.add('hidden');
+      const loader = document.getElementById("loading");
+      const overlay = document.getElementById("overlay");
+      loader.classList.add("hidden");
+      overlay.classList.add("hidden");
     },
   };
 
@@ -691,6 +682,7 @@
           currentPageNo,
           itemsPerPage,
         });
+
       });
     };
 
@@ -728,11 +720,11 @@
     setArrows(sortDirection) {
       switch (sortDirection) {
         case 1:
-          return '\u2191';
+          return "\u2191";
         case -1:
-          return '\u2193';
+          return "\u2193";
         default:
-          return '';
+          return "";
       }
     }
   }
@@ -745,11 +737,7 @@
       priority = 0,
       onSortCriteriaCreated,
     } = {}) {
-      this.sortOption = {
-        property: propertyType,
-        direction: direction,
-        priority: priority,
-      };
+      this.sortOption = { property: propertyType, direction: direction, priority: priority };
       this.onSortCriteriaCreated = onSortCriteriaCreated;
     }
 
@@ -807,7 +795,7 @@
 
   class FilterCriteria {
     constructor({ propertyType, onFilterCriteriaCreated }) {
-      this.filterOption = { property: propertyType, value: 'All' };
+      this.filterOption = { property: propertyType, value: "All" };
       this.onFilterCriteriaCreated = onFilterCriteriaCreated;
     }
 
@@ -818,7 +806,7 @@
   }
 
   class FilterCriteriaHandler {
-    constructor({ onNotifyPaginationHandler }) {
+    constructor({onNotifyPaginationHandler}) {
       this.onNotifyPaginationHandler = onNotifyPaginationHandler;
 
       this.filterCriteriaList = new Map();
@@ -829,7 +817,7 @@
       const filterCriteria = this.filterCriteriaList
         .entries()
         .reduce((acc, [key, value]) => {
-          if (value !== 'All') {
+          if (value !== "All") {
             acc.push({
               property: key,
               value: value,
@@ -869,10 +857,7 @@
         this.createSelectComponent = this.select.createSelect({
           list: columnOptionList[i],
           onSelectionChanged: (e) =>
-            this.onFilterCriteriaChanged(
-              keyValue[i].foreignKey,
-              e.target.value,
-            ),
+            this.onFilterCriteriaChanged(keyValue[i].foreignKey, e.target.value),
           key: keyValue[i].key,
           value: keyValue[i].foreignKey,
           defaultOptionLabel: 'All',
@@ -903,102 +888,99 @@
   }
 
   const taskStatus = [
-    { id: 'ad06176e-88cd-4eee-90b5-44fcea585434', status: 'To Do' },
-    { id: '44d21520-d383-4bc3-b6db-848f3545df56', status: 'In Progress' },
-    { id: 'b9920485-9f7e-4e82-bba6-3b761df91cb4', status: 'In Review' },
-    { id: 'd6c5c0b2-0b99-400d-8561-7c30b3bb0e79', status: 'Done' },
+    { id: "ad06176e-88cd-4eee-90b5-44fcea585434", status: "To Do" },
+    { id: "44d21520-d383-4bc3-b6db-848f3545df56", status: "In Progress" },
+    { id: "b9920485-9f7e-4e82-bba6-3b761df91cb4", status: "In Review" },
+    { id: "d6c5c0b2-0b99-400d-8561-7c30b3bb0e79", status: "Done" },
   ];
 
   const initialUserData = [
     {
-      id: 'c1a4d379-90c1-4e25-bbe2-9a413f0f2c67',
-      user: 'Alice Morgan',
-      email: 'alice.morgan@example.com',
-      department: 'Backend Development',
+      id: "c1a4d379-90c1-4e25-bbe2-9a413f0f2c67",
+      user: "Alice Morgan",
+      email: "alice.morgan@example.com",
+      department: "Backend Development",
     },
     {
-      id: 'a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721',
-      user: 'Dana Kim',
-      email: 'dana.kim@example.com',
-      department: 'UX/UI Design',
+      id: "a9d8d3d3-7c52-4cb4-8a1c-72595cb3e721",
+      user: "Dana Kim",
+      email: "dana.kim@example.com",
+      department: "UX/UI Design",
     },
     {
-      id: 'cfed2f3a-7129-4af3-98c0-512e63a3f8ba',
-      user: 'Eva Thompson',
-      email: 'eva.thompson@example.com',
-      department: 'Quality Assurance',
+      id: "cfed2f3a-7129-4af3-98c0-512e63a3f8ba",
+      user: "Eva Thompson",
+      email: "eva.thompson@example.com",
+      department: "Quality Assurance",
     },
     {
-      id: 'e3b54b15-dbe5-4e2c-90a4-d215d7f8c624',
-      user: 'Bob Daniels',
-      email: 'bob.daniels@example.com',
-      department: 'Frontend Development',
+      id: "e3b54b15-dbe5-4e2c-90a4-d215d7f8c624",
+      user: "Bob Daniels",
+      email: "bob.daniels@example.com",
+      department: "Frontend Development",
     },
     {
-      id: '21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d',
-      user: 'Charlie Wu',
-      email: 'charlie.wu@example.com',
-      department: 'Database Engineering',
+      id: "21b8a8a1-bc79-4f91-bcc9-0fca7ad73d9d",
+      user: "Charlie Wu",
+      email: "charlie.wu@example.com",
+      department: "Database Engineering",
     },
     {
-      id: 'f8c2f610-08c3-42f6-bbde-f94fc53119ea',
-      user: 'Henry Patel',
-      email: 'henry.patel@example.com',
-      department: 'IT Support',
+      id: "f8c2f610-08c3-42f6-bbde-f94fc53119ea",
+      user: "Henry Patel",
+      email: "henry.patel@example.com",
+      department: "IT Support",
     },
     {
-      id: 'bd23c62f-205b-44aa-8b63-d0bfb749d4b9',
-      user: 'Isla Novak',
-      email: 'isla.novak@example.com',
-      department: 'Legal',
+      id: "bd23c62f-205b-44aa-8b63-d0bfb749d4b9",
+      user: "Isla Novak",
+      email: "isla.novak@example.com",
+      department: "Legal",
     },
     {
-      id: '4f2fd22d-74cc-40bb-9600-2e9e83f223db',
-      user: 'Frank Ortega',
-      email: 'frank.ortega@example.com',
-      department: 'Project Management',
+      id: "4f2fd22d-74cc-40bb-9600-2e9e83f223db",
+      user: "Frank Ortega",
+      email: "frank.ortega@example.com",
+      department: "Project Management",
     },
     {
-      id: '8ea1de6b-681b-4d47-a4f7-abc9c7e19e02',
-      user: 'Grace Lee',
-      email: 'grace.lee@example.com',
-      department: 'Customer Support',
+      id: "8ea1de6b-681b-4d47-a4f7-abc9c7e19e02",
+      user: "Grace Lee",
+      email: "grace.lee@example.com",
+      department: "Customer Support",
     },
     {
-      id: '3e4a3c5f-f6c7-442b-8c17-ccdd75ef1b7e',
-      user: 'Jack Reynolds',
-      email: 'jack.reynolds@example.com',
-      department: 'Operations',
+      id: "3e4a3c5f-f6c7-442b-8c17-ccdd75ef1b7e",
+      user: "Jack Reynolds",
+      email: "jack.reynolds@example.com",
+      department: "Operations",
     },
   ];
 
   class Modal {
     constructor({ headerContent = [], bodyContent = [], footerContent = [] }) {
-      this.modalContainer = createElementComponent({ elementType: 'div' });
+      this.modalContainer = createElementComponent({ elementType: "div" });
 
-      this.modal = createElementComponent({ elementType: 'div' });
+      this.modal = createElementComponent({ elementType: "div" });
 
-      this.modal.classList.add('hidden', 'modal');
+      this.modal.classList.add("hidden", "modal");
 
-      this.closeBtn = createButton({
-        text: '\u2716',
-        onClick: this.closeModal,
-      });
-      this.closeBtn.classList.add('closeModalBtn');
+      this.closeBtn = createButton({ text: "\u2716", onClick: this.closeModal });
+      this.closeBtn.classList.add("closeModalBtn");
 
       const header = createElementComponent({
-        elementType: 'div',
-        elementId: 'header',
+        elementType: "div",
+        elementId: "header",
       });
 
       const body = createElementComponent({
-        elementType: 'div',
-        elementId: 'body',
+        elementType: "div",
+        elementId: "body",
       });
 
       const footer = createElementComponent({
-        elementType: 'div',
-        elementId: 'footer',
+        elementType: "div",
+        elementId: "footer",
       });
 
       headerContent.forEach((element) => header.append(element));
@@ -1010,24 +992,24 @@
       this.modal.append(header, body, footer);
       this.modalContainer.append(this.modal);
 
-      document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') {
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") {
           this.closeModal();
         }
       });
 
-      this.overlay = document.getElementById('overlay');
-      this.overlay.classList.add('overlay', 'hidden');
+      this.overlay = document.getElementById("overlay");
+      this.overlay.classList.add("overlay", "hidden");
     }
 
     closeModal = () => {
-      this.modal.classList.add('hidden');
-      this.overlay.classList.add('hidden');
+      this.modal.classList.add("hidden");
+      this.overlay.classList.add("hidden");
     };
 
     openModal = () => {
-      this.modal.classList.remove('hidden');
-      this.overlay.classList.remove('hidden');
+      this.modal.classList.remove("hidden");
+      this.overlay.classList.remove("hidden");
     };
   }
 
@@ -1090,7 +1072,7 @@
   }
 
   class CreateTaskUI {
-    constructor({ containerId, onSubmit = null }) {
+    constructor({ containerId, onSubmit = null}) {
       this.onSubmit = onSubmit;
 
       const target = document.getElementById(containerId);
@@ -1352,8 +1334,7 @@
       });
 
       this.filterCriteriaHandler = new FilterCriteriaHandler({
-        onNotifyPaginationHandler:
-          this.paginationHandler.onFilterCriteriaChanged,
+        onNotifyPaginationHandler: this.paginationHandler.onFilterCriteriaChanged,
       });
 
       this.taskPresentationUI = new TaskPresentationUI({
@@ -1403,7 +1384,8 @@
         containerId: 'viewTask',
         onSubmit: ({ formData, item }) => {
           handleFormData({
-            sendTheDataFunction: (item) => updateTask(item.id, item),
+            sendTheDataFunction: (item) =>
+              updateTask(item.id, item),
             onDataSent: () => {
               this.viewTaskUI.closeView();
               this.paginationHandler.getPaginatedItems();
@@ -1416,18 +1398,16 @@
     }
 
     onPaginationResponse = ({ paginatedItems, totalPages, currentPageNo }) => {
-      Promise.all([getAllStatuses(), getAllUsers()]).then(
-        ([statuses, users]) => {
-          let statusMap = new Map(statuses.map((s) => [s.id, s.statusName]));
-          let userMap = new Map(users.map((u) => [u.id, u.name]));
+      Promise.all([getAllStatuses(), getAllUsers()]).then(([statuses, users]) => {
+        let statusMap = new Map(statuses.map((s) => [s.id, s.statusName]));
+        let userMap = new Map(users.map((u) => [u.id, u.name]));
 
-          this.taskPresentationUI.renderTasks({
-            paginatedItems,
-            userMap,
-            statusMap,
-          });
-        },
-      );
+        this.taskPresentationUI.renderTasks({
+          paginatedItems,
+          userMap,
+          statusMap,
+        });
+      });
       this.pagerComponentUI.updateSelect({ currentPageNo, totalPages });
     };
 
@@ -1452,31 +1432,29 @@
 
     init() {
       this.pagerData.init();
-      Promise.all([getAllStatuses(), getAllUsers()]).then(
-        ([statuses, users]) => {
-          this.taskStatus = statuses.map((s) => ({
-            id: s.id,
-            status: s.statusName,
-          }));
-          this.userData = users.map((u) => ({ id: u.id, user: u.name }));
+      Promise.all([getAllStatuses(), getAllUsers()]).then(([statuses, users]) => {
+        this.taskStatus = statuses.map((s) => ({
+          id: s.id,
+          status: s.statusName,
+        }));
+        this.userData = users.map((u) => ({ id: u.id, user: u.name }));
 
-          this.filterTaskControlUI.onFilterOptionsChanged({
-            columnOptionList: [this.taskStatus, this.userData],
-            keys: [
-              { keyColumn: 'id', valueColumn: 'status' },
-              { keyColumn: 'id', valueColumn: 'user' },
-            ],
-          });
+        this.filterTaskControlUI.onFilterOptionsChanged({
+          columnOptionList: [this.taskStatus, this.userData],
+          keys: [
+            { keyColumn: 'id', valueColumn: 'status' },
+            { keyColumn: 'id', valueColumn: 'user' },
+          ],
+        });
 
-          this.viewTaskUI.onAssignUserListChanged({
-            assignUserList: this.userData,
-          });
+        this.viewTaskUI.onAssignUserListChanged({
+          assignUserList: this.userData,
+        });
 
-          this.createTaskUI.onAssignUserListChanged({
-            assignUserList: this.userData,
-          });
-        },
-      );
+        this.createTaskUI.onAssignUserListChanged({
+          assignUserList: this.userData,
+        });
+      });
     }
   }
 
@@ -1485,10 +1463,10 @@
       this.service = new DbService(userData);
     }
 
-    saveUser({ user }) {
+    saveUser({user}) {
       const id = generateGUID();
       user.id = id;
-      return this.service.save({ objToSave: user });
+      return this.service.save({objToSave: user});
     }
 
     getPaginatedUsers = (
@@ -1503,7 +1481,7 @@
       );
     };
 
-    sendEmail({ userList }) {
+    sendEmail({userList}) {
       return new Promise((resolve) => {
         const infoList = userList.map((element) => {
           return `Sent mail to ${element.name} (${element.email})`;
@@ -1517,23 +1495,27 @@
     }
   }
 
-  function createCheckbox({ id = null, value = '', onChange = null }) {
-    const element = document.createElement('input');
-    element.type = 'checkbox';
+  function createCheckbox({ id = null, value = "", onChange = null}) {
+    const element = document.createElement("input");
+    element.type = "checkbox";
     element.value = value;
     element.id = id;
-    element.addEventListener('change', onChange);
+    element.addEventListener("change", onChange);
 
     return element;
   }
 
-  function renderUsers({ userList, containerId, onCheckboxChecked = null }) {
+  function renderUsers({
+    userList,
+    containerId,
+    onCheckboxChecked = null,
+  }) {
     const container = document.getElementById(containerId);
-    container.innerHTML = '';
+    container.innerHTML = "";
 
     userList.forEach((element) => {
-      const card = createElementComponent({ elementType: 'div' });
-      card.classList.add('card', 'user');
+      const card = createElementComponent({ elementType: "div" });
+      card.classList.add("card", "user");
 
       const userCheckbox = createCheckbox({
         id: element.id,
@@ -1548,17 +1530,17 @@
       });
 
       const nameInfo = createElementComponent({
-        elementType: 'h3',
+        elementType: "h3",
         text: `${element.name}`,
       });
 
       const emailInfo = createElementComponent({
-        elementType: 'p',
+        elementType: "p",
         text: `Email: ${element.email}`,
       });
 
       const departmentInfo = createElementComponent({
-        elementType: 'p',
+        elementType: "p",
         text: `Department: ${element.department}`,
       });
 
@@ -1604,7 +1586,7 @@
       this.onUserListReceived = onUserListReceived;
 
       this.sendEmailButton = createButton({
-        text: 'Send Email',
+        text: "Send Email",
         onClick: () => {
           const idList = this.onUserListReceived();
           this.onUserListChanged({ idList: idList });
@@ -1630,8 +1612,8 @@
 
     onCheckboxChecked = ({
       id = null,
-      name = '',
-      email = '',
+      name = "",
+      email = "",
       isChecked = false,
     }) => {
       this.checkboxStateMap.set(id, { name, email, isChecked });
@@ -1801,7 +1783,7 @@
   function setTheme({ theme }) {
     let themeValue = localStorage.getItem(theme);
     if (!themeValue) {
-      themeValue = '0';
+      themeValue = "0";
     }
 
     themeValue = ((parseInt(themeValue) + 1) % 2).toString();
@@ -1815,12 +1797,12 @@
     const root = document.documentElement;
     let themeValue = localStorage.getItem(theme);
     switch (themeValue) {
-      case '1':
-        root.className = 'dark';
+      case "1":
+        root.className = "dark";
         break;
 
       default:
-        root.className = 'light';
+        root.className = "light";
         break;
     }
   }
@@ -1828,21 +1810,18 @@
   class LighDarkControlUI {
     constructor({ containerId = null, onClick }) {
       const target = document.getElementById(containerId);
-      const controlBtn = createButton({
-        text: 'Change theme',
-        onClick: onClick,
-      });
+      const controlBtn = createButton({ text: "Change theme", onClick: onClick });
 
-      getTheme({ theme: 'isDark' });
+      getTheme({ theme: "isDark" });
 
       target.append(controlBtn);
     }
   }
 
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("DOMContentLoaded", () => {
     new LighDarkControlUI({
-      containerId: 'lightDarkControl',
-      onClick: () => setTheme({ theme: 'isDark' }),
+      containerId: "lightDarkControl",
+      onClick: () => setTheme({theme: "isDark"})
     });
     const taskLogic = new TaskLogic({ initialTaskData });
     taskLogic.init();
@@ -1852,4 +1831,5 @@
     });
     userLogic.init();
   });
+
 })();
