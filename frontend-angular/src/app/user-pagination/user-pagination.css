@@ -1,0 +1,11 @@
+#userContainer {
+  display: grid;
+  gap: 15px;
+  grid-template-columns: 1fr 1fr;
+}
+
+@media (max-width: 650px) {
+  #userContainer {
+    grid-template-columns: 1fr;
+  }
+}

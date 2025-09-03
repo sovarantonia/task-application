@@ -1,6 +1,7 @@
+import { PagerData } from "./pager-data";
+
 export interface PaginationRequest {
-    currentPageNo: number;
-    itemPerPage: number;
+    pagerData: PagerData;
     sortCriteria: any[];
     filterCriteria: any[];
 }

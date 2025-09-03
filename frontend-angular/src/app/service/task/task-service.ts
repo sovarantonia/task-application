@@ -1,15 +1,13 @@
-import { HttpClient } from "@angular/common/http";
-import { inject, Injectable } from "@angular/core";
+import { Injectable } from "@angular/core";
 import { firstValueFrom, map, Observable } from "rxjs";
-import { Task } from "../entity/task";
-import { PaginationDetails } from "../entity/pagination-details";
+import { Task } from "../../entity/task";
 import { makeAutoObservable, observable } from "mobx";
+import { ApiService } from "../api/api-service";
 
 @Injectable({
     providedIn: "root"
 })
 export class TaskService {
-    private readonly http: HttpClient = inject(HttpClient);
 
     // public getPaginatedTasks(): Observable<PaginationDetails<Task>> {
     //     return this.http.post<PaginationDetails<Task>>('http://localhost:5143/Task/list', { currentPageNo: 1, itemsPerPage: 5, filterCriteria: [], sortCriteria: [] })
@@ -21,13 +19,13 @@ export class TaskService {
     @observable paginatedTasks: Task[] = [];
     @observable totalPages: number = 0;
 
-    constructor() {
+    constructor(private service: ApiService<Task>) {
         makeAutoObservable(this);
     }
 
     public async getPaginatedTasks() {
-        const result = await firstValueFrom(this.http.post<PaginationDetails<Task>>('http://localhost:5143/Task/list', { currentPageNo: 1, itemsPerPage: 5, filterCriteria: [], sortCriteria: [] }));
-        this.paginatedTasks = result.paginatedItems;
-        this.totalPages = result.totalPages;
+        const response = await this.service.getPaginatedItems("Task");
+        this.paginatedTasks = response.paginatedItems;
+        this.totalPages = response.totalPages;
     }
 }

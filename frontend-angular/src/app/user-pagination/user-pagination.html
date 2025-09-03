@@ -1,0 +1,10 @@
+<div id="userContainer" *mobxAutorun>
+  @for (result of userService.paginatedUsers; track result.id) {
+    <div class="card">
+      <h3>{{ result.name }}</h3>
+      <p>Email: {{ result.email }}</p>
+      <p>Department: {{ result.department }}</p>
+    </div>
+  }
+</div>
+
