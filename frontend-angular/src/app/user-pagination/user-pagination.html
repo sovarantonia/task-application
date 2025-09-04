@@ -1,5 +1,5 @@
 <div id="userContainer" *mobxAutorun>
-  @for (result of userService.paginatedUsers; track result.id) {
+  @for (result of paginatedUsers; track result.id) {
     <div class="card">
       <h3>{{ result.name }}</h3>
       <p>Email: {{ result.email }}</p>
@@ -8,3 +8,4 @@
   }
 </div>
 
+<page-controls [pagerData]="pagerData" (onPagerDataChanged)="onPagerDataChanged($event)" [totalPages]="totalPages"></page-controls>

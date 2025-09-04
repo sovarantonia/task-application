@@ -8,7 +8,6 @@ import { Task } from '../entity/task';
 import { makeAutoObservable, observable } from 'mobx';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'task-pagination',
   imports: [MobxAngularModule, PageControls],
   templateUrl: './task-pagination.html',
