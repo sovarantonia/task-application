@@ -34,8 +34,6 @@ export class PageControls implements OnInit {
   onItemsPerPageSelect(event: Event) {
     this.pagerData.itemsPerPage = Number((event.target as HTMLSelectElement).value);
     this.pagerData.currentPageNo = 1;
-    console.log("items per page");
-    console.log(this.totalPages);
     this.onPagerDataChanged.emit(this.pagerData);
   }
 

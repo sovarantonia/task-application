@@ -32,9 +32,7 @@ export class TaskPagination implements OnInit {
     const res = await this.taskService.getPaginatedTasks(this.paginationRequest);
     this.paginatedTasks = res.paginatedItems;
     this.totalPages = res.totalPages;
-    console.log("Paginated task method");
-    console.log(this.totalPages);
-   
+    this.cdref.detectChanges();
   }
 
   onPagerDataChanged(pagerData: PagerData) {
