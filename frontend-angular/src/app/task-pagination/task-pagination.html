@@ -1,5 +1,5 @@
 <div id="taskPaginationContainer" *mobxAutorun>
-  @for (result of taskService.paginatedTasks; track result.id) {
+  @for (result of paginatedTasks; track result.id) {
     <div class="card">
       <h3>{{ result.title }}</h3>
       <p>Description: {{ result.description }}</p>
@@ -9,5 +9,5 @@
     </div>
   }
 </div>
-
+<page-controls [pagerData]="pagerData" (onPagerDataChanged)="onPagerDataChanged($event)"></page-controls>
 

@@ -11,7 +11,7 @@ import { UserService } from '../service/user/user-service';
 export class UserPagination implements OnInit {
   constructor(public userService: UserService) { }
   ngOnInit(): void {
-    this.userService.getPaginatedUsers();
+    // this.userService.getPaginatedUsers();
   }
 
 }

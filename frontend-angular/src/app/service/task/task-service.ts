@@ -3,6 +3,7 @@ import { firstValueFrom, map, Observable } from "rxjs";
 import { Task } from "../../entity/task";
 import { makeAutoObservable, observable } from "mobx";
 import { ApiService } from "../api/api-service";
+import { PaginationRequest } from "../../entity/pagination-request";
 
 @Injectable({
     providedIn: "root"
@@ -23,9 +24,9 @@ export class TaskService {
         makeAutoObservable(this);
     }
 
-    public async getPaginatedTasks() {
-        const response = await this.service.getPaginatedItems("Task");
-        this.paginatedTasks = response.paginatedItems;
-        this.totalPages = response.totalPages;
+    public getPaginatedTasks(paginationRequest: PaginationRequest) {
+       return this.service.getPaginatedItems("Task", paginationRequest);
+        // this.paginatedTasks = response.paginatedItems;
+        // this.totalPages = response.totalPages;
     }
 }
