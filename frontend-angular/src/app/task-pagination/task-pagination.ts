@@ -1,4 +1,4 @@
-import { Component, OnInit, Output } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { TaskService } from '../service/task/task-service';
 import { MobxAngularModule } from 'mobx-angular';
 import { PagerData } from '../entity/pager-data';
@@ -33,11 +33,8 @@ export class TaskPagination implements OnInit {
   }
 
   onPagerDataChanged(pagerData: PagerData) {
-    this.pagerData = { ...pagerData };
-     this.paginationRequest = {
-    ...this.paginationRequest,
-    pagerData: this.pagerData
-  };
+    this.pagerData = pagerData;
+    this.paginationRequest.pagerData = pagerData;
     this.getPaginatedTasks();
   }
 }

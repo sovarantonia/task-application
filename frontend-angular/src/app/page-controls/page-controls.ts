@@ -21,9 +21,9 @@ export class PageControls implements OnInit {
   ngOnInit(): void { }
 
   onItemsPerPageSelect(event: Event) {
-    const itemsPerPage = Number((event.target as HTMLSelectElement).value);
-    this.onPagerDataChanged.emit({ ...this.pagerData, itemsPerPage: itemsPerPage, currentPageNo: 1 });
-    console.log(this.totalPages)
+    this.pagerData.itemsPerPage = Number((event.target as HTMLSelectElement).value);
+    this.pagerData.currentPageNo = 1;
+    this.onPagerDataChanged.emit(this.pagerData);
   }
 
   onCurrentPageSelect(event: Event) {
