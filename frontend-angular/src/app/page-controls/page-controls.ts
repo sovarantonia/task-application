@@ -3,6 +3,7 @@ import { PagerData } from '../entity/pager-data';
 
 
 @Component({
+
   selector: 'page-controls',
   imports: [],
   templateUrl: './page-controls.html',
@@ -15,19 +16,32 @@ export class PageControls implements OnInit {
   @Output()
   public onPagerDataChanged = new EventEmitter<PagerData>();
 
-  @Input()
-  public totalPages: number = 1;
+  public options: number[] = [];
 
-  ngOnInit(): void { }
+  private _totalPages!: number;
+
+  @Input() set totalPages(value: number) {
+    this._totalPages = value;
+    this.options = Array.from({ length: this.totalPages }, (_, i) => i + 1);
+  };
+
+  get totalPages() {
+    return this._totalPages;
+  }
+
+  ngOnInit(): void {  }
 
   onItemsPerPageSelect(event: Event) {
     this.pagerData.itemsPerPage = Number((event.target as HTMLSelectElement).value);
     this.pagerData.currentPageNo = 1;
+    console.log("items per page");
+    console.log(this.totalPages);
     this.onPagerDataChanged.emit(this.pagerData);
   }
 
   onCurrentPageSelect(event: Event) {
-    
+    this.pagerData.currentPageNo = Number((event.target as HTMLSelectElement).value);
+    this.onPagerDataChanged.emit(this.pagerData);
   }
 
 

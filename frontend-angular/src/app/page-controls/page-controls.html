@@ -6,6 +6,8 @@
     </select>
     <label>Page:</label>
     <select id="currentPageSelect" name="currentPageSelect" (change)="onCurrentPageSelect($event)">
-
+            @for (opt of options; track opt) {
+                <option [value]="opt">{{opt}}</option>
+            }
     </select>
 </div>
