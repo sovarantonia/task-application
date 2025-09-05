@@ -1,3 +1,6 @@
+
+<sort-controls [sortColumns]="sortColumns" (onSortCriteriaChanged)="onSortCriteriaChanged($event)"></sort-controls>
+
 <div id="taskPaginationContainer" *mobxAutorun>
   @for (result of paginatedTasks; track result.id) {
     <div class="card">
@@ -9,5 +12,5 @@
     </div>
   }
 </div>
-<page-controls [pagerData]="pagerData" (onPagerDataChanged)="onPagerDataChanged($event)" [totalPages]="totalPages"></page-controls>
 
+<page-controls [pagerData]="pagerData" (onPagerDataChanged)="onPagerDataChanged($event)" [totalPages]="totalPages"></page-controls>

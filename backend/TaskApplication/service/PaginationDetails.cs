@@ -25,14 +25,18 @@ namespace TaskApplication.service
             {
                 var property = item["property"].ToString();
                 var direction = ((JsonElement)item["direction"]).GetInt32();
-                SortCriteria.Add(property, direction);
+                SortCriteria[property] = direction;
+                if (direction == 0)
+                {
+                    SortCriteria.Remove(property);
+                }
             }
 
             foreach (var item in filterText)
             {
                 var property = item["property"].ToString();
                 var value = item["value"].ToString();
-                FilterCriteria.Add(property, value);
+                FilterCriteria[property] = value;
             }
         }
     }
