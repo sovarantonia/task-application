@@ -2,6 +2,10 @@
 const eslint = require("@eslint/js");
 const tseslint = require("typescript-eslint");
 const { FlatCompat } = require("@eslint/eslintrc");
+
+const ng = require("@angular-eslint/eslint-plugin");
+const ngTemplate = require("@angular-eslint/eslint-plugin-template");
+
 const prettier = require("eslint-plugin-prettier");
 const eslintConfigPrettier = require("eslint-config-prettier");
 
@@ -24,15 +28,17 @@ module.exports = tseslint.config(
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
-        project: false,              
+        project: false,               
         sourceType: "module",
         ecmaVersion: "latest"
       }
     },
     plugins: {
+      "@angular-eslint": ng,
+      "@angular-eslint/template": ngTemplate,
       prettier
     },
-    rules: { 
+    rules: {
       ...eslintConfigPrettier.rules,
       "prettier/prettier": "error",
 
@@ -47,10 +53,13 @@ module.exports = tseslint.config(
     }
   },
 
-
   {
     files: ["**/*.html"],
-    rules: {
-    }
+  languageOptions: {
+    parser: require("@angular-eslint/template-parser"),
+  },
+  plugins: { "@angular-eslint/template": ngTemplate },
+  rules: {
+  },
   }
 );
