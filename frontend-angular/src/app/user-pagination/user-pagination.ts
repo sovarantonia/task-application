@@ -4,8 +4,8 @@ import { UserService } from '../service/user/user-service';
 import { makeAutoObservable, observable, runInAction } from 'mobx';
 import { User } from '../entity/user';
 import { PagerData } from '../entity/pager-data';
-import { PaginationRequest } from '../entity/pagination-request';
 import { PageControls } from "../page-controls/page-controls";
+import { RawPaginationDetails } from '../entity/raw-pagination-details';
 
 @Component({
   selector: 'user-pagination',
@@ -16,7 +16,7 @@ import { PageControls } from "../page-controls/page-controls";
 export class UserPagination implements OnInit {
   constructor(public userService: UserService, private cdref: ChangeDetectorRef) { makeAutoObservable(this); }
   public pagerData: PagerData = { currentPageNo: 1, itemsPerPage: 5 };
-  public paginationRequest: PaginationRequest = { pagerData: this.pagerData, sortCriteria: [], filterCriteria: [] };
+  public paginationDetails: RawPaginationDetails = { pagerData: this.pagerData, sortCriteria: new Map<string, number>(), filterCriteria: new Map<string, string>() };
 
   @observable paginatedUsers: User[] = [];
   @observable totalPages: number = 1;
@@ -28,7 +28,7 @@ export class UserPagination implements OnInit {
 
   async getPaginatedUsers() {
     this.cdref.detectChanges();
-    const res = await this.userService.getPaginatedUsers(this.paginationRequest);
+    const res = await this.userService.getPaginatedUsers(this.paginationDetails);
     runInAction(() => {
       this.paginatedUsers = res.paginatedItems;
       this.totalPages = res.totalPages;
@@ -38,7 +38,7 @@ export class UserPagination implements OnInit {
 
   onPagerDataChanged(pagerData: PagerData) {
     this.pagerData = pagerData;
-    this.paginationRequest.pagerData = pagerData;
+    this.paginationDetails.pagerData = pagerData;
     this.getPaginatedUsers();
   }
 

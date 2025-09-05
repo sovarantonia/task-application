@@ -3,6 +3,9 @@ import { inject, Injectable } from "@angular/core";
 import { firstValueFrom } from "rxjs";
 import { PaginationResponse } from "../../entity/pagination-response";
 import { PaginationRequest } from "../../entity/pagination-request";
+import { RawPaginationDetails } from "../../entity/raw-pagination-details";
+import { SortCriterion } from "../../entity/sort-criterion";
+import { FilterCriterion } from "../../entity/filter-criterion";
 
 @Injectable({
     providedIn: "root"
@@ -11,7 +14,19 @@ export class ApiService<T> {
     private readonly baseUrl = "http://localhost:5143";
     private readonly http: HttpClient = inject(HttpClient);
 
-    public getPaginatedItems(entityName: string, paginationRequest: PaginationRequest) {
+    public getPaginatedItems(entityName: string, paginationDetails: RawPaginationDetails) {
+        const pagerData = paginationDetails.pagerData;
+        const sortCriteria: SortCriterion[] = Array.from(paginationDetails.sortCriteria.entries())
+            .map(([key, value]) => ({
+                property: key,
+                direction: value
+            }));
+        const filterCriteria: FilterCriterion[] = Array.from(paginationDetails.filterCriteria.entries())
+        .map(([key, value]) => ({
+                property: key,
+                value: value
+            }));
+        const paginationRequest: PaginationRequest = { pagerData: pagerData, sortCriteria: sortCriteria, filterCriteria: filterCriteria };
         const body = {
             currentPageNo: paginationRequest.pagerData.currentPageNo,
             itemsPerPage: paginationRequest.pagerData.itemsPerPage,

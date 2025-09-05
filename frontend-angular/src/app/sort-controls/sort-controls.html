@@ -1,5 +1,5 @@
 <div id="sortContainer">
     @for (column of sortColumns; track column) {
-    <button (click)="onClick(column)"> Sort by {{column}} </button>
+    <button (click)="onClick(column.foreignKey)"> Sort by {{column.label}} </button>
     }
 </div>

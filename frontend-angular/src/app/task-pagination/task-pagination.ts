@@ -1,8 +1,7 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { TaskService } from '../service/task/task-service';
 import { MobxAngularModule } from 'mobx-angular';
 import { PagerData } from '../entity/pager-data';
-import { PaginationRequest } from '../entity/pagination-request';
 import { PageControls } from "../page-controls/page-controls";
 import { Task } from '../entity/task';
 import { makeAutoObservable, observable, runInAction } from 'mobx';
@@ -13,6 +12,7 @@ import { UserService } from '../service/user/user-service';
 import { StatusService } from '../service/status/status-service';
 import { SelectOptionValueText } from '../entity/select-option-value-text';
 import { FilterControls } from "../filter-controls/filter-controls";
+import { SortColumn } from '../entity/sort-column';
 
 @Component({
   selector: 'task-pagination',
@@ -24,14 +24,17 @@ export class TaskPagination implements OnInit {
   public pagerData: PagerData = { currentPageNo: 1, itemsPerPage: 5 };
   public paginationDetails: RawPaginationDetails = { pagerData: this.pagerData, sortCriteria: new Map<string, number>(), filterCriteria: new Map<string, string>() };
 
-  public sortColumns = ["title", "creationDate"];
+  public sortColumns: SortColumn[] = [{label: "title", foreignKey: "title"}, {label: "date", foreignKey: "creationDate"}];
   @observable public selectOptionList: SelectOptionList[] = [];
 
   @observable paginatedTasks: Task[] = [];
   @observable totalPages: number = 1;
 
+  public userMap = new Map<string, string>();
+  public statusMap = new Map<number, string>();
+
   constructor(public taskService: TaskService, public userService: UserService, public statusService: StatusService, private cdref: ChangeDetectorRef) {
-    makeAutoObservable(this, {}, { autoBind: true });
+    makeAutoObservable(this);
   }
 
   ngOnInit() {
@@ -69,6 +72,7 @@ export class TaskPagination implements OnInit {
       res.forEach(elem => {
         const option: SelectOptionValueText = { value: elem.id, text: elem.name };
         selectOption.options.push(option);
+        this.userMap.set(elem.id, elem.name);
       });
       this.selectOptionList.push(selectOption);
     });
@@ -79,8 +83,9 @@ export class TaskPagination implements OnInit {
     runInAction(() => {
       let selectOption: SelectOptionList = { columnName: "status", foreignKey: "statusId", options: [] };
       res.forEach(elem => {
-        const option: SelectOptionValueText = { value: elem.id, text: elem.statusName };
+        const option: SelectOptionValueText = { value: elem.id.toString(), text: elem.statusName };
         selectOption.options.push(option);
+        this.statusMap.set(elem.id, elem.statusName);
       });
       this.selectOptionList.push(selectOption);
     })

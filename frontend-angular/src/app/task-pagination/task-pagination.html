@@ -7,8 +7,8 @@
       <h3>{{ result.title }}</h3>
       <p>Description: {{ result.description }}</p>
       <p>Created at: {{ result.creationDate }}</p>
-      <p>Assigned to: {{ result.userId }}</p>
-      <p>Status: {{ result.statusId }}</p>
+      <p>Assigned to: {{ userMap.get(result.userId) }}</p>
+      <p>Status: {{ statusMap.get(result.statusId) }}</p>
     </div>
   }
 </div>

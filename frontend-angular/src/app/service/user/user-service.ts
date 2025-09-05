@@ -1,7 +1,7 @@
 import { Injectable } from "@angular/core";
 import { User } from "../../entity/user";
 import { ApiService } from "../api/api-service";
-import { PaginationRequest } from "../../entity/pagination-request";
+import { RawPaginationDetails } from "../../entity/raw-pagination-details";
 
 @Injectable({
     providedIn: "root"
@@ -13,8 +13,8 @@ export class UserService {
         this.entityName = "User";
     }
 
-    public getPaginatedUsers(paginationRequest: PaginationRequest) {
-        return this.service.getPaginatedItems(this.entityName, paginationRequest);
+    public getPaginatedUsers(paginationDetails: RawPaginationDetails) {
+        return this.service.getPaginatedItems(this.entityName, paginationDetails);
     }
 
     public getAllUsers() {

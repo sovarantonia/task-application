@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { SortColumn } from '../entity/sort-column';
 
 @Component({
   selector: 'sort-controls',
@@ -7,13 +8,13 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
   styleUrl: './sort-controls.css'
 })
 export class SortControls implements OnInit {
-  @Input() public sortColumns!: string[];
+  @Input() public sortColumns!: SortColumn[];
 
   @Output() onSortCriteriaChanged = new EventEmitter<Map<string, number>>();
   columnClickCount: Map<string, number> = new Map();
 
   ngOnInit() { 
-    this.sortColumns.forEach(col => this.columnClickCount.set(col, 0));
+    this.sortColumns.forEach(col => this.columnClickCount.set(col.foreignKey, 0));
   }
 
   onClick(column: string) {
@@ -23,5 +24,4 @@ export class SortControls implements OnInit {
     this.onSortCriteriaChanged.emit(this.columnClickCount);
   }
   
-
 }
