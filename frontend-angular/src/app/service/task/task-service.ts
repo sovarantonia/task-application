@@ -13,8 +13,10 @@ import { SortCriterion } from "../../entity/sort-criterion";
     providedIn: "root"
 })
 export class TaskService {
+    private entityName: string;
 
     constructor(private service: ApiService<Task>) {
+        this.entityName = "Task";
     }
 
     public getPaginatedTasks(paginationDetails: RawPaginationDetails) {
@@ -25,7 +27,7 @@ export class TaskService {
                 direction: value
             }));
         const paginationRequest: PaginationRequest = { pagerData: pagerData, sortCriteria: sortCriteria, filterCriteria: [] };
-        console.log(paginationRequest);
-        return this.service.getPaginatedItems("Task", paginationRequest);
+        
+        return this.service.getPaginatedItems(this.entityName, paginationRequest);
     }
 }

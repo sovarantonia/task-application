@@ -25,4 +25,8 @@ export class ApiService<T> {
             })
         }));
     }
+
+    public getAllItems(entityName: string) {
+        return firstValueFrom(this.http.get<T[]>(`${this.baseUrl}/${entityName}`));
+    }
 }

@@ -7,11 +7,17 @@ import { PaginationRequest } from "../../entity/pagination-request";
     providedIn: "root"
 })
 export class UserService {
+    private entityName: string;
 
     constructor(private service: ApiService<User>) {
+        this.entityName = "User";
     }
 
-    public async getPaginatedUsers(paginationRequest: PaginationRequest) {
-        return this.service.getPaginatedItems("User", paginationRequest);
+    public getPaginatedUsers(paginationRequest: PaginationRequest) {
+        return this.service.getPaginatedItems(this.entityName, paginationRequest);
+    }
+
+    public getAllUsers() {
+        return this.service.getAllItems(this.entityName);
     }
 }

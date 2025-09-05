@@ -1,1 +1,10 @@
-<p>filter-controls works!</p>
+<div id="filterContainer">
+@for (opt of selectOptionList; track opt; let index = $index) {
+    <label [htmlFor]="opt.columnName">
+        Sort by {{opt.columnName}}
+    </label>
+    <select [id]="opt.foreignKey" [name]="opt.foreignKey" (change)="onChange(opt.columnName, $event)">
+            <option [value]="opt.options.at(index)?.value" [textContent]="opt.options.at(index)?.text"></option> 
+    </select>
+}
+</div>

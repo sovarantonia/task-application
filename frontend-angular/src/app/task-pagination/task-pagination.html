@@ -1,6 +1,6 @@
 
 <sort-controls [sortColumns]="sortColumns" (onSortCriteriaChanged)="onSortCriteriaChanged($event)"></sort-controls>
-
+<!-- <filter-controls [selectOptionList]="selectOptionList"></filter-controls> -->
 <div id="taskPaginationContainer" *mobxAutorun>
   @for (result of paginatedTasks; track result.id) {
     <div class="card">
