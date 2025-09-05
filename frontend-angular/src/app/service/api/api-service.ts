@@ -16,7 +16,7 @@ export class ApiService<T> {
             currentPageNo: paginationRequest.pagerData.currentPageNo,
             itemsPerPage: paginationRequest.pagerData.itemsPerPage,
             sortCriteria: paginationRequest.sortCriteria,
-            filterCriteria: []
+            filterCriteria: paginationRequest.filterCriteria
         };
 
         return firstValueFrom(this.http.post<PaginationResponse<T>>(`${this.baseUrl}/${entityName}/list`, body, {

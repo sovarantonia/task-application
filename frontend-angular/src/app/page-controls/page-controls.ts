@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { PagerData } from '../entity/pager-data';
 
 
@@ -29,7 +29,16 @@ export class PageControls implements OnInit {
     return this._totalPages;
   }
 
-  ngOnInit(): void {  }
+  ngOnInit(): void { }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if (changes['totalPages'] && !changes['totalPages'].firstChange) {
+      this.options = Array.from(
+        { length: this.totalPages },
+        (_, i) => i + 1
+      );
+    }
+  }
 
   onItemsPerPageSelect(event: Event) {
     this.pagerData.itemsPerPage = Number((event.target as HTMLSelectElement).value);

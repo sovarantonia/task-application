@@ -8,6 +8,7 @@ import { HttpClient } from "@angular/common/http";
 import { PaginationResponse } from "../../entity/pagination-response";
 import { RawPaginationDetails } from "../../entity/raw-pagination-details";
 import { SortCriterion } from "../../entity/sort-criterion";
+import { FilterCriterion } from "../../entity/filter-criterion";
 
 @Injectable({
     providedIn: "root"
@@ -26,7 +27,12 @@ export class TaskService {
                 property: key,
                 direction: value
             }));
-        const paginationRequest: PaginationRequest = { pagerData: pagerData, sortCriteria: sortCriteria, filterCriteria: [] };
+        const filterCriteria: FilterCriterion[] = Array.from(paginationDetails.filterCriteria.entries())
+        .map(([key, value]) => ({
+                property: key,
+                value: value
+            }));
+        const paginationRequest: PaginationRequest = { pagerData: pagerData, sortCriteria: sortCriteria, filterCriteria: filterCriteria };
         
         return this.service.getPaginatedItems(this.entityName, paginationRequest);
     }

@@ -11,4 +11,5 @@ import { UserPagination } from "./user-pagination/user-pagination";
 })
 export class App {
   protected readonly title = signal('task-app');
+  
 }

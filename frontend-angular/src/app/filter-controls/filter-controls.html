@@ -1,10 +1,14 @@
 <div id="filterContainer">
-@for (opt of selectOptionList; track opt; let index = $index) {
+    @for (opt of selectOptionList; track opt; let index = $index) {
     <label [htmlFor]="opt.columnName">
-        Sort by {{opt.columnName}}
+        Filter by {{opt.columnName}}
     </label>
-    <select [id]="opt.foreignKey" [name]="opt.foreignKey" (change)="onChange(opt.columnName, $event)">
-            <option [value]="opt.options.at(index)?.value" [textContent]="opt.options.at(index)?.text"></option> 
+    <select [id]="opt.foreignKey" [name]="opt.foreignKey" (change)="onChange(opt.foreignKey, $event)">
+
+        @for (val of selectOptionList.at(index)?.options; track val) {
+        <option [value]="val.value" [textContent]="val.text"></option>
+        }
+        
     </select>
-}
+    }
 </div>

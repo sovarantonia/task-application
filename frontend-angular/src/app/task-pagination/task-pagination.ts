@@ -5,7 +5,7 @@ import { PagerData } from '../entity/pager-data';
 import { PaginationRequest } from '../entity/pagination-request';
 import { PageControls } from "../page-controls/page-controls";
 import { Task } from '../entity/task';
-import { makeAutoObservable, observable } from 'mobx';
+import { makeAutoObservable, observable, runInAction } from 'mobx';
 import { SortControls } from "../sort-controls/sort-controls";
 import { RawPaginationDetails } from '../entity/raw-pagination-details';
 import { SelectOptionList } from '../entity/select-option-list';
@@ -22,27 +22,32 @@ import { FilterControls } from "../filter-controls/filter-controls";
 })
 export class TaskPagination implements OnInit {
   public pagerData: PagerData = { currentPageNo: 1, itemsPerPage: 5 };
-  public sortCriteria!: Map<string, number>;
-  public paginationDetails : RawPaginationDetails = { pagerData: this.pagerData, sortCriteria: new Map<string, number>(), filterCriteria: new Map<string, string>() };
+  public paginationDetails: RawPaginationDetails = { pagerData: this.pagerData, sortCriteria: new Map<string, number>(), filterCriteria: new Map<string, string>() };
 
   public sortColumns = ["title", "creationDate"];
-  public selectOptionList!: SelectOptionList[];
+  @observable public selectOptionList: SelectOptionList[] = [];
 
   @observable paginatedTasks: Task[] = [];
-  totalPages: number = 1;
+  @observable totalPages: number = 1;
 
-  constructor(public taskService: TaskService, public userUservice: UserService, public statusService: StatusService, private cdref: ChangeDetectorRef) { makeAutoObservable(this); }
+  constructor(public taskService: TaskService, public userService: UserService, public statusService: StatusService, private cdref: ChangeDetectorRef) {
+    makeAutoObservable(this, {}, { autoBind: true });
+  }
 
   ngOnInit() {
-    // this.getAllUsers();
+    this.getAllUsers();
     this.getPaginatedTasks();
+    this.getAllStatuses();
   }
 
   async getPaginatedTasks() {
     this.cdref.detectChanges();
     const res = await this.taskService.getPaginatedTasks(this.paginationDetails);
-    this.paginatedTasks = res.paginatedItems;
-    this.totalPages = res.totalPages;
+    runInAction(() => {
+      this.paginatedTasks = res.paginatedItems;
+      this.totalPages = res.totalPages;
+    })
+
     this.cdref.detectChanges();
   }
 
@@ -58,17 +63,32 @@ export class TaskPagination implements OnInit {
   }
 
   async getAllUsers() {
-    
-    const res = await this.userUservice.getAllUsers();
-    let selectOption: SelectOptionList = {columnName: "user", foreignKey: "userId", options: []};
-    selectOption.columnName = "user";
-    res.forEach(elem => {
-      const option: SelectOptionValueText = { value: elem.id, text: elem.name };
-      selectOption.options.push(option);
+    const res = await this.userService.getAllUsers();
+    runInAction(() => {
+      let selectOption: SelectOptionList = { columnName: "user", foreignKey: "userId", options: [] };
+      res.forEach(elem => {
+        const option: SelectOptionValueText = { value: elem.id, text: elem.name };
+        selectOption.options.push(option);
+      });
+      this.selectOptionList.push(selectOption);
     });
-    this.selectOptionList.push(selectOption);
-    console.log(this.selectOptionList);
-    
+  }
+
+  async getAllStatuses() {
+    const res = await this.statusService.getAllStatuses();
+    runInAction(() => {
+      let selectOption: SelectOptionList = { columnName: "status", foreignKey: "statusId", options: [] };
+      res.forEach(elem => {
+        const option: SelectOptionValueText = { value: elem.id, text: elem.statusName };
+        selectOption.options.push(option);
+      });
+      this.selectOptionList.push(selectOption);
+    })
+  }
+
+  onFilterCriteriaChanged(filterCriteria: Map<string, string>) {
+    this.paginationDetails.filterCriteria = filterCriteria;
+    this.getPaginatedTasks();
   }
 
 }

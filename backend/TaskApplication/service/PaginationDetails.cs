@@ -37,6 +37,10 @@ namespace TaskApplication.service
                 var property = item["property"].ToString();
                 var value = item["value"].ToString();
                 FilterCriteria[property] = value;
+                if (value.Equals("All", StringComparison.CurrentCultureIgnoreCase))
+                {
+                    FilterCriteria.Remove(property);
+                }
             }
         }
     }
