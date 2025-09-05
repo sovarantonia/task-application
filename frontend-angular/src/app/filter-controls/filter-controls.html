@@ -4,11 +4,11 @@
         Filter by {{opt.columnName}}
     </label>
     <select [id]="opt.foreignKey" [name]="opt.foreignKey" (change)="onChange(opt.foreignKey, $event)">
-
+        <option value="All">All</option>
         @for (val of selectOptionList.at(index)?.options; track val) {
         <option [value]="val.value" [textContent]="val.text"></option>
         }
-        
+
     </select>
     }
 </div>
