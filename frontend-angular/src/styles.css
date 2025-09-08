@@ -36,3 +36,16 @@ main {
     gap: 15px;
     align-items: stretch;
 }
+
+
+#sortContainer,
+#filterContainer {
+  display: flex;
+  gap: 15px;
+}
+
+.itemsPagination {
+    display: flex;
+      gap: 15px;
+  flex-wrap: wrap;
+}

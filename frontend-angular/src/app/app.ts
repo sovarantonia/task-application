@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { ItemsPagination } from "./items-pagination/items-pagination";
 import { TaskService } from './service/task/task-service';
@@ -9,7 +9,7 @@ import { TaskRender } from "./task-render/task-render";
 import { Task } from './entity/task';
 import { User } from './entity/user';
 import { UserRender } from "./user-render/user-render";
-import { observable, runInAction } from 'mobx';
+import { makeAutoObservable, observable, runInAction } from 'mobx';
 import { SelectOptionList } from './entity/select-option-list';
 import { SelectOptionValueText } from './entity/select-option-value-text';
 import { SortColumn } from './entity/sort-column';
@@ -20,7 +20,7 @@ import { SortColumn } from './entity/sort-column';
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
-export class App {
+export class App implements OnInit{
   protected readonly title = signal('task-app');
   public taskPaginationFunction: any;
   public userPaginationFunction: any;
@@ -37,7 +37,10 @@ export class App {
   constructor(public taskService: TaskService, public userService: UserService, public statusService: StatusService) {
     this.taskPaginationFunction = (paginationDetails: RawPaginationDetails) => taskService.getPaginatedTasks(paginationDetails);
     this.userPaginationFunction = (paginationDetails: RawPaginationDetails) => userService.getPaginatedUsers(paginationDetails);
+    makeAutoObservable(this);
+  }
 
+  ngOnInit(): void {
     this.getAllUsers();
     this.getAllStatuses();
   }
