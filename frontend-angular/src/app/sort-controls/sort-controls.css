@@ -1,0 +1,16 @@
+button {
+  border-radius: 4px;
+  border-width: 1px;
+  border: 1px solid #ca7960;
+  width: 110px;
+  transition-duration: 0.3s;
+  background-color: light-dark(#ee987e, #8b4d3a);
+  font-family: " Open Sans ", sans-serif;
+  padding: 5px 5px 5px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: light-dark(#c56d52, #57423c);
+  box-shadow: 5px 5px 5px gray;
+}

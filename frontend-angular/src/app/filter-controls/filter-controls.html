@@ -1,14 +1,17 @@
-<div id="filterContainer">
+<div class="filterContainer">
     @for (opt of selectOptionList; track opt; let index = $index) {
-    <label [htmlFor]="opt.columnName">
-        Filter by {{opt.columnName}}
-    </label>
-    <select [id]="opt.foreignKey" [name]="opt.foreignKey" (change)="onChange(opt.foreignKey, $event)">
-        <option value="All">All</option>
-        @for (val of selectOptionList.at(index)?.options; track val) {
-        <option [value]="val.value" [textContent]="val.text"></option>
-        }
+    <div class="filterControls">
+        <label [htmlFor]="opt.columnName">
+            Filter by {{opt.columnName}}
+        </label>
+        <select [id]="opt.foreignKey" [name]="opt.foreignKey" (change)="onChange(opt.foreignKey, $event)">
+            <option value="All">All</option>
+            @for (val of selectOptionList.at(index)?.options; track val) {
+            <option [value]="val.value" [textContent]="val.text"></option>
+            }
 
-    </select>
+        </select>
+    </div>
+
     }
 </div>

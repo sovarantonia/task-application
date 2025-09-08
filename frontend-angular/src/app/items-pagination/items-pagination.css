@@ -5,9 +5,3 @@
     flex-direction: column;
 }
 
-#sortContainer,
-#filterContainer {
-    display: flex;
-    gap: 15px;
-}
-

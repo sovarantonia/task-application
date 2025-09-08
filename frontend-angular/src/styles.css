@@ -24,6 +24,13 @@ main {
     gap: 10px;
 }
 
+body {
+  display: grid;
+  gap: 15px;
+  color: light-dark(black, white);
+  background-color: light-dark(#eee, rgb(97, 88, 88));
+}
+
 .left-side,
 .right-side {
     display: flex;
@@ -32,10 +39,47 @@ main {
     flex-direction: column;
 }
 
+.sortContainer,
+.filterContainer {
+    display: flex;
+    gap: 15px;
+}
+
+
 .content {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
     gap: 15px;
 }
+
+select {
+  appearance: base-select;
+  border-radius: 2px;
+}
+
+select::picker-icon {
+  color: #e69177;
+  transition: 0.4s rotate;
+}
+
+select:open::picker-icon {
+  rotate: 180deg;
+}
+
+option {
+  border: 2px solid #ddd;
+  background: #eee;
+  padding: 10px;
+  transition: 0.4s;
+}
+
+option:nth-of-type(even) {
+  background: light-dark(#e69177, #8b4d3a);
+}
+
+option:nth-of-type(odd) {
+  background: light-dark(white, #5c5654);
+}
+
 
 
