@@ -26,26 +26,16 @@ main {
 
 .left-side,
 .right-side {
-    display: grid;
+    display: flex;
     gap: 15px;
+    flex-wrap: wrap;
+    flex-direction: column;
 }
 
 .content {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr auto 1fr;
     gap: 15px;
-    align-items: stretch;
 }
 
 
-#sortContainer,
-#filterContainer {
-  display: flex;
-  gap: 15px;
-}
-
-.itemsPagination {
-    display: flex;
-      gap: 15px;
-  flex-wrap: wrap;
-}

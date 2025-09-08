@@ -1,17 +1,20 @@
 <div id="sortContainer">
     @for (column of sortColumns; track column) {
-    <button (click)="onClick(column.foreignKey)"> Sort by {{column.label}} 
-        @switch (columnClickCount.get(column.foreignKey)) {
+    
+        <button (click)="onClick(column.foreignKey)"> Sort by {{column.label}}
+            @switch (columnClickCount.get(column.foreignKey)) {
             @case (1) {
-                &#x2191;            
+            &#x2191;
             }
             @case (-1) {
-                &#x2193;
+            &#x2193;
             }
             @default {
 
             }
-        }
-    </button>
+            }
+        </button>
+   
+
     }
 </div>
