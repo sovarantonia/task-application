@@ -1,0 +1,6 @@
+<sort-controls [sortColumns]="sortColumns" (onSortCriteriaChanged)="onSortCriteriaChanged($event)"></sort-controls>
+<filter-controls [selectOptionList]="selectOptionList"
+    (onFilterCriteriaChanged)="onFilterCriteriaChanged($event)"></filter-controls>
+
+<page-controls [pagerData]="pagerData" (onPagerDataChanged)="onPagerDataChanged($event)"
+    [totalPages]="totalPages"></page-controls>

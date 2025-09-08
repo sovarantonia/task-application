@@ -1,18 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { UserPagination } from './user-pagination';
+import { TaskRender } from './task-render';
 
-describe('UserPagination', () => {
-  let component: UserPagination;
-  let fixture: ComponentFixture<UserPagination>;
+describe('TaskRender', () => {
+  let component: TaskRender;
+  let fixture: ComponentFixture<TaskRender>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [UserPagination]
+      imports: [TaskRender]
     })
     .compileComponents();
 
-    fixture = TestBed.createComponent(UserPagination);
+    fixture = TestBed.createComponent(TaskRender);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
