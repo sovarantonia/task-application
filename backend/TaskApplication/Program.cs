@@ -1,7 +1,8 @@
+using TaskApplication.filter_midw;
 using TaskApplication.repository;
 using TaskApplication.service;
 
-var  MyAllowSpecificOrigins = "MyAllowSpecificOrigins";
+var MyAllowSpecificOrigins = "MyAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 
 var app = builder.Build();
+
+app.UseMiddleware<LoggingMiddleware>();
 
 if (app.Environment.IsDevelopment())
 {

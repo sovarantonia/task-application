@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using TaskApplication.filter_midw;
 using TaskApplication.service;
 using Task = TaskApplication.entity.Task;
 
@@ -7,6 +8,7 @@ namespace TaskApplication.controller
 {
     [Route("[controller]")]
     [ApiController]
+    [TypeFilter(typeof(LogActionFilter))]
     public class TaskController : ControllerBase
     {
         private ITaskService TaskService;
