@@ -12,5 +12,6 @@ namespace TaskApplication.service
         public List<User> GetPaginatedUsers(Dictionary<string, object> paginationDetails);
         public long GetTotalUsersNo();
         public List<User> GetAllUsers();
+        public User FindUserByEmail(string email);
     }
 }

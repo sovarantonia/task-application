@@ -1,12 +1,14 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using TaskApplication.entity;
+using TaskApplication.filter_midw;
 using TaskApplication.service;
 
 namespace TaskApplication.controller
 {
     [ApiController]
     [Route("[controller]")]
+    [TypeFilter(typeof(LogActionFilter))]
     public class UserController : ControllerBase
     {
         private IUserService UserService;
@@ -21,6 +23,13 @@ namespace TaskApplication.controller
         {
             User result = UserService.FindUserById(id);
             return result == null? NotFound() : Ok(result);
+        }
+
+        [HttpGet("{email}")]
+        public ActionResult<User> GetUserByEmail(string email)
+        {
+            User result = UserService.FindUserByEmail(email);
+            return result == null ? NotFound() : Ok(result);
         }
 
         [HttpPost]

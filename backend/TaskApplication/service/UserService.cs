@@ -33,6 +33,11 @@
             return null;
         }
 
+        public User FindUserByEmail(string email)
+        {
+            return UserRepository.FindUserByEmail(email);
+        }
+
         public User FindUserById(Guid id)
         {
             return UserRepository.FindById(id);

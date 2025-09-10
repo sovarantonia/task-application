@@ -12,12 +12,10 @@ export class FilterCriteriaHandler {
     const filterCriteria = this.filterCriteriaList
       .entries()
       .reduce((acc, [key, value]) => {
-        if (value !== "All") {
           acc.push({
             property: key,
             value: value,
           });
-        }
         return acc;
       }, []);
     this.onNotifyPaginationHandler(filterCriteria);

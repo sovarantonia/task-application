@@ -8,7 +8,6 @@ namespace TaskApplication.controller
 {
     [Route("[controller]")]
     [ApiController]
-    [TypeFilter(typeof(LogActionFilter))]
     public class TaskController : ControllerBase
     {
         private ITaskService TaskService;
@@ -35,6 +34,7 @@ namespace TaskApplication.controller
 
 
         [HttpPost]
+        [TaskSaveActionFilter]
         public ActionResult<Task> SaveTask([FromBody] Task taskToSave)
         {
             return Ok(TaskService.Save(taskToSave));

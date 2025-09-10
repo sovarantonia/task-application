@@ -773,13 +773,11 @@
         .entries()
         .reduce((acc, [key, value]) => {
           const { direction, priority } = value.sortOption;
-          if (direction !== 0) {
             acc.push({
               property: key,
               direction: direction,
               priority: priority,
             });
-          }
 
           return acc;
         }, [])
@@ -817,12 +815,10 @@
       const filterCriteria = this.filterCriteriaList
         .entries()
         .reduce((acc, [key, value]) => {
-          if (value !== "All") {
             acc.push({
               property: key,
               value: value,
             });
-          }
           return acc;
         }, []);
       this.onNotifyPaginationHandler(filterCriteria);
@@ -1290,11 +1286,14 @@
         'Content-Type': 'application/json',
       },
       method: 'POST',
+      credentials: 'include'
     }).then((response) => {
       if (!response.ok) {
-        return response.text().then((text) => {
-          throw new Error('Error ' + response.status + ' ' + text);
-        });
+        // return response.text().then((text) => {
+        //   throw new Error('Error ' + response.status + ' ' + text);
+        // });
+        alert("Invalid credentials");
+        return null;
       }
       return response.json();
     });
@@ -1315,6 +1314,15 @@
       }
       return response.json();
     });
+  }
+
+  async function getUserByEmail(email) {
+    const response = await fetch(`http://localhost:5143/User/${email}`);
+    if (!response.ok) {
+      return null;
+    }
+
+    return await response.json();
   }
 
   class TaskLogic {
@@ -1818,11 +1826,72 @@
     }
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
+  class CookieControlUI {
+    constructor({ containerId, onCheckBtnClick, onDeleteBtnClick }) {
+        const target = document.getElementById(containerId);
+        const checkCookieBtn = createButton({ text: "Check cookie", onClick: onCheckBtnClick });
+        const deleteCookieBtn = createButton({ text: "Delete cookie", onClick: onDeleteBtnClick });
+        
+        target.append(checkCookieBtn, deleteCookieBtn);
+    }
+  }
+
+  function setCookie(name, value, expDays) {
+    const date = new Date();
+    date.setTime(date.getTime() + expDays * 24 * 60 * 60 * 1000);
+    let expires = 'expires=' + date.toUTCString();
+    document.cookie = name + '=' + value + ';' + expires + ';path=/';
+  }
+
+  function getCookie(cname) {
+    let name = cname + '=';
+    let ca = document.cookie.split(';');
+    for (let i = 0; i < ca.length; i++) {
+      let c = ca[i];
+      while (c.charAt(0) == ' ') {
+        c = c.substring(1);
+      }
+      if (c.indexOf(name) == 0) {
+        return c.substring(name.length, c.length);
+      }
+    }
+    return '';
+  }
+
+  function deleteCookie() {
+    setCookie('email', '', -1);
+    alert('Cookie removed');
+  }
+
+  async function checkCookie() {
+    let user = getCookie('email');
+    if (user != '') {
+      alert('Welcome again ' + user);
+    } else {
+      user = prompt('Please enter your email:', '');
+      if (user != null && user != '') {
+        const response = await getUserByEmail(user);
+        if (response != null) {
+            setCookie('email', user, 30);
+            alert('User set');
+        } else {
+          alert('User not found');
+        }
+      }
+    }
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
     new LighDarkControlUI({
-      containerId: "lightDarkControl",
-      onClick: () => setTheme({theme: "isDark"})
+      containerId: 'lightDarkControl',
+      onClick: () => setTheme({ theme: 'isDark' }),
     });
+    new CookieControlUI({
+      containerId: 'cookieControl',
+      onCheckBtnClick: () => checkCookie(),
+      onDeleteBtnClick: () => deleteCookie(),
+    });
+
     const taskLogic = new TaskLogic({ initialTaskData });
     taskLogic.init();
     const userLogic = new UserLogic({

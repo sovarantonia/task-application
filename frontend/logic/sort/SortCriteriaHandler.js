@@ -23,13 +23,11 @@ export class SortCriteriaHandler {
       .entries()
       .reduce((acc, [key, value]) => {
         const { direction, priority } = value.sortOption;
-        if (direction !== 0) {
           acc.push({
             property: key,
             direction: direction,
             priority: priority,
           });
-        }
 
         return acc;
       }, [])

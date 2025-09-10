@@ -78,11 +78,14 @@ export function addTask(taskToSave) {
       'Content-Type': 'application/json',
     },
     method: 'POST',
+    credentials: 'include'
   }).then((response) => {
     if (!response.ok) {
-      return response.text().then((text) => {
-        throw new Error('Error ' + response.status + ' ' + text);
-      });
+      // return response.text().then((text) => {
+      //   throw new Error('Error ' + response.status + ' ' + text);
+      // });
+      alert("Invalid credentials");
+      return null;
     }
     return response.json();
   });
@@ -103,4 +106,13 @@ export function updateTask(id, taskToUpdate) {
     }
     return response.json();
   });
+}
+
+export async function getUserByEmail(email) {
+  const response = await fetch(`http://localhost:5143/User/${email}`);
+  if (!response.ok) {
+    return null;
+  }
+
+  return await response.json();
 }
