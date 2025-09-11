@@ -16,7 +16,7 @@ namespace TaskApplication.service
             this.TaskRepository = repository;
         }
 
-        [TaskAuthorization(emailList: ["admin@admin.com"] )]
+        [TaskAuthorization]
         public Task Save(Task taskToSave, string emailCookie)
         {
             var attribute = (TaskAuthorizationAttribute)typeof(TaskService).GetMethod("Save").GetCustomAttributes(typeof(TaskAuthorizationAttribute), false).FirstOrDefault();

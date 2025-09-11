@@ -5,7 +5,7 @@
     using Task = TaskApplication.entity.Task;
     public interface ITaskService
     {
-        [TaskAuthorization(emailList: ["admin@admin.com"])]
+        [TaskAuthorization]
         public Task Save(Task taskToSave, string emailCookie);
         public Task FindTaskById(Guid id);
         public void DeleteTask(Guid id);

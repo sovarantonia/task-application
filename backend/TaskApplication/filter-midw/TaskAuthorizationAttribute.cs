@@ -8,9 +8,9 @@ namespace TaskApplication.filter_midw
     public class TaskAuthorizationAttribute : Attribute
     {
         public string[] AdminEmailList { get; }
-        public TaskAuthorizationAttribute(string[] emailList)
+        public TaskAuthorizationAttribute()
         {
-            AdminEmailList = emailList;
+            AdminEmailList = ["admin@admin.com"];
         }
     }
 }
