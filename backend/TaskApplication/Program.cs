@@ -5,6 +5,7 @@ using TaskApplication.service;
 var MyAllowSpecificOrigins = "MyAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
+//builder.Services.AddHttpContextAccessor();
 
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<ITaskRepository, TaskRepository>();

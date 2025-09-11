@@ -10,14 +10,24 @@ namespace TaskApplication.service
         private ITaskRepository TaskRepository;
         private PaginationDetails PaginationDetails = new PaginationDetails();
 
+
         public TaskService(ITaskRepository repository)
         {
             this.TaskRepository = repository;
         }
 
-        public Task Save(Task taskToSave)
+        [TaskAuthorization(emailList: ["admin@admin.com"] )]
+        public Task Save(Task taskToSave, char emailCookie)
         {
-            return TaskRepository.Save(taskToSave);
+            var attribute = (TaskAuthorizationAttribute)typeof(TaskService).GetMethod("Save").GetCustomAttributes(typeof(TaskAuthorizationAttribute), false).FirstOrDefault();
+            foreach (var email in attribute.AdminEmailList.FirstOrDefault())
+            {
+                if (emailCookie.Equals(email))
+                {
+                    return TaskRepository.Save(taskToSave);
+                }
+            }
+            return null;
         }
 
         public Task FindTaskById(Guid id)

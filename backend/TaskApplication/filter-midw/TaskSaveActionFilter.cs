@@ -11,7 +11,7 @@ namespace TaskApplication.filter_midw
             var cookie = context.HttpContext.Request.Cookies["email"];
             if (cookie == null)
             {
-                context.Result = new UnauthorizedResult();
+                context.Result = new BadRequestResult();
                 return;
             }
             Console.WriteLine($"Save Task Request {context.HttpContext.Request.Path}");

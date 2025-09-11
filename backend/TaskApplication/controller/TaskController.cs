@@ -37,7 +37,9 @@ namespace TaskApplication.controller
         [TaskSaveActionFilter]
         public ActionResult<Task> SaveTask([FromBody] Task taskToSave)
         {
-            return Ok(TaskService.Save(taskToSave));
+            var emailCookie = HttpContext.Request.Cookies["email"].FirstOrDefault();
+            Task result = TaskService.Save(taskToSave, emailCookie);
+            return result == null ? Unauthorized() : Ok(result);
         }
 
 
