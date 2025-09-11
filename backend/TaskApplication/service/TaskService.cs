@@ -17,12 +17,12 @@ namespace TaskApplication.service
         }
 
         [TaskAuthorization(emailList: ["admin@admin.com"] )]
-        public Task Save(Task taskToSave, char emailCookie)
+        public Task Save(Task taskToSave, string emailCookie)
         {
             var attribute = (TaskAuthorizationAttribute)typeof(TaskService).GetMethod("Save").GetCustomAttributes(typeof(TaskAuthorizationAttribute), false).FirstOrDefault();
             foreach (var email in attribute.AdminEmailList.FirstOrDefault())
             {
-                if (emailCookie.Equals(email))
+                if (emailCookie.Equals(email)) 
                 {
                     return TaskRepository.Save(taskToSave);
                 }
