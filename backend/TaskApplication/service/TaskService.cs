@@ -19,15 +19,7 @@ namespace TaskApplication.service
         [TaskAuthorization]
         public Task Save(Task taskToSave, string emailCookie)
         {
-            var attribute = (TaskAuthorizationAttribute)typeof(TaskService).GetMethod("Save").GetCustomAttributes(typeof(TaskAuthorizationAttribute), false).FirstOrDefault();
-            foreach (var email in attribute.AdminEmailList.FirstOrDefault())
-            {
-                if (emailCookie.Equals(email)) 
-                {
-                    return TaskRepository.Save(taskToSave);
-                }
-            }
-            return null;
+            return TaskRepository.Save(taskToSave);
         }
 
         public Task FindTaskById(Guid id)

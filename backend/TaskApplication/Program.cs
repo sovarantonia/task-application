@@ -1,3 +1,5 @@
+using Castle.DynamicProxy;
+using TaskApplication.entity;
 using TaskApplication.filter_midw;
 using TaskApplication.repository;
 using TaskApplication.service;
@@ -5,12 +7,31 @@ using TaskApplication.service;
 var MyAllowSpecificOrigins = "MyAllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
-//builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpContextAccessor();
 
-builder.Services.AddSingleton<IUserRepository, UserRepository>();
-builder.Services.AddSingleton<ITaskRepository, TaskRepository>();
-builder.Services.AddSingleton<IUserService, UserService>();
-builder.Services.AddSingleton<ITaskService, TaskService>();
+builder.Services.Configure<AuthorizedEmails>(builder.Configuration.GetSection("Access"));
+builder.Services.AddSingleton(sp =>
+    sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<AuthorizedEmails>>().Value);
+builder.Services.AddScoped<CurrentUserFromCookie>();
+builder.Services.AddScoped<TaskService>();
+builder.Services.AddSingleton<ProxyGenerator>();
+
+builder.Services.AddScoped<TaskInterceptor>();
+
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+//builder.Services.AddScoped<ITaskService, TaskService>();
+
+builder.Services.AddScoped<ITaskService>(sp =>
+{
+    var generator = sp.GetRequiredService<ProxyGenerator>();
+    var target = sp.GetRequiredService<TaskService>();            
+    var interceptor = sp.GetRequiredService<TaskInterceptor>();        
+
+    return generator.CreateInterfaceProxyWithTarget<ITaskService>(target, interceptor);
+
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
