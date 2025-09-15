@@ -4,7 +4,7 @@ namespace TaskApplication.service
 {
     public interface IUserService
     {
-        public bool ValidateUser(User userToSave);
+        public void ValidateUser(User userToSave);
         public User SaveUser(User userToSave);
         public User FindUserById(Guid id);
         public void DeleteUser(Guid id);

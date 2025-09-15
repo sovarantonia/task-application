@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using TaskApplication.entity.exceptions;
 using TaskApplication.filter_midw;
 using TaskApplication.repository;
 using Task = TaskApplication.entity.Task;
@@ -17,24 +18,27 @@ namespace TaskApplication.service
         }
 
         [TaskAuthorization]
-        public Task Save(Task taskToSave, string emailCookie)
+        public Task Save(Task taskToSave)
         {
             return TaskRepository.Save(taskToSave);
         }
 
         public Task FindTaskById(Guid id)
         {
-            return TaskRepository.FindById(id);
+            return TaskRepository.FindByIdOrThrow(id);
         }
 
         public void DeleteTask(Guid id)
         {
+            TaskRepository.FindByIdOrThrow(id);
             TaskRepository.Delete(id);
         }
 
         public Task UpdateTask(Guid id, Task taskToUpdate)
         {
-            return FindTaskById(id) != null ? TaskRepository.Update(id, taskToUpdate) : null;
+            TaskRepository.FindByIdOrThrow(id);
+
+            return TaskRepository.Update(id, taskToUpdate);
         }
 
         public List<Task> GetPaginatedTasks(Dictionary<string, object> paginationDetails)

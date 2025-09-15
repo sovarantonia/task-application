@@ -12,7 +12,7 @@ namespace TaskApplication.repository
 
         public UserRepository(string connectionString) : base(connectionString, "users") { }
 
-        public User FindUserByEmail(string email)
+        public User? FindUserByEmail(string email)
         {
             string queryString = "SELECT * FROM users WHERE email = @email";
             using MySqlConnection connection = new MySqlConnection(_connectionString);

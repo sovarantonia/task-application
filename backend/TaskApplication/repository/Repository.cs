@@ -4,8 +4,9 @@
     using MySqlConnector;
     using System.Reflection;
     using System.Text.Json;
+    using TaskApplication.entity.exceptions;
 
-    public class Repository<T> : IRepository<T>
+    public class Repository<T> : IRepository<T> where T : class
     {
         protected readonly string _connectionString;
         protected string TableName { get; set; }
@@ -199,7 +200,7 @@
             return default(T);
         }
 
-        public T FindById(Guid id)
+        public T? FindById(Guid id)
         {
             string queryString = $"SELECT * FROM {TableName} WHERE id = @id";
             using MySqlConnection connection = new MySqlConnection(_connectionString);
@@ -224,6 +225,17 @@
             { reader.Close(); connection.Close(); }
 
             return default(T);
+        }
+
+        public T FindByIdOrThrow(Guid id)
+        {
+            T entity = FindById(id);
+            if (entity == null)
+            {
+                throw new EntityNotFoundException($"Entity with id {id} does not exist");
+            }
+
+            return entity;
         }
 
         public List<T> GetPaginatedItems(int currentPageNo, int itemsPerPage, Dictionary<string, int> sortCriteria, Dictionary<string, string> filterCriteria)
@@ -362,7 +374,7 @@
             return items;
         }
 
-        public T SetItemProperties(MySqlDataReader reader)
+        public T? SetItemProperties(MySqlDataReader reader)
         {
             var properties = typeof(T).GetProperties();
             var item = Activator.CreateInstance<T>();

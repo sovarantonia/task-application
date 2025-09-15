@@ -16,6 +16,7 @@ builder.Services.AddScoped<CurrentUserFromCookie>();
 builder.Services.AddSingleton<ProxyGenerator>();
 builder.Services.AddScoped<TaskInterceptor>();
 
+builder.Services.AddControllers(o => { o.Filters.Add<ExceptionFilter>(); });
 builder.Services.AddScoped<ExceptionFilter>();
 
 builder.Services.AddScoped<TaskService>();

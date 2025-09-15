@@ -1,4 +1,4 @@
-﻿namespace TaskApplication.entity
+﻿namespace TaskApplication.entity.exceptions
 {
     public class UserNotAuthorizedException : Exception
     {

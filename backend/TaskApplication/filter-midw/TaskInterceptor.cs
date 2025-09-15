@@ -1,5 +1,6 @@
 ﻿using Castle.DynamicProxy;
 using TaskApplication.entity;
+using TaskApplication.entity.exceptions;
 using TaskApplication.service;
 
 namespace TaskApplication.filter_midw

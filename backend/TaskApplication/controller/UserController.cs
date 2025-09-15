@@ -21,22 +21,19 @@ namespace TaskApplication.controller
         [HttpGet("{id:guid}")]
         public ActionResult<User> GetUserById(Guid id)
         {
-            User result = UserService.FindUserById(id);
-            return result == null? NotFound() : Ok(result);
+            return UserService.FindUserById(id);
         }
 
         [HttpGet("{email}")]
         public ActionResult<User> GetUserByEmail(string email)
         {
-            User result = UserService.FindUserByEmail(email);
-            return result == null ? NotFound() : Ok(result);
+            return UserService.FindUserByEmail(email);
         }
 
         [HttpPost]
         public ActionResult<User> SaveUser([FromBody] User userToSave)
         {
-            var savedUser = UserService.SaveUser(userToSave);
-            return savedUser == null ? BadRequest() : Ok(savedUser);
+            return UserService.SaveUser(userToSave);
         }
 
         [HttpDelete("{id:guid}")]
@@ -49,8 +46,7 @@ namespace TaskApplication.controller
         [HttpPatch("{id:guid}")]
         public ActionResult<User> UpdateUser(Guid id, [FromBody] User userToUpdate)
         {
-            var updatedUser = UserService.UpdateUser(id, userToUpdate);
-            return updatedUser == null ? BadRequest() : Ok(updatedUser);
+            return UserService.UpdateUser(id, userToUpdate);
         }
 
         [HttpPost]

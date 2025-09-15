@@ -6,7 +6,7 @@
     public interface ITaskService
     {
         [TaskAuthorization]
-        public Task Save(Task taskToSave, string emailCookie);
+        public Task Save(Task taskToSave);
         public Task FindTaskById(Guid id);
         public void DeleteTask(Guid id);
         public Task UpdateTask(Guid id, Task taskToUpdate);

@@ -23,8 +23,7 @@ namespace TaskApplication.controller
         [HttpGet("{id:guid}")]
         public ActionResult<entity.Task> GetTaskById(Guid id)
         {
-            Task result = TaskService.FindTaskById(id);
-            return result == null ? NotFound() : Ok(result);
+            return TaskService.FindTaskById(id);
         }
 
 
@@ -37,20 +36,16 @@ namespace TaskApplication.controller
 
 
         [HttpPost]
-        //[TaskSaveActionFilter]
         public ActionResult<Task> SaveTask([FromBody] Task taskToSave)
         {
-            var emailCookie = HttpContext.Request.Cookies["email"].FirstOrDefault();
-            Task result = TaskService.Save(taskToSave, emailCookie.ToString());
-            return result == null ? Unauthorized() : Ok(result);
+            return TaskService.Save(taskToSave);
         }
 
 
         [HttpPatch("{id:guid}")]
         public ActionResult<Task> UpdateTask(Guid id, [FromBody] Task taskToUpdate)
         {
-            Task result = TaskService.UpdateTask(id, taskToUpdate);
-            return result == null ? NotFound() : Ok(result);
+            return TaskService.UpdateTask(id, taskToUpdate);
         }
 
 
