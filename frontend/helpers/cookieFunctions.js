@@ -28,19 +28,21 @@ export function deleteCookie() {
 }
 
 export async function checkCookie() {
-  let user = getCookie('email');
-  if (user != '') {
-    alert('Welcome again ' + user);
-  } else {
-    user = prompt('Please enter your email:', '');
-    if (user != null && user != '') {
-      const response = await getUserByEmail(user);
-      if (response != null) {
-          setCookie('email', user, 30);
-          alert('User set');
-      } else {
-        alert('User not found');
-      }
+  if (getCookie('email')) {
+    alert('Welcome again ' + getCookie('email'));
+    return;
+  }
+
+  const user = prompt('Please enter your email:', '');
+  if (user != null) {
+    const response = await getUserByEmail(user);
+
+    if (response.statusCode) {
+      alert(response.message);
+      return;
     }
+
+    setCookie('email', user, 30);
+    alert('User set');
   }
 }

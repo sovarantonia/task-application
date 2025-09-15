@@ -31,7 +31,7 @@
 
         public User FindUserByEmail(string email)
         {
-            return UserRepository.FindUserByEmail(email);
+            return UserRepository.FindUserByEmailOrThrow(email);
         }
 
         public User FindUserById(Guid id)

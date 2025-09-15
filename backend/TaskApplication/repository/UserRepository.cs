@@ -1,5 +1,7 @@
 ﻿using MySqlConnector;
+using Org.BouncyCastle.Bcpg.OpenPgp;
 using TaskApplication.entity;
+using TaskApplication.entity.exceptions;
 
 namespace TaskApplication.repository
 {
@@ -39,6 +41,17 @@ namespace TaskApplication.repository
             }
 
             return null;
+        }
+
+        public User FindUserByEmailOrThrow(string email)
+        {
+            var result = FindUserByEmail(email);
+            if (result == null)
+            {
+                throw new EntityNotFoundException($"User with email {email} not found");
+            }
+
+            return result;
         }
     }
 }

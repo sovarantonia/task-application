@@ -1206,121 +1206,111 @@
     };
   }
 
-  function getPaginatedUsers(paginationDetails) {
-    return fetch('http://localhost:5143/User/list/', {
+  async function getPaginatedUsers(paginationDetails) {
+    const response = await fetch('http://localhost:5143/User/list/', {
       body: JSON.stringify(paginationDetails),
       headers: {
         'Content-Type': 'application/json',
       },
       method: 'POST',
-    }).then((response) => {
-      if (!response.ok) {
-        return response.text().then((text) => {
-          throw new Error('Error ' + response.status + ' ' + text);
-        });
-      }
-      return response.json();
     });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error);
+    }
+
+    return await response.json();
   }
 
-  function getPaginatedTasks(paginationDetails) {
-    return fetch('http://localhost:5143/Task/list', {
+  async function getPaginatedTasks(paginationDetails) {
+    const response = await fetch('http://localhost:5143/Task/list', {
       body: JSON.stringify(paginationDetails),
       headers: {
         'Content-Type': 'application/json',
       },
       method: 'POST',
-    }).then((response) => {
-      if (!response.ok) {
-        return response.text().then((text) => {
-          throw new Error('Error ' + response.status + ' ' + text);
-        });
-      }
-      return response.json();
     });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error);
+    }
+
+    return await response.json();
   }
 
-  function getAllStatuses() {
-    return fetch('http://localhost:5143/Status/').then((response) => {
-      if (!response.ok) {
-        return response.text().then((text) => {
-          throw new Error('Error ' + response.status + ' ' + text);
-        });
-      }
-      return response.json();
-    });
+  async function getAllStatuses() {
+    const response = await fetch('http://localhost:5143/Status/');
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error);
+    }
+
+    return await response.json();
   }
 
-  function getAllUsers() {
-    return fetch('http://localhost:5143/User/').then((response) => {
-      if (!response.ok) {
-        return response.text().then((text) => {
-          throw new Error('Error ' + response.status + ' ' + text);
-        });
-      }
-      return response.json();
-    });
+  async function getAllUsers() {
+    const response = await fetch('http://localhost:5143/User/');
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error);
+    }
+
+    return await response.json();
   }
 
-  function addUser(userToSave) {
-    return fetch('http://localhost:5143/User/', {
+  async function addUser(userToSave) {
+    const response = await fetch('http://localhost:5143/User/', {
       body: JSON.stringify(userToSave),
       headers: {
         'Content-Type': 'application/json',
       },
       method: 'POST',
-    }).then((response) => {
-      if (!response.ok) {
-        return response.text().then((text) => {
-          throw new Error('Error ' + response.status + ' ' + text);
-        });
-      }
-      return response.json();
     });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error);
+    }
+
+    return await response.json();
   }
 
-  function addTask(taskToSave) {
-    return fetch('http://localhost:5143/Task/', {
+  async function addTask(taskToSave) {
+    const response = fetch('http://localhost:5143/Task/', {
       body: JSON.stringify(taskToSave),
       headers: {
         'Content-Type': 'application/json',
       },
       method: 'POST',
-      credentials: 'include'
-    }).then((response) => {
-      if (!response.ok) {
-        // return response.text().then((text) => {
-        //   throw new Error('Error ' + response.status + ' ' + text);
-        // });
-        alert("Invalid credentials");
-        return null;
-      }
-      return response.json();
+      credentials: 'include',
     });
+
+    return await response.json();
   }
 
-  function updateTask(id, taskToUpdate) {
-    return fetch(`http://localhost:5143/Task/${id}`, {
+  async function updateTask(id, taskToUpdate) {
+    const response = await fetch(`http://localhost:5143/Task/${id}`, {
       body: JSON.stringify(taskToUpdate),
       headers: {
         'Content-Type': 'application/json',
       },
       method: 'PATCH',
-    }).then((response) => {
-      if (!response.ok) {
-        return response.text().then((text) => {
-          throw new Error('Error ' + response.status + ' ' + text);
-        });
-      }
-      return response.json();
     });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error);
+    }
+
+    return await response.json();
   }
 
   async function getUserByEmail(email) {
     const response = await fetch(`http://localhost:5143/User/${email}`);
-    if (!response.ok) {
-      return null;
-    }
 
     return await response.json();
   }
@@ -1864,20 +1854,22 @@
   }
 
   async function checkCookie() {
-    let user = getCookie('email');
-    if (user != '') {
-      alert('Welcome again ' + user);
-    } else {
-      user = prompt('Please enter your email:', '');
-      if (user != null && user != '') {
-        const response = await getUserByEmail(user);
-        if (response != null) {
-            setCookie('email', user, 30);
-            alert('User set');
-        } else {
-          alert('User not found');
-        }
+    if (getCookie('email')) {
+      alert('Welcome again ' + getCookie('email'));
+      return;
+    }
+
+    const user = prompt('Please enter your email:', '');
+    if (user != null) {
+      const response = await getUserByEmail(user);
+
+      if (response.statusCode) {
+        alert(response.message);
+        return;
       }
+
+      setCookie('email', user, 30);
+      alert('User set');
     }
   }
 
