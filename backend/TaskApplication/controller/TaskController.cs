@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
+using TaskApplication.entity;
 using TaskApplication.filter_midw;
 using TaskApplication.service;
 using Task = TaskApplication.entity.Task;
@@ -8,9 +9,11 @@ namespace TaskApplication.controller
 {
     [Route("[controller]")]
     [ApiController]
+    [TypeFilter(typeof(ExceptionFilter))]
     public class TaskController : ControllerBase
     {
         private ITaskService TaskService;
+
 
         public TaskController(ITaskService service)
         {
@@ -34,7 +37,7 @@ namespace TaskApplication.controller
 
 
         [HttpPost]
-        [TaskSaveActionFilter]
+        //[TaskSaveActionFilter]
         public ActionResult<Task> SaveTask([FromBody] Task taskToSave)
         {
             var emailCookie = HttpContext.Request.Cookies["email"].FirstOrDefault();

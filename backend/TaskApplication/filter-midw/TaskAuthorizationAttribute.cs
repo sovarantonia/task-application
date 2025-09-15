@@ -5,7 +5,7 @@ using TaskApplication.entity;
 
 namespace TaskApplication.filter_midw
 {
-    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method, Inherited = true)]
     public class TaskAuthorizationAttribute : Attribute
     {
         public AuthorizedEmails AllowedEmailList { get; set; } = new();

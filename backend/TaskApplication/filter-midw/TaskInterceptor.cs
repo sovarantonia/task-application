@@ -21,8 +21,8 @@ namespace TaskApplication.filter_midw
 
             bool hasAttribute =
          Attribute.IsDefined(methodToCall, typeof(TaskAuthorizationAttribute), inherit: true) ||
-         (methodToCall.DeclaringType != null &&
-          Attribute.IsDefined(methodToCall.DeclaringType, typeof(TaskAuthorizationAttribute), inherit: true));
+    (methodToCall.DeclaringType != null &&
+     Attribute.IsDefined(methodToCall.DeclaringType, typeof(TaskAuthorizationAttribute), inherit: true)); 
 
             if (hasAttribute && !allowedEmailList.AllowedEmails.Contains(currentUser.GetCurrentUserEmail()))
             {

@@ -10,28 +10,31 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpContextAccessor();
 
 builder.Services.Configure<AuthorizedEmails>(builder.Configuration.GetSection("Access"));
-builder.Services.AddSingleton(sp =>
-    sp.GetRequiredService<Microsoft.Extensions.Options.IOptions<AuthorizedEmails>>().Value);
+builder.Services.AddSingleton(s =>
+    s.GetRequiredService<Microsoft.Extensions.Options.IOptions<AuthorizedEmails>>().Value);
 builder.Services.AddScoped<CurrentUserFromCookie>();
-builder.Services.AddScoped<TaskService>();
 builder.Services.AddSingleton<ProxyGenerator>();
-
 builder.Services.AddScoped<TaskInterceptor>();
+
+builder.Services.AddScoped<ExceptionFilter>();
+
+builder.Services.AddScoped<TaskService>();
 
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<IUserService, UserService>();
-//builder.Services.AddScoped<ITaskService, TaskService>();
 
-builder.Services.AddScoped<ITaskService>(sp =>
+builder.Services.AddScoped<ITaskService>(s =>
 {
-    var generator = sp.GetRequiredService<ProxyGenerator>();
-    var target = sp.GetRequiredService<TaskService>();            
-    var interceptor = sp.GetRequiredService<TaskInterceptor>();        
+    var generator = s.GetRequiredService<ProxyGenerator>();
+    var target = s.GetRequiredService<TaskService>();            
+    var interceptor = s.GetRequiredService<TaskInterceptor>();        
 
     return generator.CreateInterfaceProxyWithTarget<ITaskService>(target, interceptor);
 
 });
+
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
