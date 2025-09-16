@@ -25,18 +25,24 @@ namespace TaskApplication.service
 
         public Task FindTaskById(Guid id)
         {
-            return TaskRepository.FindByIdOrThrow(id);
+            Task result = TaskRepository.FindById(id);
+            if (result == null)
+            {
+                throw new EntityNotFoundException($"Task with id {id} not found");
+            }
+
+            return result;
         }
 
         public void DeleteTask(Guid id)
         {
-            TaskRepository.FindByIdOrThrow(id);
+            FindTaskById(id);
             TaskRepository.Delete(id);
         }
 
         public Task UpdateTask(Guid id, Task taskToUpdate)
         {
-            TaskRepository.FindByIdOrThrow(id);
+            FindTaskById(id);
 
             return TaskRepository.Update(id, taskToUpdate);
         }

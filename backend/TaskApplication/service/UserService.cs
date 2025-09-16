@@ -31,17 +31,29 @@
 
         public User FindUserByEmail(string email)
         {
-            return UserRepository.FindUserByEmailOrThrow(email);
+            User? result =  UserRepository.FindUserByEmail(email);
+            if(result == null)
+            {
+                throw new EntityNotFoundException($"User with email {email} not found");
+            }
+
+            return result;
         }
 
         public User FindUserById(Guid id)
         {
-            return UserRepository.FindByIdOrThrow(id);
+            User? result = UserRepository.FindById(id);
+            if (result == null)
+            {
+                throw new EntityNotFoundException($"User with id {id} not found");
+            }
+
+            return result;
         }
 
         public void DeleteUser(Guid id)
         {
-            var res = UserRepository.FindByIdOrThrow(id);
+            FindUserById(id);
             UserRepository.Delete(id);
         }
 
@@ -49,7 +61,7 @@
         {
             ValidateUser(userToUpdate);
 
-            UserRepository.FindByIdOrThrow(id);
+            FindUserById(id);
 
             return UserRepository.Update(id, userToUpdate);
         }
