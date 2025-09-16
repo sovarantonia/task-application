@@ -1,4 +1,5 @@
 using Castle.DynamicProxy;
+using Microsoft.Extensions.Options;
 using TaskApplication.entity;
 using TaskApplication.filter_midw;
 using TaskApplication.repository;
@@ -11,10 +12,11 @@ builder.Services.AddHttpContextAccessor();
 
 builder.Services.Configure<AuthorizedEmails>(builder.Configuration.GetSection("Access"));
 builder.Services.AddSingleton(s =>
-    s.GetRequiredService<Microsoft.Extensions.Options.IOptions<AuthorizedEmails>>().Value);
+    s.GetRequiredService<IOptions<AuthorizedEmails>>().Value);
+
 builder.Services.AddScoped<CurrentUserFromCookie>();
 builder.Services.AddSingleton<ProxyGenerator>();
-builder.Services.AddScoped<TaskInterceptor>();
+builder.Services.AddScoped<TaskInterceptor<TaskAuthorizationAttribute>>();
 
 builder.Services.AddControllers(o => { o.Filters.Add<ExceptionFilter>(); });
 builder.Services.AddScoped<ExceptionFilter>();
@@ -29,7 +31,7 @@ builder.Services.AddScoped<ITaskService>(s =>
 {
     var generator = s.GetRequiredService<ProxyGenerator>();
     var target = s.GetRequiredService<TaskService>();            
-    var interceptor = s.GetRequiredService<TaskInterceptor>();        
+    var interceptor = s.GetRequiredService<TaskInterceptor<TaskAuthorizationAttribute>>();        
 
     return generator.CreateInterfaceProxyWithTarget<ITaskService>(target, interceptor);
 

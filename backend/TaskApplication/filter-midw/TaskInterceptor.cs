@@ -5,7 +5,7 @@ using TaskApplication.service;
 
 namespace TaskApplication.filter_midw
 {
-    public class TaskInterceptor : IInterceptor
+    public class TaskInterceptor<T> : IInterceptor
     {
         private CurrentUserFromCookie currentUser;
         private AuthorizedEmails allowedEmailList;
@@ -21,9 +21,9 @@ namespace TaskApplication.filter_midw
             var methodToCall = invocation.MethodInvocationTarget ?? invocation.Method;
 
             bool hasAttribute =
-         Attribute.IsDefined(methodToCall, typeof(TaskAuthorizationAttribute), inherit: true) ||
+         Attribute.IsDefined(methodToCall, typeof(T), inherit: true) ||
     (methodToCall.DeclaringType != null &&
-     Attribute.IsDefined(methodToCall.DeclaringType, typeof(TaskAuthorizationAttribute), inherit: true)); 
+     Attribute.IsDefined(methodToCall.DeclaringType, typeof(T), inherit: true)); 
 
             if (hasAttribute && !allowedEmailList.AllowedEmails.Contains(currentUser.GetCurrentUserEmail()))
             {
