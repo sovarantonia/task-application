@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { User } from '../entity/user';
 
 @Component({
   selector: 'user-form',
@@ -9,6 +10,8 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 })
 export class UserForm implements OnInit{
   userForm!: FormGroup;
+
+  @Output() public onFormSubmitted = new EventEmitter<User>();
 
   constructor(private formBuilder: FormBuilder) { }
   
@@ -22,8 +25,10 @@ export class UserForm implements OnInit{
 
   onSubmit() {
     if (this.userForm?.valid) {
-      console.log("Form data: ", this.userForm.value);
+      let user: User = this.userForm.value as User;
+      this.onFormSubmitted.emit(user);
     }
+    
   }
 
 }

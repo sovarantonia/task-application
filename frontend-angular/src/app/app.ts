@@ -76,6 +76,10 @@ export class App implements OnInit{
 
   onAddUserButtonClick ()  {
     this.isAddUserClicked = !this.isAddUserClicked;
-    console.log(`Is button clicked ${this.isAddUserClicked}`)
+  }
+
+  async saveUser(user: User) {
+    const res = await this.userService.saveUser(user);
+    console.log(res);
   }
 }

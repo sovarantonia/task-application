@@ -20,4 +20,8 @@ export class UserService {
     public getAllUsers() {
         return this.service.getAllItems(this.entityName);
     }
+
+    public saveUser(user: User) {
+        return this.service.save(this.entityName, user);
+    }
 }

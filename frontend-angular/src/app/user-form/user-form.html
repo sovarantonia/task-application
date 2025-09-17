@@ -1,6 +1,6 @@
 <div id="userForm">
     <form [formGroup]="userForm">
-        <div>
+        <div class="form-group">
             <label for="name">Name</label>
             <input id="name" formControlName="name">
             @if (userForm.get('name')?.invalid && userForm.get('name')?.touched) {
@@ -8,7 +8,7 @@
             }
         </div>
 
-        <div>
+        <div class="form-group">
             <label for="email">Email</label>
             <input id="email" formControlName="email">
             @if (userForm.get('email')?.invalid && userForm.get('email')?.touched) {
@@ -16,7 +16,7 @@
             }
         </div>
 
-        <div>
+        <div class="form-group">
             <label for="department">Department</label>
             <input id="department" formControlName="department">
         </div>

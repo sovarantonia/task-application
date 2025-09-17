@@ -44,4 +44,8 @@ export class ApiService<T> {
     public getAllItems(entityName: string) {
         return firstValueFrom(this.http.get<T[]>(`${this.baseUrl}/${entityName}`));
     }
+
+    public save(entityName: string, body: any) {
+        return firstValueFrom(this.http.post<T>(`${this.baseUrl}/${entityName}`, body));
+    }
 }

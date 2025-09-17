@@ -24,7 +24,7 @@
     <div class="right-side">
       <div><button (click)="onAddUserButtonClick()">Add user</button></div>
       @if (isAddUserClicked) {
-        <user-form> </user-form>
+        <user-form (onFormSubmitted)="saveUser($event)"> </user-form>
       }
       <user-render [paginatedUsers]="paginatedUsers"></user-render>
       <items-pagination [paginationFunction]="userPaginationFunction"
