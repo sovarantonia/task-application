@@ -22,6 +22,10 @@
     <div class="divider" role="separator" aria-label="Divider"></div>
 
     <div class="right-side">
+      <div><button (click)="onAddUserButtonClick()">Add user</button></div>
+      @if (isAddUserClicked) {
+        <user-form> </user-form>
+      }
       <user-render [paginatedUsers]="paginatedUsers"></user-render>
       <items-pagination [paginationFunction]="userPaginationFunction"
         (onPaginationResponse)="paginatedUsers = $event"></items-pagination>

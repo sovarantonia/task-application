@@ -13,10 +13,11 @@ import { makeAutoObservable, observable, runInAction } from 'mobx';
 import { SelectOptionList } from './entity/select-option-list';
 import { SelectOptionValueText } from './entity/select-option-value-text';
 import { SortColumn } from './entity/sort-column';
+import { UserForm } from './user-form/user-form';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ItemsPagination, TaskRender, UserRender],
+  imports: [RouterOutlet, ItemsPagination, TaskRender, UserRender, UserForm],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -33,6 +34,8 @@ export class App implements OnInit{
 
   @observable public selectOptionList: SelectOptionList[] = [];
   public sortColumns: SortColumn[] = [{ label: "title", foreignKey: "title" }, { label: "date", foreignKey: "creationDate" }];
+
+  public isAddUserClicked: boolean = false;
 
   constructor(public taskService: TaskService, public userService: UserService, public statusService: StatusService) {
     this.taskPaginationFunction = (paginationDetails: RawPaginationDetails) => taskService.getPaginatedTasks(paginationDetails);
@@ -69,5 +72,10 @@ export class App implements OnInit{
       });
       this.selectOptionList.push(selectOption);
     })
+  }
+
+  onAddUserButtonClick ()  {
+    this.isAddUserClicked = !this.isAddUserClicked;
+    console.log(`Is button clicked ${this.isAddUserClicked}`)
   }
 }

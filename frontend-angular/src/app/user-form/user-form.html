@@ -1,0 +1,25 @@
+<div id="userForm">
+    <form [formGroup]="userForm">
+        <div>
+            <label for="name">Name</label>
+            <input id="name" formControlName="name">
+            @if (userForm.get('name')?.invalid && userForm.get('name')?.touched) {
+            <p>Name is required</p>
+            }
+        </div>
+
+        <div>
+            <label for="email">Email</label>
+            <input id="email" formControlName="email">
+            @if (userForm.get('email')?.invalid && userForm.get('email')?.touched) {
+            <p>Enter a valid email</p>
+            }
+        </div>
+
+        <div>
+            <label for="department">Department</label>
+            <input id="department" formControlName="department">
+        </div>
+        <button type="submit" [disabled]="userForm.invalid" (click)="onSubmit()">Submit</button>
+    </form>
+</div>
