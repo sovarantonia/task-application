@@ -20,6 +20,6 @@
             <label for="department">Department</label>
             <input id="department" formControlName="department">
         </div>
-        <button type="submit" [disabled]="userForm.invalid" (click)="onSubmit()">Submit</button>
+        <button type="submit" [disabled]="userForm.invalid" (click)="onSubmit($event)">Submit</button>
     </form>
 </div>

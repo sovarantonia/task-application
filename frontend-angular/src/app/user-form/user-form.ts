@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { User } from '../entity/user';
+import { EmailExistsValidator } from '../service/email-validator/email-exists-validator';
 
 @Component({
   selector: 'user-form',
@@ -10,6 +11,7 @@ import { User } from '../entity/user';
 })
 export class UserForm implements OnInit{
   userForm!: FormGroup;
+  private emailValidator!: EmailExistsValidator
 
   @Output() public onFormSubmitted = new EventEmitter<User>();
 
@@ -17,18 +19,18 @@ export class UserForm implements OnInit{
   
   ngOnInit(): void {
     this.userForm = this.formBuilder.group({
-      name: ['', Validators.required],
+      name: ['', [Validators.required], ],
       email: ['', [Validators.email, Validators.required]],
       department: ['']
-    })
+    }, )
   }
 
-  onSubmit() {
+  onSubmit(event: Event) {
+    event.preventDefault();
     if (this.userForm?.valid) {
       let user: User = this.userForm.value as User;
       this.onFormSubmitted.emit(user);
     }
-    
+    this.userForm.reset(); 
   }
-
 }
