@@ -18,7 +18,10 @@ namespace TaskApplication.config
 
         public static IServiceCollection AddTaskService(this IServiceCollection services)
         {
+            //List<Type> types = 
+            //services.AddSingleton<types>();
             services.AddSingleton<ProxyGenerator>();
+            services.AddSingleton<ValidateAttributeHook>();
             services.AddScoped<TaskInterceptor<TaskAuthorizationAttribute>>();
 
             services.AddScoped<TaskService>();
@@ -26,10 +29,11 @@ namespace TaskApplication.config
             services.AddScoped<ITaskService>(s =>
             {
                 var generator = s.GetRequiredService<ProxyGenerator>();
+                var option = new ProxyGenerationOptions (s.GetRequiredService<ValidateAttributeHook>());
                 var target = s.GetRequiredService<TaskService>();
                 var interceptor = s.GetRequiredService<TaskInterceptor<TaskAuthorizationAttribute>>();
 
-                return generator.CreateInterfaceProxyWithTarget<ITaskService>(target, interceptor);
+                return generator.CreateInterfaceProxyWithTarget<ITaskService>(target, options: option, interceptor);
 
             });
 
