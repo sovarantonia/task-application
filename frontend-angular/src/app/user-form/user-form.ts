@@ -9,20 +9,29 @@ import { EmailExistsValidator } from '../service/email-validator/email-exists-va
   templateUrl: './user-form.html',
   styleUrl: './user-form.css',
 })
-export class UserForm implements OnInit{
+export class UserForm implements OnInit {
   userForm!: FormGroup;
-  private emailValidator!: EmailExistsValidator
+  isEmailValid = false;
+  public isEmailExists = false;
 
   @Output() public onFormSubmitted = new EventEmitter<User>();
 
-  constructor(private formBuilder: FormBuilder) { }
-  
-  ngOnInit(): void {
+  constructor(private formBuilder: FormBuilder, private emailValidator: EmailExistsValidator) {
     this.userForm = this.formBuilder.group({
-      name: ['', [Validators.required], ],
-      email: ['', [Validators.email, Validators.required]],
+      name: ['', [Validators.required]],
+      email: ['', [Validators.email, Validators.required], [emailValidator.checkEmailExists()], 'blur'],
       department: ['']
-    }, )
+    })
+
+    this.userForm.get('email')?.statusChanges.subscribe((status) => {
+      if (status === 'VALID') {
+        this.isEmailExists = false;
+      } else this.isEmailExists = !!(status === 'INVALID' && this.userForm.get('email')?.errors?.['emailExists']);
+    });
+  }
+
+  ngOnInit(): void {
+
   }
 
   onSubmit(event: Event) {
@@ -31,6 +40,6 @@ export class UserForm implements OnInit{
       let user: User = this.userForm.value as User;
       this.onFormSubmitted.emit(user);
     }
-    this.userForm.reset(); 
+    this.userForm.reset();
   }
 }
