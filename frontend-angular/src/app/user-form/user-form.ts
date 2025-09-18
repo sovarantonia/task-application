@@ -11,22 +11,21 @@ import { EmailExistsValidator } from '../service/email-validator/email-exists-va
 })
 export class UserForm implements OnInit {
   userForm!: FormGroup;
-  isEmailValid = false;
-  public isEmailExists = false;
+  public emailExists = false;
 
   @Output() public onFormSubmitted = new EventEmitter<User>();
 
   constructor(private formBuilder: FormBuilder, private emailValidator: EmailExistsValidator) {
     this.userForm = this.formBuilder.group({
       name: ['', [Validators.required]],
-      email: ['', [Validators.email, Validators.required], [emailValidator.checkEmailExists()], 'blur'],
+      email: ['', [Validators.email, Validators.required], [this.emailValidator.checkEmailExists()], 'blur'],
       department: ['']
     })
 
     this.userForm.get('email')?.statusChanges.subscribe((status) => {
       if (status === 'VALID') {
-        this.isEmailExists = false;
-      } else this.isEmailExists = !!(status === 'INVALID' && this.userForm.get('email')?.errors?.['emailExists']);
+        this.emailExists = false;
+      } else this.emailExists = !!(status === 'INVALID' && this.userForm.get('email')?.errors?.['emailExists']);
     });
   }
 

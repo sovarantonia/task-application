@@ -14,7 +14,7 @@
             @if (userForm.get('email')?.invalid && userForm.get('email')?.touched) {
             <p>Enter a valid email</p>
             }
-            @else if (isEmailExists) {
+            @else if (emailExists) {
             <p>Email already exists</p>
             }
         </div>
