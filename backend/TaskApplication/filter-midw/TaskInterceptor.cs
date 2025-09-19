@@ -15,7 +15,6 @@ namespace TaskApplication.filter_midw
             this.currentUser = currentUser;
             this.allowedEmailList = allowedEmailList;
         }
-
         public void Intercept(IInvocation invocation)
         {
             if (!allowedEmailList.AllowedEmails.Contains(currentUser.GetCurrentUserEmail()))
