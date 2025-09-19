@@ -8,28 +8,35 @@
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 
 <main class="main">
+
+
   <h1>Hello, {{ title() }}</h1>
   <p>Congratulations! Your app is running. 🎉</p>
   <div class="content">
+    <div class="overlay" [class.hidden]="!isModalVisible"> </div>
 
-    <div class="left-side">
-      <items-pagination [paginationFunction]="taskPaginationFunction" (onPaginationResponse)="paginatedTasks = $event"
-        [sortColumns]="sortColumns" [selectOptionList]="selectOptionList">
-      </items-pagination>
-      <task-render [paginatedTasks]="paginatedTasks" [userMap]="userMap" [statusMap]="statusMap"></task-render>
-    </div>
+      <div class="left-side">
+        <items-pagination [paginationFunction]="taskPaginationFunction" (onPaginationResponse)="paginatedTasks = $event"
+          [sortColumns]="sortColumns" [selectOptionList]="selectOptionList">
+        </items-pagination>
+        <task-render [paginatedTasks]="paginatedTasks" [userMap]="userMap" [statusMap]="statusMap"></task-render>
+      </div>
 
-    <div class="divider" role="separator" aria-label="Divider"></div>
+      <div class="divider" role="separator" aria-label="Divider"></div>
 
-    <div class="right-side">
-      <div><button (click)="onAddUserButtonClick()">Add user</button></div>
-      @if (isAddUserClicked) {
-        <user-form (onFormSubmitted)="saveUser($event)"> </user-form>
-      }
-      <user-render [paginatedUsers]="paginatedUsers"></user-render>
-      <items-pagination [paginationFunction]="userPaginationFunction"
-        (onPaginationResponse)="paginatedUsers = $event"></items-pagination>
-    </div>
+      <div class="right-side">
+        <div><button (click)="isModalVisible = true">Add user</button></div>
+
+        <modal [(open)]="isModalVisible">
+          <h2>Add User</h2>
+          <user-form (onFormSubmitted)="saveUser($event)"> </user-form>
+        </modal>
+
+        <user-render [paginatedUsers]="paginatedUsers"></user-render>
+        <items-pagination [paginationFunction]="userPaginationFunction"
+          (onPaginationResponse)="paginatedUsers = $event"></items-pagination>
+      </div>
+
 
   </div>
 </main>

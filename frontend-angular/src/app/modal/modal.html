@@ -1,0 +1,17 @@
+@if (open) {
+<div class="modal">
+    <div class="header">
+        <ng-content></ng-content>
+        <button (click)="closeModal()" class="closeModalBtn">&#x2716;</button>
+    </div>
+
+    <div class="modalBody">
+        <ng-content></ng-content>
+    </div>
+
+    <div class="footer">
+        <ng-content></ng-content>
+    </div>
+</div>
+}
+

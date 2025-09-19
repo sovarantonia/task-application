@@ -14,10 +14,11 @@ import { SelectOptionList } from './entity/select-option-list';
 import { SelectOptionValueText } from './entity/select-option-value-text';
 import { SortColumn } from './entity/sort-column';
 import { UserForm } from './user-form/user-form';
+import { Modal } from "./modal/modal";
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, ItemsPagination, TaskRender, UserRender, UserForm],
+  imports: [RouterOutlet, ItemsPagination, TaskRender, UserRender, UserForm, Modal],
   templateUrl: './app.html',
   styleUrl: './app.css'
 })
@@ -35,7 +36,7 @@ export class App implements OnInit{
   @observable public selectOptionList: SelectOptionList[] = [];
   public sortColumns: SortColumn[] = [{ label: "title", foreignKey: "title" }, { label: "date", foreignKey: "creationDate" }];
 
-  public isAddUserClicked: boolean = false;
+  public isModalVisible: boolean = false;
 
   constructor(public taskService: TaskService, public userService: UserService, public statusService: StatusService) {
     this.taskPaginationFunction = (paginationDetails: RawPaginationDetails) => taskService.getPaginatedTasks(paginationDetails);
@@ -74,12 +75,10 @@ export class App implements OnInit{
     })
   }
 
-  onAddUserButtonClick ()  {
-    this.isAddUserClicked = !this.isAddUserClicked;
-  }
 
   async saveUser(user: User) {
     const res = await this.userService.saveUser(user);
     console.log(res);
+    this.isModalVisible = false;
   }
 }

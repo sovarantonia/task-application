@@ -1,0 +1,42 @@
+.hidden {
+  display: none;
+}
+
+.modal {
+  flex-direction: column;
+  justify-content: center;
+  flex-wrap: wrap;
+  width: 450px;
+  padding: 10px 30px;
+  max-width: 90vw;
+  max-height: 90vh;
+  position: fixed;
+  z-index: 2;
+  background-color: light-dark(white, #696462);
+  border: 1px solid #ddd;
+  border-radius: 15px;
+  margin: 20px auto;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  overflow: auto;
+}
+
+
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.closeModalBtn {
+  font-size: 30px;
+  border: none;
+  background-color: transparent;
+  color: rgb(170, 54, 54);
+  transition-duration: 0.2s;
+}
+
+.closeModalBtn:hover {
+  color: rgb(202, 32, 32);
+  background-color: transparent;
+}
