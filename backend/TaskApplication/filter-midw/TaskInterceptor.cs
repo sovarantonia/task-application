@@ -5,7 +5,7 @@ using TaskApplication.service;
 
 namespace TaskApplication.filter_midw
 {
-    public class TaskInterceptor<T> : IInterceptor
+    public class TaskInterceptor : IInterceptor
     {
         private CurrentUserFromCookie currentUser;
         private AuthorizedEmails allowedEmailList;

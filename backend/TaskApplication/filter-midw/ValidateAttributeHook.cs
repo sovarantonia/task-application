@@ -5,12 +5,12 @@ namespace TaskApplication.filter_midw
 {
     public class ValidateAttributeHook : IProxyGenerationHook
     {
-        private List<Type> attributeTypes = new List<Type> { typeof(TaskAuthorizationAttribute) };
+        private List<Type> attributeTypes;
 
-        //public ValidateAttributeHook(List<Type> types)
-        //{
-        //    attributeTypes = types;
-        //}
+        public ValidateAttributeHook(List<Type> types)
+        {
+            attributeTypes = types;
+        }
         public void MethodsInspected()
         {
         }
