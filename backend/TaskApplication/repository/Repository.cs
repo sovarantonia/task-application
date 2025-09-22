@@ -314,14 +314,14 @@
             foreach (var item in filters)
             {
                 string condition = "";
-                switch (item.Operator)
+                switch (item.FilterOption.Operator)
                 {
                     case Operator.Equal:
                         {
-                            condition = item.Negate ? "1=1" : "1=0";
+                            condition = item.FilterOption.IsNegated ? "1=1" : "1=0";
                             foreach (var value in item.Values)
                             {
-                                condition += item.Negate ?
+                                condition += item.FilterOption.IsNegated ?
                                     $" and {item.Property} != {value} " : 
                                     $" or {item.Property} = {value} ";
                             }
@@ -330,7 +330,41 @@
 
                     case Operator.Between:
                         {
-                            condition += $" {item.Property} between {item.Values[0]} and {item.Values[1]} ";
+                            condition = $" {item.Property}";
+                            if (item.FilterOption.IsNegated)
+                            {
+                                condition += " not ";
+                            }
+                            condition += $" between {item.Values[0]} and {item.Values[1]} ";
+                            
+                            break;
+                        }
+
+                    case Operator.GreaterThan:
+                        {
+                            condition = item.FilterOption.IsNegated ? 
+                                $"{item.Property} >= {item.Values[0]}":
+                                $"{item.Property} < {item.Values[0]}";
+
+                            break;
+                        }
+
+                    case Operator.LessThan:
+                        {
+                            condition = item.FilterOption.IsNegated ?
+                                $"{item.Property} <= {item.Values[0]}" :
+                                $"{item.Property} > {item.Values[0]}";
+
+                            break;
+                        }
+
+                    case Operator.Contains:
+                        {
+                            condition = $" {item.Property} ";
+                            condition += item.FilterOption.IsNegated ?
+                                $" LIKE %{item.Values[0]}%" :
+                                $" NOT LIKE %{item.Values[0]}%";
+
                             break;
                         }
                 }
