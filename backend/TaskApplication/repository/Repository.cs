@@ -4,6 +4,7 @@
     using MySqlConnector;
     using System.Reflection;
     using System.Text.Json;
+    using TaskApplication.entity;
     using TaskApplication.entity.exceptions;
 
     public class Repository<T> : IRepository<T> where T : class
@@ -238,7 +239,7 @@
             return entity;
         }
 
-        public List<T> GetPaginatedItems(int currentPageNo, int itemsPerPage, Dictionary<string, int> sortCriteria, Dictionary<string, string> filterCriteria)
+        public List<T> GetPaginatedItems(int currentPageNo, int itemsPerPage, Dictionary<string, int> sortCriteria, List<FilterCriteriaDto> filterCriteria)
         {
             List<T> items = new List<T>();
 
@@ -277,26 +278,10 @@
                 command.Parameters.Add("sortDirections", MySqlDbType.JSON).Value = DBNull.Value;
             }
 
-            if (filterCriteria.Count > 0)
-            {
-                foreach (var criterion in filterCriteria)
-                {
-                    filterColumns.Add(criterion.Key);
-                    filterColumnValues.Add(criterion.Value);
-                }
+            command.Parameters.Add("filterColumns", MySqlDbType.JSON).Value = DBNull.Value;
+            command.Parameters.Add("filterColumnValues", MySqlDbType.JSON).Value = DBNull.Value;
 
-                var jsonFilterColumns = JsonSerializer.Serialize(filterColumns);
-                var jsonFilterColumnValues = JsonSerializer.Serialize(filterColumnValues);
-
-                command.Parameters.Add("filterColumns", MySqlDbType.JSON).Value = jsonFilterColumns;
-                command.Parameters.Add("filterColumnValues", MySqlDbType.JSON).Value = jsonFilterColumnValues;
-            }
-
-            else
-            {
-                command.Parameters.Add("filterColumns", MySqlDbType.JSON).Value = DBNull.Value;
-                command.Parameters.Add("filterColumnValues", MySqlDbType.JSON).Value = DBNull.Value;
-            }
+            command.Parameters.Add("whereClause", MySqlDbType.Text).Value = BuildWhereFilterCriteria(filterCriteria);
 
             try
             {
@@ -321,6 +306,38 @@
             }
 
             return items;
+        }
+
+        public string BuildWhereFilterCriteria(List<FilterCriteriaDto> filters)
+        {
+            string where = " where 1=1 ";
+            foreach (var item in filters)
+            {
+                string condition = "";
+                switch (item.Operator)
+                {
+                    case Operator.Equal:
+                        {
+                            condition = item.Negate ? "1=1" : "1=0";
+                            foreach (var value in item.Values)
+                            {
+                                condition += item.Negate ?
+                                    $" and {item.Property} != {value} " : 
+                                    $" or {item.Property} = {value} ";
+                            }
+                            break;
+                        }
+
+                    case Operator.Between:
+                        {
+                            condition += $" {item.Property} between {item.Values[0]} and {item.Values[1]} ";
+                            break;
+                        }
+                }
+                where += $" AND ({condition})";
+            }
+
+            return where;
         }
 
         public long GetTotalItemsNo()
