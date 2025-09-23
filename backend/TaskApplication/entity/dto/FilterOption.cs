@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace TaskApplication.entity
+namespace TaskApplication.entity.dto
 {
     public class FilterOption
     {

@@ -3,8 +3,9 @@
     using Microsoft.Extensions.Configuration;
     using MySqlConnector;
     using System.Reflection;
+    using System.Reflection.Metadata.Ecma335;
     using System.Text.Json;
-    using TaskApplication.entity;
+    using TaskApplication.entity.dto;
     using TaskApplication.entity.exceptions;
 
     public class Repository<T> : IRepository<T> where T : class
@@ -239,7 +240,7 @@
             return entity;
         }
 
-        public List<T> GetPaginatedItems(int currentPageNo, int itemsPerPage, Dictionary<string, int> sortCriteria, List<FilterCriteriaDto> filterCriteria)
+        public List<T> GetPaginatedItems(int currentPageNo, int itemsPerPage, Dictionary<string, int> sortCriteria, List<FilterGroupDto> filterGroup)
         {
             List<T> items = new List<T>();
 
@@ -281,7 +282,7 @@
             command.Parameters.Add("filterColumns", MySqlDbType.JSON).Value = DBNull.Value;
             command.Parameters.Add("filterColumnValues", MySqlDbType.JSON).Value = DBNull.Value;
 
-            command.Parameters.Add("whereClause", MySqlDbType.Text).Value = BuildWhereFilterCriteria(filterCriteria);
+            command.Parameters.Add("whereClause", MySqlDbType.Text).Value = BuildWhereFilterCriteria(filterGroup);
 
             try
             {
@@ -308,87 +309,99 @@
             return items;
         }
 
-        public string BuildWhereFilterCriteria(List<FilterCriteriaDto> filters)
+        public string BuildFilterCriteriaUnit(FilterCriteriaDto filter)
         {
-            string where = " where 1=1 ";
-            foreach (var item in filters)
+            string condition = "";
+            switch (filter.FilterOption.Operator)
             {
-                string condition = "";
-                switch (item.FilterOption.Operator)
-                {
-                    case Operator.Equal:
+                case Operator.Equal:
+                    {
+                        condition = filter.FilterOption.IsNegated ? "1=1" : "1=0";
+                        foreach (var value in filter.Values)
                         {
-                            condition = item.FilterOption.IsNegated ? "1=1" : "1=0";
-                            foreach (var value in item.Values)
-                            {
-                                
-                                condition += item.FilterOption.IsNegated ?
-                                    $" and {item.Property} != {ToSqlLiteral(value)} " : 
-                                    $" or {item.Property} = {ToSqlLiteral(value)} ";
-                            }
 
-                            break;
+                            condition += filter.FilterOption.IsNegated ?
+                                $" and {filter.Property} != {ToSqlLiteral(value)} " :
+                                $" or {filter.Property} = {ToSqlLiteral(value)} ";
                         }
 
-                    case Operator.Between:
+                        break;
+                    }
+
+                case Operator.Between:
+                    {
+                        condition = $" {filter.Property}";
+                        if (filter.FilterOption.IsNegated)
                         {
-                            condition = $" {item.Property}";
-                            if (item.FilterOption.IsNegated)
-                            {
-                                condition += " not ";
-                            }
-                            condition += $" between {ToSqlLiteral(item.Values[0])} and {ToSqlLiteral(item.Values[1])} ";
-                            
-                            break;
+                            condition += " not ";
                         }
+                        condition += $" between {ToSqlLiteral(filter.Values[0])} and {ToSqlLiteral(filter.Values[1])} ";
 
-                    case Operator.GreaterThan:
-                        {
-                            condition = item.FilterOption.IsNegated ? 
-                                $"{item.Property} < {ToSqlLiteral(item.Values[0])}" :
-                                $"{item.Property} >= {ToSqlLiteral(item.Values[0])}";
+                        break;
+                    }
 
-                            break;
-                        }
+                case Operator.GreaterThan:
+                    {
+                        condition = filter.FilterOption.IsNegated ?
+                            $"{filter.Property} < {ToSqlLiteral(filter.Values[0])}" :
+                            $"{filter.Property} >= {ToSqlLiteral(filter.Values[0])}";
 
-                    case Operator.LessThan:
-                        {
-                            condition = item.FilterOption.IsNegated ?
-                                $"{item.Property} > {ToSqlLiteral(item.Values[0])}" :
-                                $"{item.Property} <= {ToSqlLiteral(item.Values[0])}";
+                        break;
+                    }
 
-                            break;
-                        }
+                case Operator.LessThan:
+                    {
+                        condition = filter.FilterOption.IsNegated ?
+                            $"{filter.Property} > {ToSqlLiteral(filter.Values[0])}" :
+                            $"{filter.Property} <= {ToSqlLiteral(filter.Values[0])}";
 
-                    case Operator.Contains:
-                        {
-                            condition = $" {item.Property} ";
-                            condition += item.FilterOption.IsNegated ?
-                                $" LIKE %{ToSqlLiteral(item.Values[0])}%" :
-                                $" NOT LIKE %{ToSqlLiteral(item.Values[0])}%";
+                        break;
+                    }
 
-                            break;
-                        }
-                }
-                where += $" AND ({condition})";
+                case Operator.Contains:
+                    {
+                        condition = $" {filter.Property} ";
+                        condition += filter.FilterOption.IsNegated ?
+                            $" LIKE {ToSqlLiteral($"%{filter.Values[0]}%")}" :
+                            $" NOT LIKE {ToSqlLiteral($"%{filter.Values[0]}%")}";
+
+                        break;
+                    }
             }
 
-            return where;
+            return $"({condition})";
         }
 
-        public string ToSqlLiteral(object? value)
+        public string BuildFilterCriteriaGroup(FilterGroupDto group)
         {
-            return value switch
+            string condition = group.LogicOperator.Equals(LogicOperator.And) ? " 1=1 " : " 1=0 ";
+            string conditionOperator = group.LogicOperator.Equals(LogicOperator.And) ? " AND " : " OR ";
+            foreach (var subGroup in group.Groups ?? new List<FilterGroupDto>())
             {
-                null => "NULL",
-                string s => $"'{s.Replace("'", "''")}'",
-                Guid g => $"'{g}'",
-                DateTime d => $"'{d:yyyy-MM-dd HH:mm:ss}'",
-                DateOnly d => $"'{d:yyyy-MM-dd}'",
-                int or long or short or byte => value.ToString()!,
-                double or float or decimal => Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture)!,
-                _ => $"'{value}'"
-            };
+                var sub = BuildFilterCriteriaGroup(subGroup);
+                condition += conditionOperator + $"({sub})";
+            }
+
+            foreach (var criterion in group.FilterCriteria)
+            {
+                condition += conditionOperator + BuildFilterCriteriaUnit(criterion);
+            }
+
+            return $"({condition})";
+        }
+
+        public string BuildWhereFilterCriteria(List<FilterGroupDto> groups)
+        {
+            string groupSqls = " where ";
+            foreach (var g in groups)
+            {
+                var expr = BuildFilterCriteriaGroup(g);
+                if (!string.IsNullOrWhiteSpace(expr))
+                    groupSqls += $"({expr})";
+            }
+
+            Console.WriteLine(groupSqls);
+            return groupSqls;
         }
 
         public long GetTotalItemsNo()
@@ -471,6 +484,19 @@
             }
 
             return item;
+        }
+        public string ToSqlLiteral(object? value)
+        {
+            return value switch
+            {
+                null => "NULL",
+                string s => $"'{s.Replace("'", "''")}'",
+                Guid g => $"'{g}'",
+                DateOnly d => $"'{d:yyyy-MM-dd}'",
+                int or long => value.ToString()!,
+                double or float or decimal => Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture)!,
+                _ => $"'{value}'"
+            };
         }
     }
 }

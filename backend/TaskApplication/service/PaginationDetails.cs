@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using TaskApplication.entity;
+using TaskApplication.entity.dto;
 
 namespace TaskApplication.service
 {
@@ -8,7 +9,7 @@ namespace TaskApplication.service
         public int CurrentPageNo { get; set; }
         public int ItemsPerPage { get; set; }
         public Dictionary<string, int> SortCriteria { get; set; } = new Dictionary<string, int>();
-        public List<FilterCriteriaDto> FilterCriteria { get; set; } = new List<FilterCriteriaDto>();
+        public List<FilterGroupDto> FilterGroup { get; set; } = new List<FilterGroupDto>();
 
         public void ExtractPaginationDetails(Dictionary<string, object> paginationDetails)
         {
@@ -21,8 +22,8 @@ namespace TaskApplication.service
             ItemsPerPage = ((JsonElement)paginationDetails["itemsPerPage"]).GetInt32();
             var sortText = JsonSerializer.Deserialize<List<SortCriteriaDto>>(
     ((JsonElement)paginationDetails["sortCriteria"]), jsonOptions);
-            FilterCriteria = JsonSerializer.Deserialize<List<FilterCriteriaDto>>(
-    ((JsonElement)paginationDetails["filterCriteria"]), jsonOptions);
+            FilterGroup = JsonSerializer.Deserialize<List<FilterGroupDto>>(
+    ((JsonElement)paginationDetails["filterGroup"]), jsonOptions);
 
 
             foreach (var item in sortText)

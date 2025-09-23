@@ -69,7 +69,7 @@
         public List<User> GetPaginatedUsers(Dictionary<string, object> paginationDetails)
         {
             PaginationDetails.ExtractPaginationDetails(paginationDetails);
-            return UserRepository.GetPaginatedItems(PaginationDetails.CurrentPageNo, PaginationDetails.ItemsPerPage, PaginationDetails.SortCriteria, PaginationDetails.FilterCriteria);
+            return UserRepository.GetPaginatedItems(PaginationDetails.CurrentPageNo, PaginationDetails.ItemsPerPage, PaginationDetails.SortCriteria, PaginationDetails.FilterGroup);
         }
 
         public long GetTotalUsersNo()

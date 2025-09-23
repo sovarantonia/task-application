@@ -1,4 +1,4 @@
-﻿namespace TaskApplication.entity
+﻿namespace TaskApplication.entity.dto
 {
     public enum Operator
     {

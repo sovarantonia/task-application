@@ -50,7 +50,7 @@ namespace TaskApplication.service
         public List<Task> GetPaginatedTasks(Dictionary<string, object> paginationDetails)
         {
             PaginationDetails.ExtractPaginationDetails(paginationDetails);
-            return TaskRepository.GetPaginatedItems(PaginationDetails.CurrentPageNo, PaginationDetails.ItemsPerPage, PaginationDetails.SortCriteria, PaginationDetails.FilterCriteria);
+            return TaskRepository.GetPaginatedItems(PaginationDetails.CurrentPageNo, PaginationDetails.ItemsPerPage, PaginationDetails.SortCriteria, PaginationDetails.FilterGroup);
         }
 
         public long GetTotalTasksNo()
