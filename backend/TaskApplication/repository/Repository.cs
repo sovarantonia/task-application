@@ -362,8 +362,8 @@
                     {
                         condition = $" {filter.Property} ";
                         condition += filter.FilterOption.IsNegated ?
-                            $" LIKE {ToSqlLiteral($"%{filter.Values[0]}%")}" :
-                            $" NOT LIKE {ToSqlLiteral($"%{filter.Values[0]}%")}";
+                            $" NOT LIKE {ToSqlLiteral($"%{filter.Values[0]}%")}" :
+                            $" LIKE {ToSqlLiteral($"%{filter.Values[0]}%")}";
 
                         break;
                     }
@@ -376,10 +376,13 @@
         {
             string condition = group.LogicOperator.Equals(LogicOperator.And) ? " 1=1 " : " 1=0 ";
             string conditionOperator = group.LogicOperator.Equals(LogicOperator.And) ? " AND " : " OR ";
-            foreach (var subGroup in group.Groups ?? new List<FilterGroupDto>())
+            if (group.Groups != null)
             {
-                var sub = BuildFilterCriteriaGroup(subGroup);
-                condition += conditionOperator + $"({sub})";
+                foreach (var subGroup in group.Groups)
+                {
+                    var sub = BuildFilterCriteriaGroup(subGroup);
+                    condition += conditionOperator + $"({sub})";
+                }
             }
 
             foreach (var criterion in group.FilterCriteria)
@@ -392,16 +395,20 @@
 
         public string BuildWhereFilterCriteria(List<FilterGroupDto> groups)
         {
-            string groupSqls = " where ";
+            string groupSql = " where ";
+            if (groups.Count == 0)
+            {
+                return string.Empty;
+            }
+
             foreach (var g in groups)
             {
                 var expr = BuildFilterCriteriaGroup(g);
-                if (!string.IsNullOrWhiteSpace(expr))
-                    groupSqls += $"({expr})";
+                groupSql += $"({expr})";
             }
 
-            Console.WriteLine(groupSqls);
-            return groupSqls;
+            Console.WriteLine(groupSql);
+            return groupSql;
         }
 
         public long GetTotalItemsNo()
