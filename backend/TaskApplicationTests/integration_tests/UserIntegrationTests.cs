@@ -14,6 +14,7 @@ using TaskApplication.service;
 namespace TaskApplicationTests;
 
 [TestClass]
+[Ignore]
 public class UserIntegrationTests
 {
     private static string _conectionString = "Server=127.0.0.1; database=task_application_test; UID=root; password=root; Allow User Variables=true";

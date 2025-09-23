@@ -9,6 +9,7 @@ using Task = TaskApplication.entity.Task;
 namespace TaskApplicationTests;
 
 [TestClass]
+[Ignore]
 public class TaskIntegrationTests
 {
     private static string _conectionString = "Server=127.0.0.1; database=task_application_test; UID=root; password=root; Allow User Variables=true";

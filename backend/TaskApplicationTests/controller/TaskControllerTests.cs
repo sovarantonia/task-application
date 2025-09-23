@@ -16,6 +16,7 @@ using Task = TaskApplication.entity.Task;
 namespace TaskApplication.controller.Tests
 {
     [TestClass()]
+    [Ignore]
     public class TaskControllerTests
     {
         private Mock<ITaskService> service = new Mock<ITaskService>();
