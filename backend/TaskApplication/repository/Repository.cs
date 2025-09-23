@@ -321,10 +321,12 @@
                             condition = item.FilterOption.IsNegated ? "1=1" : "1=0";
                             foreach (var value in item.Values)
                             {
+                                
                                 condition += item.FilterOption.IsNegated ?
-                                    $" and {item.Property} != {value} " : 
-                                    $" or {item.Property} = {value} ";
+                                    $" and {item.Property} != {ToSqlLiteral(value)} " : 
+                                    $" or {item.Property} = {ToSqlLiteral(value)} ";
                             }
+
                             break;
                         }
 
@@ -335,7 +337,7 @@
                             {
                                 condition += " not ";
                             }
-                            condition += $" between {item.Values[0]} and {item.Values[1]} ";
+                            condition += $" between {ToSqlLiteral(item.Values[0])} and {ToSqlLiteral(item.Values[1])} ";
                             
                             break;
                         }
@@ -343,8 +345,8 @@
                     case Operator.GreaterThan:
                         {
                             condition = item.FilterOption.IsNegated ? 
-                                $"{item.Property} >= {item.Values[0]}":
-                                $"{item.Property} < {item.Values[0]}";
+                                $"{item.Property} < {ToSqlLiteral(item.Values[0])}" :
+                                $"{item.Property} >= {ToSqlLiteral(item.Values[0])}";
 
                             break;
                         }
@@ -352,8 +354,8 @@
                     case Operator.LessThan:
                         {
                             condition = item.FilterOption.IsNegated ?
-                                $"{item.Property} <= {item.Values[0]}" :
-                                $"{item.Property} > {item.Values[0]}";
+                                $"{item.Property} > {ToSqlLiteral(item.Values[0])}" :
+                                $"{item.Property} <= {ToSqlLiteral(item.Values[0])}";
 
                             break;
                         }
@@ -362,8 +364,8 @@
                         {
                             condition = $" {item.Property} ";
                             condition += item.FilterOption.IsNegated ?
-                                $" LIKE %{item.Values[0]}%" :
-                                $" NOT LIKE %{item.Values[0]}%";
+                                $" LIKE %{ToSqlLiteral(item.Values[0])}%" :
+                                $" NOT LIKE %{ToSqlLiteral(item.Values[0])}%";
 
                             break;
                         }
@@ -372,6 +374,21 @@
             }
 
             return where;
+        }
+
+        public string ToSqlLiteral(object? value)
+        {
+            return value switch
+            {
+                null => "NULL",
+                string s => $"'{s.Replace("'", "''")}'",
+                Guid g => $"'{g}'",
+                DateTime d => $"'{d:yyyy-MM-dd HH:mm:ss}'",
+                DateOnly d => $"'{d:yyyy-MM-dd}'",
+                int or long or short or byte => value.ToString()!,
+                double or float or decimal => Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture)!,
+                _ => $"'{value}'"
+            };
         }
 
         public long GetTotalItemsNo()

@@ -14,5 +14,6 @@ namespace TaskApplication.repository
         public T? SetItemProperties(MySqlConnector.MySqlDataReader reader);
         public T FindByIdOrThrow(Guid id);
         public string BuildWhereFilterCriteria(List<FilterCriteriaDto> filters);
+        public string ToSqlLiteral(object? value);
     }
 }
