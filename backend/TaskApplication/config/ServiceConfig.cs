@@ -1,4 +1,5 @@
 ﻿using Castle.DynamicProxy;
+using TaskApplication.entity;
 using TaskApplication.filter_midw;
 using TaskApplication.repository;
 using TaskApplication.service;
@@ -19,6 +20,8 @@ namespace TaskApplication.config
         public static IServiceCollection AddTaskService(this IServiceCollection services)
         {
             services.AddSingleton(new List<Type> { typeof(TaskAuthorizationAttribute) });
+
+            services.AddScoped<ICurrentUser, CurrentUserFromCookie>();
 
             services.AddSingleton<ProxyGenerator>();
             

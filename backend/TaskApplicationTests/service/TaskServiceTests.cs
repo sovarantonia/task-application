@@ -1,6 +1,10 @@
-﻿using Moq;
+﻿using Castle.DynamicProxy;
+using Moq;
 using System.Text.Json;
+using TaskApplication.entity;
 using TaskApplication.entity.dto;
+using TaskApplication.entity.exceptions;
+using TaskApplication.filter_midw;
 using TaskApplication.repository;
 
 using Task = TaskApplication.entity.Task;
@@ -8,19 +12,34 @@ using Task = TaskApplication.entity.Task;
 namespace TaskApplication.service.Tests
 {
     [TestClass()]
-    [Ignore]
     public class TaskServiceTests
     {
         private Mock<ITaskRepository> repository = new Mock<ITaskRepository>();
+        private Mock<ICurrentUser> currentUser = new Mock<ICurrentUser>();
         private ITaskService service;
+        private AuthorizedEmails authorizedEmails = new AuthorizedEmails() { AllowedEmails = new List<string>() { "admin@admin.com" } };
 
-        public TaskServiceTests()
+        private static ITaskService BuildTaskServiceProxy(ITaskRepository repo,
+    AuthorizedEmails allowedEmails, ICurrentUser current)
         {
-            service = new TaskService(repository.Object);
+            var generator = new ProxyGenerator();
+            var target = new TaskService(repo);
+            var interceptor = new TaskInterceptor(current, allowedEmails);
+            var option = new ProxyGenerationOptions(new ValidateAttributeHook(new List<Type>() { typeof(TaskAuthorizationAttribute)}));
+
+            return generator.CreateInterfaceProxyWithTarget<ITaskService>(target, option, interceptor);
         }
 
+        [TestInitialize]
+        public void Setup()
+        {
+            currentUser.Setup(c => c.GetCurrentUserEmail()).Returns("admin@admin.com");
+            service = BuildTaskServiceProxy(repository.Object, authorizedEmails, currentUser.Object);
+        }
+
+
         [TestMethod()]
-        public void SaveTest()
+        public void SaveTaskTest_AuthorizedCurrentUser()
         {
             Guid userId = Guid.NewGuid();
             int statusId = 2;
@@ -31,6 +50,8 @@ namespace TaskApplication.service.Tests
                 .Returns(savedTask);
 
             Task result = service.Save(taskToSave);
+            
+            repository.Verify(repo => repo.Save(It.IsAny<Task>()), Times.Once());
             Assert.IsNotNull(result);
             Assert.AreEqual(savedTask.Id, result.Id);
             Assert.AreEqual(savedTask.Title, result.Title);
@@ -39,28 +60,48 @@ namespace TaskApplication.service.Tests
             Assert.AreEqual(savedTask.StatusId, result.StatusId);
         }
 
-        [TestMethod()]
-        public void FindTaskByIdTest()
+        [TestMethod]
+        public void SaveTaskTest_CurrentUserNotAuthorized()
         {
-            Guid id = Guid.NewGuid();
-            Task foundTask = new Task { Id = id, Title = "Title" };
-            repository.SetupSequence(repo => repo.FindById(It.IsAny<Guid>()))
-                .Returns(foundTask)
-                .Returns((Task?)null);
+            currentUser.Setup(c => c.GetCurrentUserEmail()).Returns("user@example.com");
+            service = BuildTaskServiceProxy(repository.Object, authorizedEmails, currentUser.Object);
 
-            Task foundResult = service.FindTaskById(id);
-            Task notFoundTask = service.FindTaskById(Guid.NewGuid());
-
-            Assert.IsNotNull(foundResult);
-            Assert.AreEqual(foundTask.Id, foundResult.Id);
-            Assert.AreEqual(foundTask.Title, foundResult.Title);
-            Assert.IsNull(notFoundTask);
+            var exception = Assert.ThrowsException<UserNotAuthorizedException>(() => service.Save(new Task()));
+            Assert.AreEqual("User not authorized for this function", exception.Message);
         }
 
         [TestMethod()]
-        public void DeleteTaskTest()
+        public void FindTaskByIdTest_ValidTask()
         {
             Guid id = Guid.NewGuid();
+            Task foundTask = new Task { Id = id, Title = "Title" };
+            repository.Setup(repo => repo.FindById(It.IsAny<Guid>()))
+                .Returns(foundTask);
+
+            Task foundResult = service.FindTaskById(id); 
+
+            Assert.IsNotNull(foundResult);
+            Assert.AreEqual(foundTask.Id, foundResult.Id);
+            Assert.AreEqual(foundTask.Title, foundResult.Title);     
+        }
+
+        [TestMethod]
+        public void FindTaskById_ThrowsException()
+        {
+            Guid id = Guid.NewGuid();
+            repository.Setup(repo => repo.FindById(It.IsAny<Guid>()))
+                 .Returns((Task?)null);
+
+            var exception = Assert.ThrowsException<EntityNotFoundException>(() => service.FindTaskById(id));
+            Assert.AreEqual($"Task with id {id} not found", exception.Message);
+        }
+
+        [TestMethod()]
+        public void DeleteTaskTest_ValidTask()
+        {
+            Guid id = Guid.NewGuid();
+            repository.Setup(repo => repo.FindById(It.IsAny<Guid>()))
+                .Returns(new Task() { Id = id });
             repository.Setup(repo => repo.Delete(It.IsAny<Guid>()))
                 .Verifiable();
 
@@ -69,8 +110,19 @@ namespace TaskApplication.service.Tests
             repository.Verify(repo => repo.Delete(It.IsAny<Guid>()), Times.Once());
         }
 
+        [TestMethod]
+        public void DeleteTaskTest_ThrowsException()
+        {
+            Guid id = Guid.NewGuid();
+            repository.Setup(repo => repo.FindById(It.IsAny<Guid>()))
+                .Returns((Task?)null);
+
+            var exception = Assert.ThrowsException<EntityNotFoundException>(() => service.DeleteTask(id));
+            Assert.AreEqual($"Task with id {id} not found", exception.Message);
+        }
+
         [TestMethod()]
-        public void UpdateTaskTest()
+        public void UpdateTaskTest_ValidTask()
         {
             Guid id = Guid.NewGuid();
             Task initialTask = new Task { Id = id, Title = "Title", CreationDate = DateOnly.Parse("2025-09-01"), StatusId = 2 };
@@ -86,6 +138,17 @@ namespace TaskApplication.service.Tests
             Assert.IsNotNull(result);
             Assert.AreEqual(updatedTask.Title, result.Title);
             Assert.AreEqual(updatedTask.StatusId, result.StatusId);
+        }
+
+        [TestMethod]
+        public void UpdateTaskTest_ThrowsException()
+        {
+            Guid id = Guid.NewGuid();
+            repository.Setup(repo => repo.FindById(It.IsAny<Guid>()))
+                .Returns((Task?)null);
+
+            var exception = Assert.ThrowsException<EntityNotFoundException>(() => service.UpdateTask(id, new Task()));
+            Assert.AreEqual($"Task with id {id} not found", exception.Message);
         }
 
         [TestMethod()]

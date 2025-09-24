@@ -1,16 +1,15 @@
 ﻿using Castle.DynamicProxy;
 using TaskApplication.entity;
 using TaskApplication.entity.exceptions;
-using TaskApplication.service;
 
 namespace TaskApplication.filter_midw
 {
     public class TaskInterceptor : IInterceptor
     {
-        private CurrentUserFromCookie currentUser;
+        private ICurrentUser currentUser;
         private AuthorizedEmails allowedEmailList;
 
-        public TaskInterceptor(CurrentUserFromCookie currentUser, AuthorizedEmails allowedEmailList)
+        public TaskInterceptor(ICurrentUser currentUser, AuthorizedEmails allowedEmailList)
         {
             this.currentUser = currentUser;
             this.allowedEmailList = allowedEmailList;

@@ -1,6 +1,6 @@
 ﻿namespace TaskApplication.entity
 {
-    public class CurrentUserFromCookie
+    public class CurrentUserFromCookie : ICurrentUser
     {
         private readonly IHttpContextAccessor httpContext;
         public CurrentUserFromCookie(IHttpContextAccessor accessor)
