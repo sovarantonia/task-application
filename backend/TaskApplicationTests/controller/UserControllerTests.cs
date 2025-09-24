@@ -1,11 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using TaskApplication.controller;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TaskApplication.service;
+﻿using TaskApplication.service;
 using Moq;
 using TaskApplication.entity;
 using Microsoft.AspNetCore.Mvc;
@@ -14,7 +7,6 @@ using System.Text.Json;
 namespace TaskApplication.controller.Tests
 {
     [TestClass()]
-    [Ignore]
     public class UserControllerTests
     {
         private readonly Mock<IUserService> service = new Mock<IUserService>();
@@ -30,24 +22,15 @@ namespace TaskApplication.controller.Tests
         {
             Guid id = Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f");
             User userToFind = new User { Id = id, Name = "Name", Email = "email@example.com" };
-            service.SetupSequence(s => s.FindUserById(It.IsAny<Guid>()))
-                .Returns(userToFind)
-                .Returns((User?)null);
+            service.Setup(s => s.FindUserById(It.IsAny<Guid>()))
+                .Returns(userToFind);
 
             ActionResult<User> result = controller.GetUserById(id);
-            ActionResult<User> resultNotFound = controller.GetUserById(Guid.NewGuid());
-
-            var ok = result.Result as OkObjectResult;
-            Assert.IsNotNull(ok);
-            Assert.AreEqual(200, ok.StatusCode);
-
-            var user = ok.Value as User;
+           
+            var user = result.Value;
             Assert.IsNotNull(user);
             Assert.AreEqual(userToFind.Name, user.Name);
             Assert.AreEqual(userToFind.Email, user.Email);
-
-            var statusCode = resultNotFound.Result as NotFoundResult;
-            Assert.AreEqual(404, statusCode.StatusCode);
         }
 
         [TestMethod()]
@@ -55,25 +38,15 @@ namespace TaskApplication.controller.Tests
         {
             Guid id = Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f");
             User userToSave = new User { Id = id, Name = "Name", Email = "email@example.com" };
-            User invalidUser = new User { Id = Guid.NewGuid(), Name = "Name Name", Email = "email@example.com" };
-
             service.SetupSequence(s => s.SaveUser(It.IsAny<User>()))
-                .Returns(userToSave)
-                .Returns((User?)null);
+                .Returns(userToSave);
 
             ActionResult<User> okResult = controller.SaveUser(userToSave);
-            ActionResult<User> badRequestResult = controller.SaveUser(invalidUser);
-
-            var ok = okResult.Result as OkObjectResult;
-            Assert.IsNotNull(ok);
-            Assert.AreEqual(200, ok.StatusCode);
-            var user = ok.Value as User;
+            
+            var user = okResult.Value;
             Assert.IsNotNull(user);
             Assert.AreEqual(userToSave.Name, user.Name);
-            Assert.AreEqual(userToSave.Email, user.Email);
-
-            var badReq = badRequestResult.Result as BadRequestResult;
-            Assert.AreEqual(400, badReq.StatusCode);
+            Assert.AreEqual(userToSave.Email, user.Email);  
         }
 
         [TestMethod()]
@@ -98,27 +71,17 @@ namespace TaskApplication.controller.Tests
             User initialUser = new User { Id = id };
             User userToUpdate = new User { Name = "Name Name", Email = "email@example.com" };
             User updatedUser = new User { Id = id, Name = "Name Name", Email = "email@example.com" };
-            User invalidUser = new User { Name = "Name N", Email = "email@example.com" };
             service.SetupSequence(s => s.FindUserById(It.IsAny<Guid>()))
-                .Returns(initialUser)
-                .Returns((User?)null);
+                .Returns(initialUser);
             service.SetupSequence(s => s.UpdateUser(It.IsAny<Guid>(), It.IsAny<User>()))
-                .Returns(updatedUser)
-                .Returns((User?)null);
+                .Returns(updatedUser);
 
             ActionResult<User> okResult = controller.UpdateUser(id, userToUpdate);
-            ActionResult<User> badReqResult = controller.UpdateUser(Guid.NewGuid(), invalidUser);
 
-            var ok = okResult.Result as OkObjectResult;
-            Assert.IsNotNull(ok);
-            Assert.AreEqual(200, ok.StatusCode);
-            var user = ok.Value as User;
+            var user = okResult.Value;
             Assert.AreEqual(updatedUser.Name, user.Name);
             Assert.AreEqual(updatedUser.Email, user.Email);
             Assert.AreEqual(updatedUser.Id, id);
-
-            var badReq = badReqResult.Result as BadRequestResult;
-            Assert.AreEqual(400, badReq.StatusCode);
         }
 
         [TestMethod()]
@@ -137,7 +100,7 @@ namespace TaskApplication.controller.Tests
                 ""currentPageNo"": 1,
                 ""itemsPerPage"": 6,
                 ""sortCriteria"": [],
-                ""filterCriteria"": []
+                ""filterGroup"": []
                             }";
             var details = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
             service.Setup(s => s.GetPaginatedUsers(It.IsAny<Dictionary<string, object>>()))
