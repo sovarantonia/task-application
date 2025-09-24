@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc.Testing;
 using Microsoft.Extensions.DependencyInjection;
 using TaskApplication.repository;
-using TaskApplication.service;
 namespace TaskApplicationTests.integration_tests
 {
     public class CustomWebApplicationFactory<TProgram>
