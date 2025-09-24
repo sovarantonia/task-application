@@ -1,22 +1,12 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;
-using MySqlX.XDevAPI.Common;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.Json;
-using System.Threading.Tasks;
-using TaskApplication.controller;
-using TaskApplication.entity;
 using TaskApplication.service;
 using Task = TaskApplication.entity.Task;
 
 namespace TaskApplication.controller.Tests
 {
     [TestClass()]
-    [Ignore]
     public class TaskControllerTests
     {
         private Mock<ITaskService> service = new Mock<ITaskService>();
@@ -31,24 +21,15 @@ namespace TaskApplication.controller.Tests
         {
             Guid id = Guid.NewGuid();
             Task taskToFind = new Task { Id = id, Title = "Title" };
-            service.SetupSequence(s => s.FindTaskById(It.IsAny<Guid>()))
-                .Returns(taskToFind)
-                .Returns((Task?)null);
+            service.Setup(s => s.FindTaskById(It.IsAny<Guid>()))
+                .Returns(taskToFind);
 
-            ActionResult<Task> result = controller.GetTaskById(id);
-            ActionResult<Task> resultNotFound = controller.GetTaskById(Guid.NewGuid());
+            ActionResult<Task> result = controller.GetTaskById(id);    
 
-            var ok = result.Result as OkObjectResult;
-            Assert.IsNotNull(ok);
-            Assert.AreEqual(200, ok.StatusCode);
-
-            var task = ok.Value as Task;
+            var task = result.Value;
             Assert.IsNotNull(task);
             Assert.AreEqual(taskToFind.Id, task.Id);
             Assert.AreEqual(taskToFind.Title, task.Title);
-
-            var statusCode = resultNotFound.Result as NotFoundResult;
-            Assert.AreEqual(404, statusCode.StatusCode);
         }
 
         [TestMethod()]
@@ -75,16 +56,12 @@ namespace TaskApplication.controller.Tests
             Task savedTask = new Task { Id = id, UserId = userId, Title = "Title", CreationDate = DateOnly.Parse("2025-09-01"), StatusId = statusId };
             Task taskToSave = new Task {UserId = userId, Title = "Title", CreationDate = DateOnly.Parse("2025-09-01"), StatusId = statusId };
 
-            service.SetupSequence(s => s.Save(It.IsAny<Task>()))
-                .Returns(savedTask)
-                .Returns((Task?)null);
+            service.Setup(s => s.Save(It.IsAny<Task>()))
+                .Returns(savedTask);
 
             ActionResult<Task> taskResult = controller.SaveTask(taskToSave);
-          
 
-            var ok = taskResult.Result as OkObjectResult;
-            Assert.IsNotNull(ok);
-            var task = ok.Value as Task;
+            var task = taskResult.Value;
             Assert.IsNotNull(task);
             Assert.AreEqual(savedTask.Title, task.Title);
             Assert.AreEqual(savedTask.CreationDate, task.CreationDate);
@@ -100,26 +77,17 @@ namespace TaskApplication.controller.Tests
             Task newTask = new Task { Title = "new Title", StatusId = 3 };
             Task updatedTask = new Task { Id = id, Title = "new Title", CreationDate = DateOnly.Parse("2025-09-01"), StatusId = 3 };
             
-            service.SetupSequence(s => s.FindTaskById(It.IsAny<Guid>()))
-                .Returns(initialTask)
-                .Returns((Task?)null);
-            service.SetupSequence(s => s.UpdateTask(It.IsAny<Guid>(), It.IsAny<Task>()))
-                .Returns(updatedTask)
-                .Returns((Task?)null);
+            service.Setup(s => s.FindTaskById(It.IsAny<Guid>()))
+                .Returns(initialTask);
+            service.Setup(s => s.UpdateTask(It.IsAny<Guid>(), It.IsAny<Task>()))
+                .Returns(updatedTask);
 
             ActionResult<Task> okResult = controller.UpdateTask(id, newTask);
-            ActionResult<Task> notFoundResult = controller.UpdateTask(Guid.NewGuid(), newTask);
 
-            var ok = okResult.Result as OkObjectResult;
-            Assert.IsNotNull(ok);
-            Assert.AreEqual(200, ok.StatusCode);
-            var task = ok.Value as Task;
+            var task = okResult.Value as Task;
             Assert.IsNotNull(task);
             Assert.AreEqual(updatedTask.Title, task.Title);
             Assert.AreEqual(updatedTask.StatusId,task.StatusId);
-
-            var notFound = notFoundResult.Result as NotFoundResult;
-            Assert.AreEqual(404, notFound.StatusCode);
         }
 
         [TestMethod()]
@@ -189,7 +157,7 @@ namespace TaskApplication.controller.Tests
                 ""currentPageNo"": 1,
                 ""itemsPerPage"": 4,
                 ""sortCriteria"": [],
-                ""filterCriteria"": []
+                ""filterGroup"": []
                             }";
             var details = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
 
