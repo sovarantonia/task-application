@@ -1,20 +1,26 @@
-using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.VisualStudio.TestPlatform.TestHost;
 using MySqlConnector;
-using MySqlX.XDevAPI.Common;
+using System.Net;
+using System.Net.Http.Json;
+using System.Text;
 using System.Text.Json;
-using System.Xml;
-using System.Xml.Linq;
+using System.Threading.Tasks;
 using TaskApplication.controller;
 using TaskApplication.entity;
+using TaskApplication.entity.dto;
+using TaskApplication.entity.exceptions;
 using TaskApplication.repository;
 using TaskApplication.service;
+using TaskApplicationTests.integration_tests;
+using Task = System.Threading.Tasks.Task;
+
 
 
 namespace TaskApplicationTests;
 
 [TestClass]
-[Ignore]
 public class UserIntegrationTests
 {
     private static string _conectionString = "Server=127.0.0.1; database=task_application_test; UID=root; password=root; Allow User Variables=true";
@@ -22,6 +28,9 @@ public class UserIntegrationTests
     private UserController controller = null!;
     private IUserService service = null!;
     private IUserRepository repository = null!;
+
+    private CustomWebApplicationFactory<Program> factory = null!;
+    private HttpClient client = null!;
 
     [ClassInitialize]
     public static void ClassInit(TestContext _)
@@ -43,145 +52,207 @@ public class UserIntegrationTests
     [TestInitialize]
     public void TestInit()
     {
+        factory = new CustomWebApplicationFactory<Program>(_conectionString);
+        client = factory.CreateClient();
         using var connection = new MySqlConnection(_conectionString);
         connection.Open();
         using var dropFkCommand = new MySqlCommand("SET FOREIGN_KEY_CHECKS = 0;", connection);
         dropFkCommand.ExecuteNonQuery();
         using var command = new MySqlCommand("TRUNCATE TABLE users;", connection);
         command.ExecuteNonQuery();
+    }
 
-        repository = new UserRepository(_conectionString);
-        service = new UserService(repository);
-        controller = new UserController(service);
+    [TestCleanup]
+    public void Cleanup()
+    {
+        client.Dispose();
+        factory.Dispose();
     }
 
     [TestMethod]
-    public void SaveUser()
+    public async Task SaveUser()
     {
         var user = new User { Name = "Alice", Email = "alice@example.com", Department = "Engineering" };
 
-        var result = controller.SaveUser(user);
+        var response = await client.PostAsJsonAsync("/User/", user);
 
-        var ok = result.Result as OkObjectResult;
-        Assert.IsNotNull(ok);
-        var saved = ok.Value as User;
-        Assert.IsNotNull(saved);
-        Assert.AreNotEqual(Guid.Empty, saved.Id);
-        Assert.AreEqual("Alice", saved.Name);
-        Assert.AreEqual("alice@example.com", saved.Email);
+        Assert.AreEqual(HttpStatusCode.OK, response.StatusCode);
+
+        var created = await response.Content.ReadFromJsonAsync<User>();
+        Assert.IsNotNull(created);
+        Assert.AreEqual("Alice", created.Name);
+        Assert.AreEqual("alice@example.com", created.Email);
     }
 
     [TestMethod]
-    public void GetUserById()
+    public async Task SaveUser_ThrowsException()
     {
-        var saved = (controller.SaveUser(new User
+        var user = new User { Name = "Alice", Email = "alice@example.com", Department = "Engineering" };
+        var invalidUser = new User { Name = "Alice", Email = "alice@example.com", Department = "Engineering" };
+        
+        await client.PostAsJsonAsync("/User/", user);
+       
+        var response = await client.PostAsJsonAsync("/User/", invalidUser);
+        
+        Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+        var error = await response.Content.ReadFromJsonAsync<ErrorModel>();
+        Assert.IsNotNull(error);
+        Assert.AreEqual($"User with email {user.Email} already exists", error.Message);
+    }
+
+    [TestMethod]
+    public async Task GetUserById()
+    {
+        User userToSave = new User
         {
             Name = "Bob",
             Email = "bob@example.com",
             Department = "HR"
-        }).Result as OkObjectResult)!.Value as User;
+        };
+        var res = await client.PostAsJsonAsync("/User/", userToSave);
 
-        var result = controller.GetUserById(saved.Id);
+        var user = await res.Content.ReadFromJsonAsync<User>();
 
-        var ok = result.Result as OkObjectResult;
-        Assert.IsNotNull(ok);
-        var fetched = ok.Value as User;
-        Assert.IsNotNull(fetched);
-        Assert.AreEqual(saved.Email, fetched.Email);
+        var result = await client.GetAsync($"/User/{user.Id}");
+
+        Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
+
+        var userGetId = await result.Content.ReadFromJsonAsync<User>();
+
+        Assert.AreEqual(userToSave.Email, userGetId.Email);
+        Assert.AreEqual(userToSave.Name, userGetId.Name);
+        Assert.AreEqual(userToSave.Department, userGetId.Department);
+        Assert.AreEqual(user.Id, userGetId.Id);
     }
 
     [TestMethod]
-    public void GetUserById_NotFound()
+    public async Task GetUserById_NotFound()
     {
-        var result = controller.GetUserById(Guid.NewGuid());
-        Assert.IsInstanceOfType(result.Result, typeof(NotFoundResult));
+        Guid id = Guid.NewGuid();
+        
+        var res = await client.GetAsync($"/User/{id}");
+
+        Assert.AreEqual(HttpStatusCode.NotFound, res.StatusCode);
+
+        var error = await res.Content.ReadFromJsonAsync<ErrorModel>();
+
+        Assert.AreEqual($"User with id {id} not found", error.Message);
     }
 
     [TestMethod]
-    public void DeleteUser()
+    public async Task DeleteUser()
     {
-        var saved = (controller.SaveUser(new User
+        User userToSave = new User
         {
-            Name = "Temp",
-            Email = "temp@example.com"
-        }).Result as OkObjectResult)!.Value as User;
+            Name = "Bob",
+            Email = "bob@example.com",
+            Department = "HR"
+        };
+        var res = await client.PostAsJsonAsync("/User/", userToSave);
 
-        var del = controller.DeleteUser(saved!.Id);
-        Assert.IsInstanceOfType(del, typeof(OkResult));
+        var user = await res.Content.ReadFromJsonAsync<User>();
 
-        var after = controller.GetUserById(saved.Id);
-        Assert.IsInstanceOfType(after.Result, typeof(NotFoundResult));
+        var result = await client.DeleteAsync($"/User/{user.Id}");
+
+        Assert.AreEqual(HttpStatusCode.OK, result.StatusCode);
     }
 
     [TestMethod]
-    public void UpdateUser()
+    public async Task DeleteUser_NotFound()
     {
-        var saved = (controller.SaveUser(new User
+        Guid id = Guid.NewGuid();
+
+        var res = await client.DeleteAsync($"/User/{id}");
+
+        Assert.AreEqual(HttpStatusCode.NotFound, res.StatusCode);
+
+        var error = await res.Content.ReadFromJsonAsync<ErrorModel>();
+
+        Assert.AreEqual($"User with id {id} not found", error.Message);
+    }
+
+    [TestMethod]
+    public async Task UpdateUser()
+    {
+        User userToSave = new User
         {
             Name = "Carol",
             Email = "carol@example.com",
             Department = "IT"
-        }).Result as OkObjectResult)!.Value as User;
+        };
+        var res = await client.PostAsJsonAsync("/User/", userToSave);
+        var saved = await res.Content.ReadFromJsonAsync<User>();
 
         var patch = new User { Name = "Carol Updated", Department = "R&D" };
-        var result = controller.UpdateUser(saved!.Id, patch);
 
-        var ok = result.Result as OkObjectResult;
-        Assert.IsNotNull(ok);
-        var updated = ok.Value as User;
+        var updatedResult = await client.PatchAsJsonAsync($"/User/{saved.Id}", patch);
+
+        Assert.AreEqual(HttpStatusCode.OK, updatedResult.StatusCode);
+
+        var updated = await updatedResult.Content.ReadFromJsonAsync<User>();
         Assert.IsNotNull(updated);
         Assert.AreEqual("Carol Updated", updated!.Name);
         Assert.AreEqual("R&D", updated!.Department);
     }
 
     [TestMethod]
-    public void UpdateUser_BadReq()
+    public async Task UpdateUser_NotFound()
     {
-        var patch = new User { Name = "Nobody", Department = "None" };
-        var result = controller.UpdateUser(Guid.NewGuid(), patch);
-        Assert.IsInstanceOfType(result.Result, typeof(BadRequestResult));
+        Guid id = Guid.NewGuid();
+        var patch = new User { Name = "Carol Updated", Department = "R&D" };
+
+        var res = await client.PatchAsJsonAsync($"/User/{id}", patch);
+        Assert.AreEqual(HttpStatusCode.NotFound, res.StatusCode);
+
+        var error = await res.Content.ReadFromJsonAsync<ErrorModel>();
+        Assert.AreEqual($"User with id {id} not found", error.Message);
     }
 
     [TestMethod]
-    public void GetAllUsers()
+    public async Task UpdateUser_InvalidEmail()
     {
-        controller.SaveUser(new User { Name = "Alice", Email = "alice1@example.com" });
-        controller.SaveUser(new User { Name = "Bob", Email = "bob@example.com" });
+        User userToSave = new User
+        {
+            Name = "Carol",
+            Email = "carol@example.com",
+            Department = "IT"
+        };
+        var res = await client.PostAsJsonAsync("/User/", userToSave);
+        var saved = await res.Content.ReadFromJsonAsync<User>();
 
-        ActionResult<List<User>> result = controller.GetAllUsers();
+        var patch = new User { Name = "Carol Updated", Email = "carol@example.com" };
 
-        var ok = result.Result as OkObjectResult;     
-        Assert.IsNotNull(ok);
-        Assert.AreEqual(200, ok.StatusCode);
+        var response = await client.PatchAsJsonAsync($"/User/{saved.Id}", patch);
 
-        var list = ok.Value as List<User>;
-        Assert.IsNotNull(list);
-        Assert.AreEqual(2, list!.Count);
-        Assert.IsTrue(list.Any(u => u.Email == "alice1@example.com"));
-        Assert.IsTrue(list.Any(u => u.Email == "bob@example.com"));
+        Assert.AreEqual(HttpStatusCode.BadRequest, response.StatusCode);
+
+        var error = await response.Content.ReadFromJsonAsync<ErrorModel>();
+        Assert.AreEqual($"User with email {patch.Email} already exists", error.Message);
     }
 
+
     [TestMethod]
-    public void GetPaginatedUsers()
+    public async Task GetPaginatedUsers()
     {
         for (int i = 0; i < 7; i++)
         {
-            controller.SaveUser(new User { Name = $"U{i}", Email = $"u{i}@ex.com" });
+            await client.PostAsJsonAsync("/User/", (new User { Name = $"U{i}", Email = $"u{i}@ex.com" }));
         }
 
-        string jsonString = @"{
-                ""currentPageNo"": 1,
-                ""itemsPerPage"": 6,
-                ""sortCriteria"": [],
-                ""filterCriteria"": []
-                            }";
-        var details = JsonSerializer.Deserialize<Dictionary<string, object>>(jsonString);
+        var body = new
+        {
+            currentPageNo = 1,
+            itemsPerPage = 6,
+            sortCriteria = new SortCriteriaDto[] { }, 
+            filterGroup = new FilterGroupDto[] { }  
+        };
+        var res = await client.PostAsJsonAsync("/User/list", body);
 
-        var action = controller.GetPaginatedUsers(details);
-        var ok = action as OkObjectResult;
-        Assert.IsNotNull(ok);
+        Assert.AreEqual(HttpStatusCode.OK, res.StatusCode);
 
-        var json = JsonSerializer.Serialize(ok!.Value);
+        var content = await res.Content.ReadFromJsonAsync<object>();
+
+        var json = JsonSerializer.Serialize(content);
         var dict = JsonSerializer.Deserialize<Dictionary<string, object>>(json)!;
 
         Assert.IsTrue(dict.ContainsKey("paginatedItems"));

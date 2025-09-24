@@ -1,10 +1,6 @@
-using Castle.DynamicProxy;
-using Microsoft.Extensions.Options;
 using TaskApplication.config;
-using TaskApplication.entity;
 using TaskApplication.filter_midw;
-using TaskApplication.repository;
-using TaskApplication.service;
+
 
 var MyAllowSpecificOrigins = "MyAllowSpecificOrigins";
 
@@ -37,5 +33,5 @@ app.MapControllers();
 
 app.Run();
 
-
+public partial class Program { }
 
