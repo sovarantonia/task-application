@@ -1,15 +1,8 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Moq;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Moq;
 using System.Text.Json;
-using System.Threading.Tasks;
-using TaskApplication.entity;
+using TaskApplication.entity.dto;
 using TaskApplication.repository;
-using TaskApplication.service;
-using static Microsoft.ApplicationInsights.MetricDimensionNames.TelemetryContext;
+
 using Task = TaskApplication.entity.Task;
 
 namespace TaskApplication.service.Tests
@@ -162,14 +155,14 @@ namespace TaskApplication.service.Tests
                 ""currentPageNo"": 1,
                 ""itemsPerPage"": 4,
                 ""sortCriteria"": [],
-                ""filterCriteria"": []
+                ""filterGroup"": []
                             }";
             var details = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
 
 
-            //repository.Setup(repo => repo.GetPaginatedItems(It.IsAny<int>(), It.IsAny<int>()
-            //    , It.IsAny<Dictionary<string, int>>(), It.IsAny<Dictionary<string, string>>()))
-            //    .Returns(tasks.Slice(0, 4));
+            repository.Setup(repo => repo.GetPaginatedItems(It.IsAny<int>(), It.IsAny<int>()
+                , It.IsAny<Dictionary<string, int>>(), It.IsAny<List<FilterGroupDto>>()))
+                .Returns(tasks.Slice(0, 4));
 
             List<Task> result = service.GetPaginatedTasks(details);
             Assert.AreEqual(4, result.Count);

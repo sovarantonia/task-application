@@ -1,90 +1,154 @@
 ﻿using Moq;
 using System.Text.Json;
 using TaskApplication.entity;
+using TaskApplication.entity.dto;
+using TaskApplication.entity.exceptions;
 using TaskApplication.repository;
 
 namespace TaskApplication.service.Tests
 {
     [TestClass()]
-    [Ignore]
     public class UserServiceTests
     {
-        readonly Mock<IUserRepository> userRepository = new Mock<IUserRepository>();
+        readonly Mock<IUserRepository> repository = new Mock<IUserRepository>();
         private IUserService service;
 
         public UserServiceTests()
         {
-            service = new UserService(userRepository.Object);
+            service = new UserService(repository.Object);
         }
 
-        //[TestMethod()]
-        //public void ValidateUserTest()
-        //{
-        //    User userToSave = new User { Id = Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f"), Name = "Name", Email = "email@example.com" };
-        //    userRepository.SetupSequence(repo => repo.FindUserByEmail(It.IsAny<string>()))
-        //        .Returns((User?)null)
-        //        .Returns(userToSave);
-
-        //    var firstCall = service.ValidateUser(userToSave);
-        //    var secondCall = service.ValidateUser(userToSave);
-
-        //    Assert.IsTrue(firstCall);
-        //    Assert.IsFalse(secondCall);
-        //}
-        
-        [TestMethod()]
-        public void SaveUserTest()
+        [TestMethod]
+        public void ValidateUserTest_ValidUser()
         {
             User userToSave = new User { Id = Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f"), Name = "Name", Email = "email@example.com" };
-            userRepository.Setup(repo => repo.Save(It.IsAny<User>()))
+            repository.Setup(repo => repo.FindUserByEmail(It.IsAny<string>()))
+                .Returns((User?)null);
+                
+            service.ValidateUser(userToSave);
+            
+            repository.Verify(repo => repo.FindUserByEmail(It.IsAny<string>()), Times.Once());
+        }
+
+        [TestMethod]
+        public void ValidateUserTest_ThrowsException()
+        {
+            repository.Setup(repo => repo.FindUserByEmail(It.IsAny<string>()))
+                .Returns(new User() { Email = "email@example.com"});
+
+            User invalidUser = new User { Id = Guid.NewGuid(), Email = "email@example.com" };
+            
+            var exception = Assert.ThrowsException<UserAlreadyExistsException>(() => service.ValidateUser(invalidUser));
+            Assert.AreEqual($"User with email {invalidUser.Email} already exists", exception.Message);
+        }
+
+        [TestMethod()]
+        public void SaveUserTest_ValidUser()
+        {
+            User userToSave = new User { Id = Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f"), Name = "Name", Email = "email@example.com" };
+            repository.Setup(repo => repo.FindUserByEmail(It.IsAny<string>()))
+                .Returns((User?)null);
+            repository.Setup(repo => repo.Save(It.IsAny<User>()))
                 .Returns(userToSave);
 
             var savedUser = service.SaveUser(new User());
+
             Assert.AreEqual(Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f"), savedUser.Id);
             Assert.AreEqual("Name", savedUser.Name);
             Assert.AreEqual("email@example.com", savedUser.Email);
         }
 
+        [TestMethod]
+        public void SaveUserTest_ThrowsException()
+        {
+            repository.Setup(repo => repo.FindUserByEmail(It.IsAny<string>()))
+                .Returns(new User() { Email = "email@example.com" });
+
+            User invalidUser = new User { Id = Guid.NewGuid(), Email = "email@example.com" };
+            
+            var exception = Assert.ThrowsException<UserAlreadyExistsException>(() => service.SaveUser(invalidUser));
+            Assert.AreEqual($"User with email {invalidUser.Email} already exists", exception.Message);
+        }
+
         [TestMethod()]
-        public void FindUserByIdTest()
+        public void FindUserByIdTest_ValidUser()
         {
             User userToFind = new User { Id = Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f"), Name = "Name", Email = "email@example.com" };
-            userRepository.Setup(repo => repo.FindById(It.IsAny<Guid>()))
+            repository.Setup(repo => repo.FindById(It.IsAny<Guid>()))
                 .Returns(userToFind);
 
             var foundUser = service.FindUserById(Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f"));
+            
             Assert.AreEqual(Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f"), foundUser.Id);
             Assert.AreEqual("Name", foundUser.Name);
-            Assert.AreEqual("email@example.com", foundUser.Email);
+            Assert.AreEqual("email@example.com", foundUser.Email);    
+        }
+
+        [TestMethod]
+        public void FindUserByIdTest_ThrowsException()
+        {
+            Guid guid = Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f");
+            repository.Setup(repo => repo.FindById(It.IsAny<Guid>()))
+                .Returns((User?)null);
+
+            var exception = Assert.ThrowsException<EntityNotFoundException>(() => service.FindUserById(guid));
+            Assert.AreEqual($"User with id {guid} not found", exception.Message);
         }
 
         [TestMethod()]
-        public void DeleteUserTest()
+        public void DeleteUserTest_ValidUser()
         {
             Guid id = Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f");
-            userRepository.Setup(repo => repo.Delete(It.IsAny<Guid>()))
+            repository.Setup(repo => repo.FindById(It.IsAny<Guid>()))
+                .Returns(new User() { Id = id });
+            repository.Setup(repo => repo.Delete(It.IsAny<Guid>()))
                 .Verifiable();
 
             service.DeleteUser(id);
-            userRepository.Verify(repo => repo.Delete((It.IsAny<Guid>())), Times.Once());
+
+            repository.Verify(repo => repo.Delete((It.IsAny<Guid>())), Times.Once());
+        }
+
+        [TestMethod]
+        public void DeleteUserTest_ThrowsException()
+        {
+            Guid id = Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f");
+            repository.Setup(repo => repo.FindById(It.IsAny<Guid>()))
+                .Returns((User?)null);
+
+            var exception = Assert.ThrowsException<EntityNotFoundException>(() => service.DeleteUser(id));
+            Assert.AreEqual($"User with id {id} not found", exception.Message);
         }
 
         [TestMethod()]
-        public void UpdateUserTest()
+        public void UpdateUserTest_ValidUser()
         {
             User updatedUserDetails = new User { Id = Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f"), Name = "New name", Email = "new.email@example.com" };
             var initialUser = new User { Id = Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f") };
-            userRepository.Setup(repo => repo.Update(It.IsAny<Guid>(), It.IsAny<User>()))
+            repository.Setup(repo => repo.Update(It.IsAny<Guid>(), It.IsAny<User>()))
                 .Returns(updatedUserDetails);
-            userRepository.Setup(repo => repo.FindById(It.IsAny<Guid>()))
+            repository.Setup(repo => repo.FindById(It.IsAny<Guid>()))
                 .Returns(initialUser);
-
 
             var res = service.UpdateUser(initialUser.Id, updatedUserDetails);
 
             Assert.AreEqual(updatedUserDetails.Name, res.Name);
             Assert.AreEqual(updatedUserDetails.Email, res.Email);
             Assert.AreEqual(Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f"), res.Id);
+        }
+
+        [TestMethod]
+        public void UpdateUserTest_ThrowsException()
+        {
+            User updatedUserDetails = new User { Id = Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f"), Name = "New name", Email = "new.email@example.com" };
+            var initialUser = new User { Id = Guid.Parse("1543f9e2-8351-11f0-829d-00505692e06f") };
+            repository.Setup(repo => repo.FindById(It.IsAny<Guid>()))
+                .Returns(initialUser);
+            repository.Setup(repo => repo.FindUserByEmail(It.IsAny<string>()))
+                .Returns(new User() { Email = "new.email@example.com" });
+
+            var exception = Assert.ThrowsException<UserAlreadyExistsException>(() => service.UpdateUser(initialUser.Id, updatedUserDetails));
+            Assert.AreEqual($"User with email {updatedUserDetails.Email} already exists", exception.Message);
         }
 
         [TestMethod()]
@@ -101,15 +165,15 @@ namespace TaskApplication.service.Tests
                 new User { Id = Guid.NewGuid(), Name = "Charlie", Email = "charlie1@example.com" },
             };
 
-            //userRepository.Setup(repo => repo.GetPaginatedItems(It.IsAny<int>(), It.IsAny<int>()
-            //    , It.IsAny<Dictionary<string, int>>(), It.IsAny<Dictionary<string, string>>()))
-            //    .Returns(userList);
+            repository.Setup(repo => repo.GetPaginatedItems(It.IsAny<int>(), It.IsAny<int>()
+                , It.IsAny<Dictionary<string, int>>(), It.IsAny<List<FilterGroupDto>>()))
+                .Returns(userList);
 
             string json = @"{
                 ""currentPageNo"": 1,
                 ""itemsPerPage"": 6,
                 ""sortCriteria"": [],
-                ""filterCriteria"": []
+                ""filterGroup"": []
                             }";
             var details = JsonSerializer.Deserialize<Dictionary<string, object>>(json);
 
@@ -135,7 +199,7 @@ namespace TaskApplication.service.Tests
                 new User { Id = Guid.NewGuid(), Name = "Charlie", Email = "charlie1@example.com" },
             };
 
-            userRepository.Setup(repo => repo.GetAllItems())
+            repository.Setup(repo => repo.GetAllItems())
                 .Returns(userList);
 
             List<User> result = service.GetAllUsers();
