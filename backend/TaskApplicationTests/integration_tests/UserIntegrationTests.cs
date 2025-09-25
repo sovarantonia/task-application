@@ -24,11 +24,6 @@ namespace TaskApplicationTests;
 public class UserIntegrationTests
 {
     private static string _conectionString = "Server=127.0.0.1; database=task_application_test; UID=root; password=root; Allow User Variables=true";
-
-    private UserController controller = null!;
-    private IUserService service = null!;
-    private IUserRepository repository = null!;
-
     private CustomWebApplicationFactory<Program> factory = null!;
     private HttpClient client = null!;
 
